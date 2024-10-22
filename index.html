@@ -78,9 +78,10 @@
             const players = document.getElementById('players').value;
 
             // Weiterleitung zur Einzelspieler- oder Mehrspieler-Seite
-            if (players === '2') {
+            if (players === '1') {
                 window.location.href = `ein_spieler_spiel.html?gridSize=${gridSize}`;
-            } else {
+            }
+            if (players === '2') {
                 window.location.href = `zwei_spieler_spiel.html?gridSize=${gridSize}&moves=${moves}`;
             }
         });
