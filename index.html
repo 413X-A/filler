@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filler Game - Start</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #settings {
+            margin-bottom: 20px;
+        }
+
+        .setting-item {
+            margin: 10px 0;
+        }
+
+        #startGame {
+            width: 80%;
+            background-color: green;
+            color: white;
+            padding: 25px;
+            font-size: 1.5em;
+            border: none;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Filler Game</h1>
+
+    <div id="settings">
+        <div class="setting-item">
+            <label for="gridSize">Feldgröße:</label>
+            <select id="gridSize">
+                <option value="11">11x11</option>
+                <option value="21">21x21</option>
+                <option value="31">31x31</option>
+                <option value="41">41x41</option>
+            </select>
+        </div>
+
+        <div class="setting-item">
+            <label for="moves">Anzahl der Züge:</label>
+            <select id="moves">
+                <option value="5">5 Züge</option>
+                <option value="10">10 Züge</option>
+                <option value="20">20 Züge</option>
+                <option value="30">30 Züge</option>
+                <option value="50">50 Züge</option>
+                <option value="unlimited">Unendlich Züge</option>
+            </select>
+        </div>
+
+        <div class="setting-item">
+            <label for="players">Spieleranzahl:</label>
+            <select id="players">
+                <option value="1">1 Spieler</option>
+                <option value="2">2 Spieler</option>
+            </select>
+        </div>
+
+        <div class="setting-item">
+            <button id="startGame">Spiel starten</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('startGame').addEventListener('click', () => {
+            const gridSize = document.getElementById('gridSize').value;
+            const moves = document.getElementById('moves').value;
+            const players = document.getElementById('players').value;
+
+            // Weiterleitung zur Einzelspieler- oder Mehrspieler-Seite
+            if (players === '2') {
+                window.location.href = `ein_spieler_spiel.html?gridSize=${gridSize}`;
+            } else {
+                window.location.href = `zwei_spieler_spiel.html?gridSize=${gridSize}&moves=${moves}`;
+            }
+        });
+    </script>
+</body>
+</html>
