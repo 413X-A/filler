@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filler Game - 1 Spieler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #gameContainer {
+            display: grid;
+            margin: 20px auto;
+        }
+
+        .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 30px;
+            height: 30px;
+            border: none;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        #colorButtons {
+            margin-top: 20px;
+        }
+
+        #scoreboard {
+            margin-top: 20px;
+        }
+
+        #score, #remainingMoves, #homeButton {
+            display: inline-block;
+            padding: 10px;
+            background-color: white;
+            border: 2px solid black;
+            width: 80px;
+            text-align: center;
+            margin: 0 10px;
+        }
+
+        #homeButton {
+            cursor: pointer;
+            background-color: lightgray;
+        }
+
+        #homeButton:hover {
+            background-color: gray;
+        }
+
+        #resultModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 2px solid black;
+            z-index: 10;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Filler Game - 1 Spieler</h1>
+
+    <div id="scoreboard">
+        <div id="score">0</div>
+        <div id="remainingMoves">Züge übrig: 50</div>
+        <div id="homeButton" onclick="goHome()">Home</div>
+    </div>
+
+    <div id="gameContainer"></div>
+
+    <div id="colorButtons"></div>
+
+    <div id="overlay"></div>
+    <div id="resultModal">
+        <h2>Spielende</h2>
+        <p id="resultMessage"></p>
+        <button id="restartGame">OK</button>
+    </div>
+
+    <script>
+        let gridSize = 11;
+        let movesLeft = 50; // Anzahl der Züge
+        const params = new URLSearchParams(window.location.search);
+        gridSize = parseInt(params.get('gridSize')) || 11;
+
+        let gameBoard = [];
+        const colors = ['red', 'yellow', 'green', 'blue', 'lightgreen', 'lightblue', 'purple', 'pink', 'brown'];
+        let score = 1;
+
+        document.getElementById('restartGame').addEventListener('click', () => {
+            document.getElementById('resultModal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            startGame();
+        });
+
+        function startGame() {
+            gameBoard = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    gameBoard[i][j] = colors[Math.floor(Math.random() * colors.length)];
+                }
+            }
+
+            gameBoard[0][0] = 'white'; // Spieler startet unten links
+
+            drawBoard();
+            createColorButtons();
+            updateScore();
+        }
+
+        function drawBoard() {
+            const gameContainer = document.getElementById('gameContainer');
+            gameContainer.innerHTML = '';
+            const cellSize = Math.floor(window.innerWidth / gridSize);
+            gameContainer.style.gridTemplateColumns = `repeat(${gridSize}, ${cellSize}px)`;
+            gameBoard.forEach((row) => {
+                row.forEach((color) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.style.backgroundColor = color || 'white';
+                    cell.style.width = `${cellSize}px`;
+                    cell.style.height = `${cellSize}px`;
+                    gameContainer.appendChild(cell);
+                });
+            });
+        }
+
+        function createColorButtons() {
+            const colorButtons = document.getElementById('colorButtons');
+            colorButtons.innerHTML = '';
+            colors.forEach(color => {
+                const button = document.createElement('button');
+                button.style.backgroundColor = color;
+                button.addEventListener('click', () => {
+                    fillAdjacentToWhite(color);
+                    movesLeft--; // Züge abziehen, wenn ein Zug gemacht wurde
+                    updateScore();
+                    if (movesLeft === 0 || checkAllWhite()) {
+                        endGame();
+                    }
+                });
+                colorButtons.appendChild(button);
+            });
+        }
+
+        function fillAdjacentToWhite(selectedColor) {
+            const startCells = findWhiteCells();
+
+            startCells.forEach(([row, col]) => {
+                const adjacentCells = [
+                    [row - 1, col],
+                    [row + 1, col],
+                    [row, col - 1],
+                    [row, col + 1]
+                ];
+
+                adjacentCells.forEach(([adjRow, adjCol]) => {
+                    if (adjRow >= 0 && adjCol >= 0 && adjRow < gridSize && adjCol < gridSize) {
+                        if (gameBoard[adjRow][adjCol] === selectedColor) {
+                            gameBoard[adjRow][adjCol] = 'white';
+                        }
+                    }
+                });
+            });
+
+            drawBoard();
+        }
+
+        function findWhiteCells() {
+            const whiteCells = [];
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    if (gameBoard[i][j] === 'white') {
+                        whiteCells.push([i, j]);
+                    }
+                }
+            }
+            return whiteCells;
+        }
+
+        function updateScore() {
+            score = countWhiteCells(); // Aktualisiere den Score mit der Anzahl der weißen Zellen
+            document.getElementById('score').textContent = score;
+            document.getElementById('remainingMoves').textContent = `Züge übrig: ${movesLeft}`;
+        }
+
+        function countWhiteCells() {
+            let count = 0;
+            for (let row of gameBoard) {
+                for (let cell of row) {
+                    if (cell === 'white') count++;
+                }
+            }
+            return count;
+        }
+
+        function checkAllWhite() {
+            return gameBoard.every(row => row.every(cell => cell === 'white'));
+        }
+
+        function endGame() {
+            const resultMessage = document.getElementById('resultMessage');
+            resultMessage.textContent = `Spiel beendet! Dein Punktestand: ${score} Punkte.`;
+            document.getElementById('resultModal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function goHome() {
+            window.location.href = 'index.html'; // Leitet zur index.html weiter
+        }
+
+        // Starte das Spiel
+        startGame();
+    </script>
+</body>
+</html>
