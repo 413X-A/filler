@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filler Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #settings {
+            margin-bottom: 20px;
+        }
+
+        .setting-item {
+            margin: 10px 0;
+        }
+
+        #gameContainer {
+            display: grid;
+            margin: 20px auto;
+            margin-bottom: 20px;
+        }
+
+        .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 30px;
+            height: 30px;
+            border: none;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        #colorButtons {
+            margin-top: 20px;
+        }
+
+        #scoreboard {
+            margin-top: 20px;
+            display: none; /* Punkte und Züge werden erst nach Spielstart angezeigt */
+        }
+
+        #scoreboard .score-box {
+            display: inline-block;
+            padding: 10px;
+            background-color: white;
+            border: 2px solid black;
+            width: 50px;
+            text-align: center;
+        }
+
+        #resultModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 2px solid black;
+            z-index: 10;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9;
+        }
+
+        #startGame {
+            width: 80%;
+            background-color: green;
+            color: white;
+            padding: 15px;
+            font-size: 1.2em;
+            border: none;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Filler Game</h1>
+    
+    <div id="settings">
+        <div class="setting-item">
+            <label for="gridSize">Feldgröße:</label>
+            <select id="gridSize">
+                <option value="11">11x11</option>
+                <option value="21">21x21</option>
+                <option value="31">31x31</option>
+                <option value="41">41x41</option>
+            </select>
+        </div>
+        
+        <div class="setting-item">
+            <label for="moveCount">Anzahl Züge:</label>
+            <select id="moveCount">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+                <option value="30">30</option>
+                <option value="35">35</option>
+                <option value="40">40</option>
+                <option value="45">45</option>
+                <option value="50">50</option>
+                <option value="infinity">Unendlich</option>
+            </select>
+        </div>
+        
+        <div class="setting-item">
+            <button id="startGame">Spiel starten</button>
+        </div>
+    </div>
+
+    <div id="scoreboard">
+        <div class="score-box">
+            <span id="score">0</span>
+        </div>
+        <div>
+            Verbleibende Züge: <span id="remainingMoves">0</span>
+        </div>
+    </div>
+
+    <div id="gameContainer"></div>
+
+    <div id="colorButtons"></div>
+
+    <div id="overlay"></div>
+    <div id="resultModal">
+        <h2>Spielende</h2>
+        <p id="resultMessage"></p>
+        <button id="restartGame">OK</button>
+    </div>
+
+    <script>
+        let gridSize = 11;
+        let moveCount = 5;
+        let infiniteMoves = false;
+        let gameBoard = [];
+        const colors = ['red', 'yellow', 'green', 'blue', 'lightgreen', 'lightblue', 'purple', 'pink', 'brown'];
+        let movesLeft = 0;
+        let score = 0;
+
+        document.getElementById('gridSize').addEventListener('change', (e) => {
+            gridSize = parseInt(e.target.value);
+        });
+
+        document.getElementById('moveCount').addEventListener('change', (e) => {
+            const value = e.target.value;
+            if (value === 'infinity') {
+                moveCount = Infinity;
+                infiniteMoves = true;
+            } else {
+                moveCount = parseInt(value);
+                infiniteMoves = false;
+            }
+        });
+
+        document.getElementById('startGame').addEventListener('click', () => {
+            document.getElementById('settings').style.display = 'none'; // Versteckt die Einstellungen
+            document.getElementById('scoreboard').style.display = 'block'; // Zeigt das Scoreboard
+            startGame();
+        });
+
+        document.getElementById('restartGame').addEventListener('click', () => {
+            document.getElementById('resultModal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            startGame(); // Spiel neustarten
+        });
+
+        function startGame() {
+            movesLeft = infiniteMoves ? Infinity : moveCount;
+            score = 0;
+            gameBoard = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    gameBoard[i][j] = colors[Math.floor(Math.random() * colors.length)];
+                }
+            }
+            gameBoard[Math.floor(gridSize / 2)][Math.floor(gridSize / 2)] = 'white';
+            drawBoard();
+            createColorButtons();
+            updateScoreboard();
+        }
+
+        function drawBoard() {
+            const gameContainer = document.getElementById('gameContainer');
+            gameContainer.innerHTML = '';
+            const cellSize = Math.floor(window.innerWidth / gridSize);
+            gameContainer.style.gridTemplateColumns = `repeat(${gridSize}, ${cellSize}px)`;
+            gameBoard.forEach((row, i) => {
+                row.forEach((color, j) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.style.backgroundColor = color || 'white';
+                    cell.style.width = `${cellSize}px`;
+                    cell.style.height = `${cellSize}px`;
+                    gameContainer.appendChild(cell);
+                });
+            });
+        }
+
+        function createColorButtons() {
+            const colorButtons = document.getElementById('colorButtons');
+            colorButtons.innerHTML = '';
+            colors.forEach(color => {
+                const button = document.createElement('button');
+                button.style.backgroundColor = color;
+                button.addEventListener('click', () => {
+                    if (movesLeft > 0 || infiniteMoves) {
+                        fillAdjacentToWhite(color);
+                    }
+                });
+                colorButtons.appendChild(button);
+            });
+        }
+
+        function fillAdjacentToWhite(selectedColor) {
+            const whiteCells = [];
+            
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    if (gameBoard[i][j] === 'white') {
+                        whiteCells.push([i, j]);
+                    }
+                }
+            }
+
+            let anyFilled = false;
+
+            whiteCells.forEach(([row, col]) => {
+                const adjacentCells = [
+                    [row - 1, col],
+                    [row + 1, col],
+                    [row, col - 1],
+                    [row, col + 1]
+                ];
+
+                adjacentCells.forEach(([adjRow, adjCol]) => {
+                    if (adjRow >= 0 && adjCol >= 0 && adjRow < gridSize && adjCol < gridSize) {
+                        if (gameBoard[adjRow][adjCol] === selectedColor) {
+                            gameBoard[adjRow][adjCol] = 'white';
+                            anyFilled = true;
+                        }
+                    }
+                });
+            });
+
+            if (anyFilled) {
+                movesLeft--; // Nur wenn mindestens ein Feld gefüllt wurde, wird ein Zug abgezogen
+                updateScoreboard();
+                drawBoard();
+                updateScore();
+
+                // Prüfen, ob das Spiel vorbei ist (alle Felder weiß oder Züge vorbei)
+                if (movesLeft === 0 || checkAllWhite()) {
+                    endGame();
+                }
+            }
+        }
+
+        function updateScore() {
+            let whiteCellsCount = 0;
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    if (gameBoard[i][j] === 'white') {
+                        whiteCellsCount++;
+                    }
+                }
+            }
+            score = whiteCellsCount;
+            document.getElementById('score').innerText = score;
+        }
+
+        function updateScoreboard() {
+            document.getElementById('remainingMoves').innerText = infiniteMoves ? '∞' : movesLeft;
+        }
+
+        function checkAllWhite() {
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    if (gameBoard[i][j] !== 'white') {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        function endGame() {
+            const totalWhiteCells = score; // Die Anzahl der weißen Felder
+            document.getElementById('resultMessage').innerText = `Du hast ${totalWhiteCells} weiße Felder erreicht!`;
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('resultModal').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
