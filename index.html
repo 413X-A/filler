@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filler Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #gameContainer {
+            display: grid;
+            margin: 20px auto;
+            margin-bottom: 20px;
+        }
+
+        .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            margin: 5px;
+        }
+
+        #colorButtons {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Filler Game</h1>
+    
+    <div>
+        <label for="gridSize">Feldgröße:</label>
+        <select id="gridSize">
+            <option value="11">11x11</option>
+            <option value="21">21x21</option>
+            <option value="31">31x31</option>
+            <option value="41">41x41</option>
+        </select>
+        
+        <label for="moveCount">Anzahl Züge:</label>
+        <input type="range" id="moveCount" min="5" max="50" value="5">
+        <span id="moveCountValue">5</span>
+        <button id="infiniteMoves">Unendlich Züge</button>
+        
+        <button id="startGame">Spiel starten</button>
+    </div>
+
+    <div id="gameContainer"></div>
+
+    <div id="colorButtons"></div>
+
+    <div id="result"></div>
+
+    <script>
+        let gridSize = 11;
+        let moveCount = 5;
+        let infiniteMoves = false;
+        let gameBoard = [];
+        const colors = ['red', 'yellow', 'green', 'blue', 'lightgreen', 'lightblue', 'purple', 'pink', 'brown'];
+        let movesLeft = 0;
+
+        document.getElementById('gridSize').addEventListener('change', (e) => {
+            gridSize = parseInt(e.target.value);
+        });
+
+        document.getElementById('moveCount').addEventListener('input', (e) => {
+            moveCount = e.target.value;
+            document.getElementById('moveCountValue').innerText = moveCount;
+        });
+
+        document.getElementById('infiniteMoves').addEventListener('click', () => {
+            infiniteMoves = true;
+            moveCount = Infinity; // Set moves to infinite
+        });
+
+        document.getElementById('startGame').addEventListener('click', () => {
+            startGame();
+        });
+
+        function startGame() {
+            movesLeft = infiniteMoves ? Infinity : moveCount;
+            gameBoard = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    gameBoard[i][j] = colors[Math.floor(Math.random() * colors.length)]; // Zufällige Farben für jedes Feld
+                }
+            }
+            gameBoard[Math.floor(gridSize / 2)][Math.floor(gridSize / 2)] = 'white'; // Setze den Startblock auf weiß
+            drawBoard();
+            createColorButtons();
+            document.getElementById('result').innerText = '';
+        }
+
+        function drawBoard() {
+            const gameContainer = document.getElementById('gameContainer');
+            gameContainer.innerHTML = '';
+            const cellSize = Math.floor(window.innerWidth / gridSize); // Setze die Zellgröße basierend auf der Fensterbreite
+            gameContainer.style.gridTemplateColumns = `repeat(${gridSize}, ${cellSize}px)`;
+            gameBoard.forEach((row, i) => {
+                row.forEach((color, j) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.style.backgroundColor = color || 'white';
+                    cell.style.width = `${cellSize}px`;
+                    cell.style.height = `${cellSize}px`;
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    gameContainer.appendChild(cell);
+                });
+            });
+        }
+
+        function createColorButtons() {
+            const colorButtons = document.getElementById('colorButtons');
+            colorButtons.innerHTML = '';
+            colors.forEach(color => {
+                const button = document.createElement('button');
+                button.style.backgroundColor = color;
+                button.innerText = 'Färben ' + color;
+                button.addEventListener('click', () => {
+                    fillAdjacentWhite(color);
+                });
+                colorButtons.appendChild(button);
+            });
+        }
+
+        function fillAdjacentWhite(color) {
+            const startRow = Math.floor(gridSize / 2);
+            const startCol = Math.floor(gridSize / 2);
+            const startColor = gameBoard[startRow][startCol];
+
+            if (startColor === 'white') {
+                floodFill(startRow, startCol, 'white', color);
+            }
+            drawBoard();
+        }
+
+        function floodFill(row, col, targetColor, replacementColor) {
+            if (row < 0 || col < 0 || row >= gridSize || col >= gridSize) {
+                return;
+            }
+            if (gameBoard[row][col] !== targetColor) {
+                return;
+            }
+            gameBoard[row][col] = replacementColor; // Fülle die Zelle mit der neuen Farbe
+            floodFill(row + 1, col, targetColor, replacementColor);
+            floodFill(row - 1, col, targetColor, replacementColor);
+            floodFill(row, col + 1, targetColor, replacementColor);
+            floodFill(row, col - 1, targetColor, replacementColor);
+        }
+
+        function checkGameEnd() {
+            return gameBoard.every(row => row.every(cell => cell === 'white'));
+        }
+
+        function endGame() {
+            const whiteCount = gameBoard.flat().filter(cell => cell === 'white').length;
+            document.getElementById('result').innerText = `Spiel beendet! Weiße Felder: ${whiteCount}`;
+        }
+    </script>
+</body>
+</html>
