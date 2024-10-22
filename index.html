@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filler Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #gameContainer {
+            display: grid;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .cell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            margin: 5px;
+        }
+
+        #colorButtons {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Filler Game</h1>
+    
+    <div>
+        <label for="gridSize">Feldgröße:</label>
+        <select id="gridSize">
+            <option value="11">11x11</option>
+            <option value="21">21x21</option>
+            <option value="31">31x31</option>
+            <option value="41">41x41</option>
+        </select>
+        
+        <label for="colorCount">Anzahl Farben:</label>
+        <select id="colorCount">
+            <option value="3">3</option>
+            <option value="5">5</option>
+            <option value="7">7</option>
+            <option value="9">9</option>
+        </select>
+        
+        <label for="moveCount">Anzahl Züge:</label>
+        <input type="range" id="moveCount" min="5" max="50" value="5">
+        <span id="moveCountValue">5</span>
+        <button id="infiniteMoves">Unendlich Züge</button>
+        
+        <button id="startGame">Spiel starten</button>
+    </div>
+
+    <div id="gameContainer"></div>
+
+    <div id="colorButtons"></div>
+
+    <div id="result"></div>
+
+    <script>
+        let gridSize = 11;
+        let colorCount = 3;
+        let moveCount = 5;
+        let infiniteMoves = false;
+        let gameBoard = [];
+        let colors = [];
+        let movesLeft = 0;
+
+        document.getElementById('gridSize').addEventListener('change', (e) => {
+            gridSize = parseInt(e.target.value);
+        });
+
+        document.getElementById('colorCount').addEventListener('change', (e) => {
+            colorCount = parseInt(e.target.value);
+            generateColors();
+        });
+
+        document.getElementById('moveCount').addEventListener('input', (e) => {
+            moveCount = e.target.value;
+            document.getElementById('moveCountValue').innerText = moveCount;
+        });
+
+        document.getElementById('infiniteMoves').addEventListener('click', () => {
+            infiniteMoves = true;
+            moveCount = Infinity; // Set moves to infinite
+        });
+
+        document.getElementById('startGame').addEventListener('click', () => {
+            startGame();
+        });
+
+        function generateColors() {
+            colors = [];
+            for (let i = 0; i < colorCount; i++) {
+                colors.push(`hsl(${Math.random() * 360}, 100%, 50%)`); // Generate random colors
+            }
+        }
+
+        function startGame() {
+            movesLeft = infiniteMoves ? Infinity : moveCount;
+            gameBoard = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    gameBoard[i][j] = colors[Math.floor(Math.random() * colorCount)];
+                }
+            }
+            gameBoard[Math.floor(gridSize / 2)][Math.floor(gridSize / 2)] = 'white'; // Set starting point to white
+            drawBoard();
+            createColorButtons();
+            document.getElementById('result').innerText = '';
+        }
+
+        function drawBoard() {
+            const gameContainer = document.getElementById('gameContainer');
+            gameContainer.innerHTML = '';
+            gameContainer.style.gridTemplateColumns = `repeat(${gridSize}, 30px)`;
+            gameBoard.forEach((row, i) => {
+                row.forEach((color, j) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.style.backgroundColor = color || 'white';
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    cell.addEventListener('click', () => {
+                        if (movesLeft > 0 || infiniteMoves) {
+                            fillColor(i, j, color);
+                            movesLeft--;
+                            if (!infiniteMoves) {
+                                document.getElementById('moveCountValue').innerText = movesLeft;
+                            }
+                        }
+                        if (checkGameEnd()) {
+                            endGame();
+                        }
+                    });
+                    gameContainer.appendChild(cell);
+                });
+            });
+        }
+
+        function createColorButtons() {
+            const colorButtons = document.getElementById('colorButtons');
+            colorButtons.innerHTML = '';
+            colors.forEach(color => {
+                const button = document.createElement('button');
+                button.style.backgroundColor = color;
+                button.innerText = 'Färben';
+                button.addEventListener('click', () => {
+                    fillAll(i, j, color);
+                });
+                colorButtons.appendChild(button);
+            });
+        }
+
+        function fillColor(row, col, color) {
+            const targetColor = gameBoard[row][col];
+            if (targetColor !== 'white') {
+                floodFill(row, col, targetColor, 'white');
+            }
+            drawBoard();
+        }
+
+        function fillAll(row, col, color) {
+            const targetColor = gameBoard[row][col];
+            if (targetColor !== 'white') {
+                floodFill(row, col, targetColor, color);
+            }
+            drawBoard();
+        }
+
+        function floodFill(row, col, targetColor, replacementColor) {
+            if (row < 0 || col < 0 || row >= gridSize || col >= gridSize) {
+                return;
+            }
+            if (gameBoard[row][col] !== targetColor || gameBoard[row][col] === replacementColor) {
+                return;
+            }
+            gameBoard[row][col] = replacementColor;
+            floodFill(row + 1, col, targetColor, replacementColor);
+            floodFill(row - 1, col, targetColor, replacementColor);
+            floodFill(row, col + 1, targetColor, replacementColor);
+            floodFill(row, col - 1, targetColor, replacementColor);
+        }
+
+        function checkGameEnd() {
+            return gameBoard.every(row => row.every(cell => cell === 'white'));
+        }
+
+        function endGame() {
+            const whiteCount = gameBoard.flat().filter(cell => cell === 'white').length;
+            document.getElementById('result').innerText = `Spiel beendet! Weiße Felder: ${whiteCount}`;
+        }
+    </script>
+</body>
+</html>
