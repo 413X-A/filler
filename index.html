@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filler Game</title>
+    <title>Filler Game - Single Player</title>
     <style>
         body {
             text-align: center;
@@ -14,159 +14,145 @@
 
         #gameCanvas {
             display: block;
-            margin: 0 auto;
+            margin: 20px auto;
             background-color: #ffffff;
             border: 2px solid black;
         }
 
-        #scores {
-            margin-top: 20px;
+        #buttons {
+            margin: 20px;
         }
 
-        #scores div {
-            margin: 10px 0;
+        .color-button {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            cursor: pointer;
+            border: 1px solid black;
+        }
+
+        #score {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
-    <div id="scores">
-        <div>Player 1 (Red): <span id="score1">0</span></div>
-        <div>Player 2 (Green): <span id="score2">0</span></div>
-        <div>Player 3 (Blue): <span id="score3">0</span></div>
-        <div>Player 4 (Yellow): <span id="score4">0</span></div>
+    <div id="buttons">
+        <div class="color-button" id="red" style="background-color: red;"></div>
+        <div class="color-button" id="yellow" style="background-color: yellow;"></div>
+        <div class="color-button" id="green" style="background-color: green;"></div>
+        <div class="color-button" id="blue" style="background-color: blue;"></div>
+        <div class="color-button" id="black" style="background-color: black;"></div>
+        <div class="color-button" id="pink" style="background-color: pink;"></div>
+        <div class="color-button" id="brown" style="background-color: brown;"></div>
     </div>
 
+    <div id="score">Züge: 0/10</div>
+
     <script>
-        // Canvas Setup
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
+        canvas.width = 300;
+        canvas.height = 300;
 
-        canvas.width = 600;
-        canvas.height = 600;
-
-        const tileSize = 20; // Größe der Kacheln
+        const tileSize = 15; // Kleine Kacheln
         const cols = canvas.width / tileSize;
         const rows = canvas.height / tileSize;
 
-        // Spielerfarben und Positionen
-        const players = [
-            { color: 'red', x: 0, y: 0, score: 0 },
-            { color: 'green', x: cols - 1, y: 0, score: 0 },
-            { color: 'blue', x: 0, y: rows - 1, score: 0 },
-            { color: 'yellow', x: cols - 1, y: rows - 1, score: 0 }
-        ];
-
+        const colors = ['red', 'yellow', 'green', 'blue', 'black', 'pink', 'brown'];
         let grid = [];
+        let playerTiles = [[Math.floor(rows / 2), Math.floor(cols / 2)]]; // Spieler beginnt in der Mitte
+        let currentColor = grid[Math.floor(rows / 2)][Math.floor(cols / 2)];
+        let moves = 0;
+        const maxMoves = 10;
 
-        // Funktion, um das Spielfeld zu initialisieren
+        // Initialisiere das Spielfeld mit zufälligen Farben
         function initGrid() {
-            grid = [];
             for (let row = 0; row < rows; row++) {
-                let line = [];
+                grid[row] = [];
                 for (let col = 0; col < cols; col++) {
-                    line.push(null); // Anfangs sind alle Zellen leer
+                    grid[row][col] = colors[Math.floor(Math.random() * colors.length)];
                 }
-                grid.push(line);
             }
-
-            // Setzt die Spielerpositionen
-            players.forEach((player, index) => {
-                const { x, y, color } = player;
-                grid[y][x] = color;
-            });
-
-            updateScores();
-        }
-
-        // Punkte aktualisieren
-        function updateScores() {
-            players.forEach((player, index) => {
-                let score = 0;
-                for (let row = 0; row < rows; row++) {
-                    for (let col = 0; col < cols; col++) {
-                        if (grid[row][col] === player.color) {
-                            score++;
-                        }
-                    }
-                }
-                player.score = score;
-                document.getElementById(`score${index + 1}`).innerText = score;
-            });
+            grid[Math.floor(rows / 2)][Math.floor(cols / 2)] = 'white'; // Startfeld des Spielers
         }
 
         // Spielfeld rendern
         function renderGrid() {
             for (let row = 0; row < rows; row++) {
                 for (let col = 0; col < cols; col++) {
+                    ctx.fillStyle = grid[row][col];
+                    ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
                     ctx.strokeStyle = 'black';
                     ctx.strokeRect(col * tileSize, row * tileSize, tileSize, tileSize);
-
-                    if (grid[row][col]) {
-                        ctx.fillStyle = grid[row][col];
-                        ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
-                    }
                 }
             }
         }
 
-        // Spielzug eines Spielers
-        function playerTurn(player) {
-            let directions = [
-                { dx: 0, dy: 1 }, // nach unten
-                { dx: 0, dy: -1 }, // nach oben
-                { dx: 1, dy: 0 }, // nach rechts
-                { dx: -1, dy: 0 } // nach links
-            ];
+        // Rekursive Funktion zum Färben der angrenzenden Kacheln
+        function floodFill(startRow, startCol, targetColor, newColor) {
+            if (startRow < 0 || startRow >= rows || startCol < 0 || startCol >= cols) return; // Grenzen prüfen
+            if (grid[startRow][startCol] !== targetColor) return; // Falsche Farbe, also abbrechen
+            if (grid[startRow][startCol] === newColor) return; // Bereits gefärbt
 
-            // zufällige Richtung wählen
-            let randomDir = directions[Math.floor(Math.random() * directions.length)];
-            let newX = player.x + randomDir.dx;
-            let newY = player.y + randomDir.dy;
+            grid[startRow][startCol] = newColor; // Farbe ändern
+            playerTiles.push([startRow, startCol]); // Spieler "beansprucht" diese Kachel
 
-            // Prüfen, ob die Bewegung innerhalb des Spielfelds bleibt
-            if (newX >= 0 && newX < cols && newY >= 0 && newY < rows && grid[newY][newX] === null) {
-                grid[newY][newX] = player.color; // Spielfeld füllen
-                player.x = newX; // Spielerposition aktualisieren
-                player.y = newY;
+            // In alle Richtungen ausbreiten
+            floodFill(startRow + 1, startCol, targetColor, newColor);
+            floodFill(startRow - 1, startCol, targetColor, newColor);
+            floodFill(startRow, startCol + 1, targetColor, newColor);
+            floodFill(startRow, startCol - 1, targetColor, newColor);
+        }
+
+        // Wenn eine Farbe gewählt wird, führe den Zug aus
+        function makeMove(color) {
+            if (moves >= maxMoves) return; // Keine Züge mehr erlaubt
+
+            const [centerRow, centerCol] = playerTiles[0]; // Start bei der ersten Spieler-Kachel
+            const targetColor = grid[centerRow][centerCol]; // Die aktuelle Farbe des Blocks
+            floodFill(centerRow, centerCol, targetColor, color); // Neue Farbe anwenden
+
+            moves++; // Zugzähler erhöhen
+            document.getElementById('score').innerText = `Züge: ${moves}/${maxMoves}`;
+            
+            renderGrid(); // Spielfeld neu zeichnen
+
+            if (moves === maxMoves) {
+                calculateScore(); // Punkte berechnen nach 10 Zügen
             }
         }
 
-        // Spielablauf
-        function gameLoop() {
-            players.forEach(player => playerTurn(player)); // Alle Spieler machen einen Zug
-            updateScores(); // Punkte aktualisieren
-            renderGrid(); // Spielfeld neu rendern
-
-            // Prüfen, ob das Spiel vorbei ist
-            if (isGameOver()) {
-                setTimeout(resetGame, 3000); // 3 Sekunden warten und dann neu starten
-            } else {
-                requestAnimationFrame(gameLoop); // Spiel fortsetzen
-            }
+        // Berechnet die Punktzahl des Spielers
+        function calculateScore() {
+            let score = playerTiles.length; // Anzahl der vom Spieler "besetzten" Felder
+            alert(`Spiel beendet! Du hast ${score} Felder gefüllt.`);
+            resetGame(); // Spiel zurücksetzen
         }
 
-        // Prüfen, ob das Spielfeld voll ist
-        function isGameOver() {
-            for (let row = 0; row < rows; row++) {
-                for (let col = 0; col < cols; col++) {
-                    if (grid[row][col] === null) {
-                        return false; // Noch nicht voll
-                    }
-                }
-            }
-            return true; // Spielfeld ist voll
-        }
-
-        // Spiel zurücksetzen
+        // Setzt das Spiel zurück
         function resetGame() {
-            initGrid(); // Spielfeld zurücksetzen
-            requestAnimationFrame(gameLoop); // Spiel neustarten
+            moves = 0;
+            playerTiles = [[Math.floor(rows / 2), Math.floor(cols / 2)]];
+            initGrid();
+            renderGrid();
+            document.getElementById('score').innerText = `Züge: ${moves}/${maxMoves}`;
         }
 
-        // Spielinitialisierung
+        // Buttons für die Farbwahl
+        document.getElementById('red').addEventListener('click', () => makeMove('red'));
+        document.getElementById('yellow').addEventListener('click', () => makeMove('yellow'));
+        document.getElementById('green').addEventListener('click', () => makeMove('green'));
+        document.getElementById('blue').addEventListener('click', () => makeMove('blue'));
+        document.getElementById('black').addEventListener('click', () => makeMove('black'));
+        document.getElementById('pink').addEventListener('click', () => makeMove('pink'));
+        document.getElementById('brown').addEventListener('click', () => makeMove('brown'));
+
+        // Spiel initialisieren
         initGrid();
-        requestAnimationFrame(gameLoop);
+        renderGrid();
     </script>
 </body>
 </html>
