@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filler Game - Zwei Spieler Modus</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #gameBoard {
+            display: grid;
+            margin: 20px auto;
+        }
+
+        .cell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ccc;
+        }
+
+        #scoreBoard {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .scoreBox {
+            display: inline-block;
+            width: 100px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .whiteScore {
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+        }
+
+        .blackScore {
+            background-color: black;
+            color: white;
+            border: 2px solid white;
+        }
+
+        #currentTurn {
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .colorButton {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        #homeButton {
+            margin-top: 20px;
+            width: 80%;
+            height: 50px;
+            background-color: lightgray;
+            font-size: 18px;
+            line-height: 50px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        #overlay, #resultModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #resultModal {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Filler Game - Zwei Spieler</h1>
+
+    <div id="currentTurn">Weiß an der Reihe</div>
+
+    <div id="scoreBoard">
+        <div id="scorePlayer1" class="scoreBox whiteScore">0</div>
+        <div id="scorePlayer2" class="scoreBox blackScore">0</div>
+    </div>
+
+    <div id="gameBoard"></div>
+
+    <div id="colorButtons"></div>
+
+    <div id="homeButton" onclick="goHome()">Home</div>
+
+    <div id="overlay">
+        <div id="resultModal">
+            <h2 id="resultMessage"></h2>
+            <button onclick="restartGame()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        const gridSize = 11; // Spielfeldgröße (11x11, kann angepasst werden)
+        const colors = ['red', 'yellow', 'green', 'blue', 'lightgreen', 'lightblue', 'violet', 'pink', 'brown'];
+        let gameBoard = [];
+        let player1Score = 0;
+        let player2Score = 0;
+        let isPlayerOneTurn = true;
+        let isGameOver = false;
+
+        function createBoard() {
+            const boardElement = document.getElementById('gameBoard');
+            boardElement.style.gridTemplateColumns = `repeat(${gridSize}, 30px)`;
+            gameBoard = [];
+
+            for (let x = 0; x < gridSize; x++) {
+                const row = [];
+                for (let y = 0; y < gridSize; y++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    let randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    cell.style.backgroundColor = randomColor;
+
+                    if (x === gridSize - 1 && y === 0) {
+                        cell.style.backgroundColor = 'white'; // Spieler 1 Startblock
+                        row.push(null); // Weiß gehört zu Spieler 1
+                    } else if (x === 0 && y === gridSize - 1) {
+                        cell.style.backgroundColor = 'black'; // Spieler 2 Startblock
+                        row.push('black'); // Schwarz gehört zu Spieler 2
+                    } else {
+                        row.push(randomColor);
+                    }
+
+                    cell.dataset.x = x;
+                    cell.dataset.y = y;
+                    boardElement.appendChild(cell);
+                }
+                gameBoard.push(row);
+            }
+        }
+
+        function createColorButtons() {
+            const colorButtonsContainer = document.getElementById('colorButtons');
+            colorButtonsContainer.innerHTML = '';
+
+            colors.forEach((color, index) => {
+                const button = document.createElement('div');
+                button.classList.add('colorButton');
+                button.style.backgroundColor = color;
+                button.onclick = () => colorSelected(index);
+                colorButtonsContainer.appendChild(button);
+            });
+        }
+
+        function colorSelected(colorIndex) {
+            if (isGameOver) return;
+
+            let queue = [];
+            if (isPlayerOneTurn) {
+                queue = [[gridSize - 1, 0]]; // Spieler 1 Start (unten links)
+            } else {
+                queue = [[0, gridSize - 1]]; // Spieler 2 Start (oben rechts)
+            }
+
+            const targetColor = colors[colorIndex];
+            const visited = Array.from({ length: gridSize }, () => Array(gridSize).fill(false));
+
+            while (queue.length > 0) {
+                const [x, y] = queue.shift();
+
+                // Stelle sicher, dass wir im gültigen Bereich sind und das Feld noch nicht besucht wurde
+                if (x < 0 || y < 0 || x >= gridSize || y >= gridSize || visited[x][y]) continue;
+
+                // Füge eine Bedingung hinzu, um gegnerische Felder nicht zu überschreiben
+                if (isPlayerOneTurn && gameBoard[x][y] === 'black') continue;
+                if (!isPlayerOneTurn && gameBoard[x][y] === null) continue;
+
+                // Überprüfe, ob das Feld die gleiche Farbe hat wie die ausgewählte Farbe
+                if (gameBoard[x][y] !== targetColor && gameBoard[x][y] !== null && gameBoard[x][y] !== 'black') continue;
+
+                // Der Spieler darf das Feld nur einnehmen, wenn es die gleiche Farbe hat
+                if (isPlayerOneTurn) {
+                    gameBoard[x][y] = null; // Spieler 1 (Weiß) nimmt das Feld ein
+                    player1Score++;
+                } else {
+                    gameBoard[x][y] = 'black'; // Spieler 2 (Schwarz) nimmt das Feld ein
+                    player2Score++;
+                }
+
+                visited[x][y] = true;
+
+                // Nachbarn zur Warteschlange hinzufügen (nur benachbarte Felder!)
+                if (x + 1 < gridSize && gameBoard[x + 1][y] === targetColor) queue.push([x + 1, y]);
+                if (x - 1 >= 0 && gameBoard[x - 1][y] === targetColor) queue.push([x - 1, y]);
+                if (y + 1 < gridSize && gameBoard[x][y + 1] === targetColor) queue.push([x, y + 1]);
+                if (y - 1 >= 0 && gameBoard[x][y - 1] === targetColor) queue.push([x, y - 1]);
+            }
+
+            // Überprüfe, ob das Spiel beendet ist
+            if (player1Score + player2Score === gridSize * gridSize) {
+                isGameOver = true;
+                showResult();
+            } else {
+                isPlayerOneTurn = !isPlayerOneTurn; // Wechsel zum nächsten Spieler
+                updateTurnDisplay();
+                updateScore();
+                updateBoard();
+            }
+        }
+
+        function updateTurnDisplay() {
+            const currentTurnDisplay = document.getElementById('currentTurn');
+            if (isPlayerOneTurn) {
+                currentTurnDisplay.textContent = "Weiß an der Reihe";
+            } else {
+                currentTurnDisplay.textContent = "Schwarz an der Reihe";
+            }
+        }
+
+        function updateScore() {
+            document.getElementById('scorePlayer1').textContent = player1Score;
+            document.getElementById('scorePlayer2').textContent = player2Score;
+        }
+
+        function showResult() {
+            const resultMessage = document.getElementById('resultMessage');
+            const overlay = document.getElementById('overlay');
+            const resultModal = document.getElementById('resultModal');
+
+            if (player1Score > player2Score) {
+                resultMessage.textContent = "Weiß gewinnt!";
+            } else if (player2Score > player1Score) {
+                resultMessage.textContent = "Schwarz gewinnt!";
+            } else {
+                resultMessage.textContent = "Unentschieden!";
+            }
+
+            overlay.style.display = "flex";
+            resultModal.style.display = "block";
+        }
+
+        function restartGame() {
+            // Setze das Spielfeld und die Spielwerte zurück
+            player1Score = 0;
+            player2Score = 0;
+            isPlayerOneTurn = true;
+            isGameOver = false;
+            document.getElementById('overlay').style.display = 'none';
+
+            // Aktualisiere das Spielfeld
+            document.getElementById('gameBoard').innerHTML = '';
+            createBoard();
+            updateScore();
+            updateTurnDisplay();
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        function updateBoard() {
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                const x = cell.dataset.x;
+                const y = cell.dataset.y;
+                const color = gameBoard[x][y];
+
+                if (color === null) {
+                    cell.style.backgroundColor = 'white'; // Spieler 1 (weiß)
+                } else if (color === 'black') {
+                    cell.style.backgroundColor = 'black'; // Spieler 2 (schwarz)
+                } else {
+                    cell.style.backgroundColor = color;
+                }
+            });
+        }
+
+        // Initialisiere das Spielbrett und Buttons beim Laden der Seite
+        window.onload = function () {
+            createBoard();
+            createColorButtons();
+            updateScore();
+            updateTurnDisplay();
+        };
+    </script>
+</body>
+</html>
