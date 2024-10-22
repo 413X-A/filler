@@ -45,7 +45,6 @@
             <option value="41">40x40</option>
         </select>
         <p></p>
-        <p></p>
         
         <label for="colorCount">Anzahl Farben:</label>
         <select id="colorCount">
@@ -55,18 +54,13 @@
             <option value="9">9</option>
         </select>
         <p></p>
-        <p></p>
-        
         
         <label for="moveCount">Anzahl Züge:</label>
-        <p></p>
-        <p></p>
         <input type="range" id="moveCount" min="5" max="50" value="5">
-        <span id="moveCountValue">25</span>
+        <span id="moveCountValue">5</span>
         <p></p>
-        <p></p>
+        
         <button id="infiniteMoves">Unendlich Züge</button>
-        <p></p>
         <p></p>
         
         <button id="startGame">Spiel starten</button>
@@ -97,7 +91,7 @@
         });
 
         document.getElementById('moveCount').addEventListener('input', (e) => {
-            moveCount = e.target.value;
+            moveCount = parseInt(e.target.value);
             document.getElementById('moveCountValue').innerText = moveCount;
         });
 
@@ -144,13 +138,13 @@
                     cell.dataset.col = j;
                     cell.addEventListener('click', () => {
                         if (movesLeft > 0 || infiniteMoves) {
-                            fillColor(i, j, color);
-                            movesLeft--;
+                            fillColor(i, j);
                             if (!infiniteMoves) {
+                                movesLeft--;
                                 document.getElementById('moveCountValue').innerText = movesLeft;
                             }
                         }
-                        if (checkGameEnd()) {
+                        if (checkGameEnd() && !infiniteMoves) {
                             endGame();
                         }
                     });
@@ -167,13 +161,13 @@
                 button.style.backgroundColor = color;
                 button.innerText = 'Färben';
                 button.addEventListener('click', () => {
-                    fillAll(i, j, color);
+                    fillAll(color);
                 });
                 colorButtons.appendChild(button);
             });
         }
 
-        function fillColor(row, col, color) {
+        function fillColor(row, col) {
             const targetColor = gameBoard[row][col];
             if (targetColor !== 'white') {
                 floodFill(row, col, targetColor, 'white');
@@ -181,12 +175,15 @@
             drawBoard();
         }
 
-        function fillAll(row, col, color) {
-            const targetColor = gameBoard[row][col];
+        function fillAll(color) {
+            const targetColor = gameBoard[Math.floor(gridSize / 2)][Math.floor(gridSize / 2)];
             if (targetColor !== 'white') {
-                floodFill(row, col, targetColor, color);
+                floodFill(Math.floor(gridSize / 2), Math.floor(gridSize / 2), targetColor, color);
             }
             drawBoard();
+            if (checkGameEnd()) {
+                endGame();
+            }
         }
 
         function floodFill(row, col, targetColor, replacementColor) {
@@ -210,6 +207,13 @@
         function endGame() {
             const whiteCount = gameBoard.flat().filter(cell => cell === 'white').length;
             document.getElementById('result').innerText = `Spiel beendet! Weiße Felder: ${whiteCount}`;
+            resetGame();
+        }
+
+        function resetGame() {
+            movesLeft = 0;
+            gameBoard = [];
+            document.getElementById('colorButtons').innerHTML = '';
         }
     </script>
 </body>
