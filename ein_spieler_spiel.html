@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filler Game - 1 Spieler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #gameContainer {
+            display: grid;
+            margin: 20px auto;
+        }
+
+        .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 30px;
+            height: 30px;
+            border: none;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        #colorButtons {
+            margin-top: 20px;
+        }
+
+        #scoreboard {
+            margin-top: 20px;
+        }
+
+        .scoreBox {
+            display: inline-block;
+            padding: 10px;
+            background-color: white;
+            border: 2px solid black;
+            width: 80px;
+            text-align: center;
+            margin: 0 10px;
+        }
+
+        #homeButton {
+            display: inline-block;
+            padding: 10px;
+            background-color: lightgray;
+            border: 2px solid black;
+            width: 80px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        #homeButton:hover {
+            background-color: gray;
+        }
+
+        #movesLeft {
+            width: 80%;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: lightgray;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        #resultModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 2px solid black;
+            z-index: 10;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Filler Game - 1 Spieler</h1>
+
+    <div id="scoreboard">
+        <div id="score" class="scoreBox">0</div>
+        <div id="homeButton" onclick="goHome()">Home</div>
+    </div>
+
+    <div id="movesLeft">Züge übrig: <span id="moves">50</span></div>
+
+    <div id="gameContainer"></div>
+
+    <div id="colorButtons"></div>
+
+    <div id="overlay"></div>
+    <div id="resultModal">
+        <h2>Spielende</h2>
+        <p id="resultMessage"></p>
+        <button id="restartGame">OK</button>
+    </div>
+
+    <script>
+        let gridSize = 11;
+        let numMoves = 50;
+        const colors = ['red', 'yellow', 'green', 'blue', 'lightgreen', 'lightblue', 'purple', 'pink', 'brown'];
+        let gameBoard = [];
+        let score = 1;
+        let movesLeft = numMoves;
+        let isGameOver = false;
+
+        // Funktion um die URL-Parameter zu holen
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                gridSize: parseInt(params.get('gridSize')),
+                numColors: parseInt(params.get('numColors')),
+                numMoves: params.get('numMoves')
+            };
+        }
+
+        document.getElementById('restartGame').addEventListener('click', () => {
+            document.getElementById('resultModal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            startGame();
+        });
+
+        function startGame() {
+            const { gridSize: size, numColors: colorsCount, numMoves: moves } = getQueryParams();
+            gridSize = size;
+            numMoves = moves === 'unlimited' ? Infinity : parseInt(moves);
+            gameBoard = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                                        gameBoard[i][j] = Math.floor(Math.random() * colorsCount);
+                }
+            }
+
+            gameBoard[Math.floor(gridSize / 2)][Math.floor(gridSize / 2)] = null; // Startblock in der Mitte
+            score = 1;
+            movesLeft = numMoves;
+            isGameOver = false;
+
+            updateBoard();
+            updateScore();
+        }
+
+        function updateBoard() {
+            const gameContainer = document.getElementById('gameContainer');
+            gameContainer.innerHTML = ''; // Spielfeld zurücksetzen
+
+            gameContainer.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.style.width = `${Math.min(30, 300 / gridSize)}px`;
+                    cell.style.height = `${Math.min(30, 300 / gridSize)}px`;
+
+                    if (gameBoard[i][j] === null) {
+                        cell.style.backgroundColor = 'white';
+                    } else {
+                        cell.style.backgroundColor = colors[gameBoard[i][j]];
+                    }
+
+                    gameContainer.appendChild(cell);
+                }
+            }
+
+            createColorButtons();
+        }
+
+        function createColorButtons() {
+            const colorButtonsContainer = document.getElementById('colorButtons');
+            colorButtonsContainer.innerHTML = ''; // Buttons zurücksetzen
+
+            const { numColors } = getQueryParams();
+            for (let i = 0; i < numColors; i++) {
+                const colorButton = document.createElement('button');
+                colorButton.style.backgroundColor = colors[i];
+                colorButton.addEventListener('click', () => colorSelected(i));
+                colorButtonsContainer.appendChild(colorButton);
+            }
+        }
+
+        function colorSelected(colorIndex) {
+            if (isGameOver) return;
+
+            const startX = Math.floor(gridSize / 2);
+            const startY = Math.floor(gridSize / 2);
+            const queue = [[startX, startY]];
+
+            const targetColor = colorIndex;
+            const originalColor = gameBoard[startX][startY];
+
+            while (queue.length > 0) {
+                const [x, y] = queue.shift();
+
+                if (x < 0 || y < 0 || x >= gridSize || y >= gridSize) continue;
+                if (gameBoard[x][y] === null || gameBoard[x][y] !== targetColor) continue;
+
+                gameBoard[x][y] = null;
+                score++;
+
+                // Nachbarn hinzufügen
+                queue.push([x + 1, y]);
+                queue.push([x - 1, y]);
+                queue.push([x, y + 1]);
+                queue.push([x, y - 1]);
+            }
+
+            movesLeft--;
+            if (movesLeft === 0 || score === gridSize * gridSize) {
+                gameOver();
+            }
+
+            updateBoard();
+            updateScore();
+        }
+
+        function updateScore() {
+            document.getElementById('score').innerText = score;
+            document.getElementById('moves').innerText = movesLeft === Infinity ? '∞' : movesLeft;
+        }
+
+        function gameOver() {
+            isGameOver = true;
+            document.getElementById('resultMessage').innerText = `Du hast das Spiel mit ${score} Punkten beendet!`;
+            document.getElementById('resultModal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        // Spiel initialisieren
+        window.onload = () => {
+            startGame();
+        };
+    </script>
+</body>
+</html>
