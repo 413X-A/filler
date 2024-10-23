@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filler Game - 2 Spieler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #gameContainer {
+            display: grid;
+            margin: 20px auto;
+        }
+
+        .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 30px;
+            height: 30px;
+            border: none;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        #colorButtons {
+            margin-top: 20px;
+        }
+
+        #scoreboard {
+            margin-top: 20px;
+        }
+
+        .scoreBox {
+            display: inline-block;
+            padding: 10px;
+            background-color: white;
+            border: 2px solid black;
+            width: 80px;
+            text-align: center;
+            margin: 0 10px;
+        }
+
+        .player1 {
+            background-color: white;
+            color: black;
+        }
+
+        .player2 {
+            background-color: black;
+            color: white;
+        }
+
+        #homeButton {
+            display: inline-block;
+            padding: 10px;
+            background-color: lightgray;
+            border: 2px solid black;
+            width: 80px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        #homeButton:hover {
+            background-color: gray;
+        }
+
+        #resultModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 2px solid black;
+            z-index: 10;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Filler Game - 2 Spieler</h1>
+
+    <div id="scoreboard">
+        <div id="scorePlayer1" class="scoreBox player1">0</div>
+        <div id="scorePlayer2" class="scoreBox player2">0</div>
+        <div id="homeButton" onclick="goHome()">Home</div>
+    </div>
+
+    <div id="gameContainer"></div>
+
+    <div id="colorButtons"></div>
+
+    <div id="overlay"></div>
+    <div id="resultModal">
+        <h2>Spielende</h2>
+        <p id="resultMessage"></p>
+        <button id="restartGame">OK</button>
+    </div>
+
+    <script>
+        let gridSize = 11;
+        const colors = ['red', 'yellow', 'green', 'blue', 'lightgreen', 'lightblue', 'purple', 'pink', 'brown'];
+        let gameBoard = [];
+        let scorePlayer1 = 1;
+        let scorePlayer2 = 1;
+        let currentPlayer = 1; // Spieler 1 beginnt
+        let isGameOver = false;
+        let numMoves = Infinity; // numMoves bleibt immer auf Infinity im 2-Spieler-Modus
+
+        // URL-Parameter auslesen (außer numMoves)
+        const urlParams = new URLSearchParams(window.location.search);
+        const paramGridSize = parseInt(urlParams.get('gridSize'));
+        if (paramGridSize) {
+            gridSize = paramGridSize;
+        }
+
+        document.getElementById('restartGame').addEventListener('click', () => {
+            document.getElementById('resultModal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            startGame();
+        });
+
+        function startGame() {
+            gameBoard = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    gameBoard[i][j] = colors[Math.floor(Math.random() * colors.length)];
+                }
+            }
+
+            // Startpositionen der Spieler: Spieler 1 (unten links), Spieler 2 (oben rechts)
+            gameBoard[gridSize - 1][0] = 'white'; // Spieler 1 (weiß)
+            gameBoard[0][gridSize - 1] = 'black'; // Spieler 2 (schwarz)
+
+            scorePlayer1 = 1;
+            scorePlayer2 = 1;
+            currentPlayer = 1;
+            isGameOver = false;
+
+            drawBoard();
+            createColorButtons();
+            updateScores();
+        }
+
+        function drawBoard() {
+            const gameContainer = document.getElementById('gameContainer');
+            gameContainer.innerHTML = '';
+            const cellSize = Math.floor(window.innerWidth / gridSize);
+            gameContainer.style.gridTemplateColumns = `repeat(${gridSize}, ${cellSize}px)`;
+            gameBoard.forEach((row) => {
+                row.forEach((color) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.style.backgroundColor = color || 'white';
+                    cell.style.width = `${cellSize}px`;
+                    cell.style.height = `${cellSize}px`;
+                    gameContainer.appendChild(cell);
+                });
+            });
+        }
+
+        function createColorButtons() {
+            const colorButtons = document.getElementById('colorButtons');
+            colorButtons.innerHTML = '';
+            colors.forEach(color => {
+                const button = document.createElement('button');
+                button.style.backgroundColor = color;
+                button.addEventListener('click', () => {
+                    if (!isGameOver) {
+                        fillAdjacentToPlayer(currentPlayer === 1 ? 'white' : 'black', color);
+                        currentPlayer = currentPlayer === 1 ? 2 : 1; // Spielerwechsel
+                        updateScores();
+                        if (checkAllFilled() || isGameOver) {
+                            endGame();
+                        }
+                    }
+                });
+                colorButtons.appendChild(button);
+            });
+        }
+
+        function fillAdjacentToPlayer(playerColor, selectedColor) {
+            const startCells = findPlayerCells(playerColor);
+
+            startCells.forEach(([row, col]) => {
+                const adjacentCells = [
+                    [row - 1, col],
+                    [row + 1, col],
+                    [row, col - 1],
+                    [row, col + 1]
+                ];
+
+                adjacentCells.forEach(([adjRow, adjCol]) => {
+                    if (adjRow >= 0 && adjCol >= 0 && adjRow < gridSize && adjCol < gridSize) {
+                        if (gameBoard[adjRow][adjCol] === selectedColor) {
+                            gameBoard[adjRow][adjCol] = playerColor;
+                            if (playerColor === 'white') {
+                                scorePlayer1++;
+                            } else {
+                                scorePlayer2++;
+                            }
+                        }
+                    }
+                });
+            });
+
+            drawBoard();
+        }
+
+        function findPlayerCells(playerColor) {
+            const playerCells = [];
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    if (gameBoard[i][j] === playerColor) {
+                        playerCells.push([i, j]);
+                    }
+                }
+            }
+            return playerCells;
+        }
+
+        function updateScores() {
+            document.getElementById('scorePlayer1').textContent = scorePlayer1;
+            document.getElementById('scorePlayer2').textContent = scorePlayer2;
+        }
+
+        function checkAllFilled() {
+            let whiteCount = 0;
+            let blackCount = 0;
+            for (let row of gameBoard) {
+                for (let cell of row) {
+                    if (cell === 'white') whiteCount++;
+                    if (cell === 'black') blackCount++;
+                }
+            }
+            return whiteCount + blackCount === gridSize * gridSize;
+        }
+
+        function endGame() {
+            isGameOver = true;
+            const resultMessage = document.getElementById('resultMessage');
+            if (scorePlayer1 > scorePlayer2) {
+                resultMessage.textContent = `Spieler 1 (Weiß) gewinnt mit ${scorePlayer1} Punkten!`;
+            } else if (scorePlayer2 > scorePlayer1) {
+                resultMessage.textContent = `Spieler 2 (Schwarz) gewinnt mit ${scorePlayer2} Punkten!`;
+            } else {
+                resultMessage.textContent = 'Unentschieden!';
+            }
+            document.getElementById('resultModal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function goHome() {
+            window.location.href = 'index.html'; // Leitet zur Startseite zurück
+        }
+
+        // Starte das Spiel
+        startGame();
+    </script>
+</body>
+</html>
