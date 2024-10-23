@@ -253,7 +253,7 @@
         function startChallenge(level) {
             const completedLevels = JSON.parse(localStorage.getItem('completedLevels')) || [];
             if (!completedLevels.includes(level)) {
-                window.location.href = `herausforderung.html?level=${level}`;
+                window.location.href = `herausforderung_spiel.html?level=${level}`;
             } else {
                 alert("Diese Herausforderung wurde bereits abgeschlossen.");
             }
