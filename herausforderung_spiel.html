@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filler - Herausforderung</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #game-container {
+            margin: 50px auto;
+            width: 80%;
+            max-width: 600px;
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #game-info {
+            margin-bottom: 20px;
+        }
+
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(11, 30px); /* Beispiel für 11x11 */
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .grid-cell {
+            width: 30px;
+            height: 30px;
+            background-color: lightblue;
+            border: 1px solid #ccc;
+        }
+
+        #moves-left {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        #game-message {
+            display: none;
+            font-size: 24px;
+            font-weight: bold;
+            color: green;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <h1>Filler - Herausforderung</h1>
+
+        <div id="game-info">
+            <p id="target-info"></p>
+            <p>Züge übrig: <span id="moves-left">0</span></p>
+        </div>
+
+        <div id="grid"></div>
+
+        <p id="game-message">Spiel vorbei!</p>
+    </div>
+
+    <script>
+        let movesLeft;
+        const gridSize = new URLSearchParams(window.location.search).get('gridSize') || 11;
+        const numColors = new URLSearchParams(window.location.search).get('numColors') || 3;
+        const numMoves = new URLSearchParams(window.location.search).get('numMoves') || 5;
+        const target = new URLSearchParams(window.location.search).get('target') || 'Erreiche das Ziel!';
+
+        // Update the game info
+        document.getElementById('target-info').textContent = `Ziel: ${target}`;
+        document.getElementById('moves-left').textContent = numMoves;
+
+        // Erstelle das Spielfeld (Grid)
+        const grid = document.getElementById('grid');
+        grid.style.gridTemplateColumns = `repeat(${gridSize}, 30px)`;
+
+        for (let i = 0; i < gridSize * gridSize; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('grid-cell');
+            cell.style.backgroundColor = getRandomColor();
+            grid.appendChild(cell);
+        }
+
+        // Starte das Spiel
+        movesLeft = numMoves;
+
+        function getRandomColor() {
+            const colors = ['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'pink'];
+            return colors[Math.floor(Math.random() * numColors)];
+        }
+
+        // Simulierte Funktion für das Spielen (hier könnte später die eigentliche Spielmechanik eingebaut werden)
+        function playGame() {
+            if (movesLeft > 0) {
+                movesLeft--;
+                document.getElementById('moves-left').textContent = movesLeft;
+
+                if (movesLeft === 0) {
+                    endGame();
+                }
+            }
+        }
+
+        // Funktion für das Spielende
+        function endGame() {
+            document.getElementById('game-message').style.display = 'block';
+            setTimeout(function() {
+                window.location.href = 'index.html';
+            }, 3000); // 3 Sekunden warten, bevor man zur index.html geleitet wird
+        }
+
+        // Simuliere, dass der Spieler jede Sekunde einen Zug macht (später durch echte Aktionen ersetzen)
+        setInterval(playGame, 1000);
+    </script>
+
+</body>
+</html>
