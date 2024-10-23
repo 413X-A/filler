@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Einzelspieler Filler Spiel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+
+        #gameBoard {
+            display: grid;
+            margin: 20px auto;
+            border: 2px solid #ccc;
+            background-color: white;
+        }
+
+        .cell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        .info {
+            margin: 20px;
+        }
+
+        #movesRemaining {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Einzelspieler Filler Spiel</h1>
+    <div class="info">
+        <p id="movesRemaining"></p>
+    </div>
+    
+    <div id="gameBoard"></div>
+    
+    <script>
+        // Spielparameter aus der URL abrufen
+        const urlParams = new URLSearchParams(window.location.search);
+        const gridSize = parseInt(urlParams.get('gridSize'));
+        const numColors = parseInt(urlParams.get('numColors'));
+        const numMoves = urlParams.get('numMoves') === 'infinite' ? null : parseInt(urlParams.get('numMoves'));
+
+        let movesLeft = numMoves; // Speichert die verbleibenden Züge
+        const board = []; // Spielbrett-Array
+        const colors = Array.from({length: numColors}, (_, i) => `color${i + 1}`); // Farben für die Zellen
+        let currentColor; // Die aktuelle Farbe, die gewählt wurde
+        let fillColor; // Die Farbe, die die Spieler wählen können
+
+        // Funktion zum Erstellen des Spielbretts
+        function createBoard() {
+            const gameBoard = document.getElementById('gameBoard');
+            gameBoard.style.gridTemplateColumns = `repeat(${gridSize}, 30px)`;
+            gameBoard.style.gridTemplateRows = `repeat(${gridSize}, 30px)`;
+
+            for (let i = 0; i < gridSize; i++) {
+                board[i] = [];
+                for (let j = 0; j < gridSize; j++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.style.backgroundColor = 'white'; // Anfangsfarbe
+                    cell.addEventListener('click', () => makeMove(i, j));
+                    gameBoard.appendChild(cell);
+                    board[i][j] = cell; // Speichere die Zellreferenz
+                }
+            }
+
+            // Wähle zufällig eine Startfarbe für das Füllgebiet
+            currentColor = colors[Math.floor(Math.random() * colors.length)];
+            fillColor = colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // Funktion zur Aktualisierung der Anzeige der verbleibenden Züge
+        function updateMovesDisplay() {
+            const movesDisplay = document.getElementById('movesRemaining');
+            if (movesLeft === null) {
+                movesDisplay.textContent = "Unbegrenzte Züge!";
+            } else {
+                movesDisplay.textContent = `Verbleibende Züge: ${movesLeft}`;
+            }
+        }
+
+        // Funktion zum Überprüfen, ob das Feld in der Füllregion ist
+        function isWithinFillArea(row, col, targetColor) {
+            const cell = board[row][col];
+            return cell.style.backgroundColor === targetColor || cell.style.backgroundColor === 'white';
+        }
+
+        // Funktion zur Fülllogik
+        function floodFill(row, col) {
+            if (row < 0 || row >= gridSize || col < 0 || col >= gridSize) return; // Überprüfe die Grenzen
+            const cell = board[row][col];
+
+            if (cell.style.backgroundColor !== fillColor && isWithinFillArea(row, col, currentColor)) {
+                cell.style.backgroundColor = fillColor; // Zelle füllen
+
+                // Rekursion für benachbarte Zellen
+                floodFill(row - 1, col); // Oben
+                floodFill(row + 1, col); // Unten
+                floodFill(row, col - 1); // Links
+                floodFill(row, col + 1); // Rechts
+            }
+        }
+
+        // Funktion zum Ausführen eines Zuges
+        function makeMove(row, col) {
+            if (movesLeft !== null) {
+                movesLeft--; // Züge reduzieren
+                if (movesLeft < 0) {
+                    endGame("Du hast keine Züge mehr!");
+                    return;
+                }
+            }
+
+            // Beginne die Füllung von der gewählten Zelle
+            floodFill(row, col);
+            updateMovesDisplay();
+
+            // Überprüfe, ob das Spiel gewonnen ist
+            checkWin();
+        }
+
+        // Funktion um das Spiel zu beenden
+        function endGame(message) {
+            alert(message);
+            location.reload(); // Seite neu laden
+        }
+
+        // Funktion um zu überprüfen, ob das Spiel gewonnen ist
+        function checkWin() {
+            let filledCount = 0;
+            const totalCells = gridSize * gridSize;
+
+            // Zähle gefüllte Zellen
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    if (board[i][j].style.backgroundColor === fillColor) {
+                        filledCount++;
+                    }
+                }
+            }
+
+            // Überprüfe den Gewinn
+            if (filledCount === totalCells) {
+                endGame("Herzlichen Glückwunsch! Du hast gewonnen!");
+            }
+        }
+
+        // Initialisiere das Spiel
+        function initializeGame() {
+            createBoard(); // Erstelle das Spielbrett
+            updateMovesDisplay(); // Anzeige der verbleibenden Züge aktualisieren
+        }
+
+        initializeGame(); // Spiel initialisieren
+    </script>
+</body>
+</html>
