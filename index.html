@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filler Spiel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #challengeBanner {
+            width: 90%;
+            margin: 50px auto;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        td {
+            width: 30%;
+            text-align: center;
+        }
+
+        button {
+            width: 80%;
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+            background-color: lightgray;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        button.completed {
+            background-color: lightgreen;
+        }
+
+        button:hover {
+            background-color: gray;
+        }
+
+        #modeSelection {
+            margin: 20px auto;
+        }
+
+        .challengeBanner {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9;
+        }
+
+        #resultModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 2px solid black;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <h1>Filler Spiel</h1>
+    <p>Ein autistisches Spiel, in dem die Farbkombination an höchster Stelle steht</p>
+
+    <!-- Modus-Auswahl -->
+    <div id="modeSelection">
+        <h2>Wähle deinen Modus:</h2>
+        <button onclick="showSinglePlayer()">Einzelspieler</button>
+        <button onclick="showMultiPlayer()">Mehrspieler</button>
+        <button onclick="showChallenges()">Herausforderungen [ALPHA]</button>
+    </div>
+
+    <!-- Einzelspieler Optionen -->
+    <div id="singlePlayer" style="display: none;">
+        <img src="ein_spieler_spiel_index_banner.png.PNG" alt="Einzelspieler Banner" style="width: 90%;">
+        <p>Spiele Filler im Einzelspielermodus</p>
+        <select id="gridSize">
+            <option value="11">11x11</option>
+            <option value="21">21x21</option>
+            <option value="31">31x31</option>
+        </select>
+        <select id="numMoves">
+            <option value="5">5 Züge</option>
+            <option value="10">10 Züge</option>
+            <option value="15">15 Züge</option>
+            <option value="20">20 Züge</option>
+            <option value="25">25 Züge</option>
+            <option value="30">30 Züge</option>
+            <option value="40">40 Züge</option>
+            <option value="50">50 Züge</option>
+            <option value="infinite">Unendlich</option>
+        </select>
+        <select id="numColors">
+            <option value="3">3 Farben</option>
+            <option value="5">5 Farben</option>
+            <option value="7">7 Farben</option>
+            <option value="9">9 Farben</option>
+        </select>
+        <button onclick="startSinglePlayer()">Spiel starten</button>
+    </div>
+
+    <!-- Mehrspieler Optionen -->
+    <div id="multiPlayer" style="display: none;">
+        <img src="zwei_spieler_spiel_index_banner.png.PNG" alt="Mehrspieler Banner" style="width: 90%;">
+        <p>Spiele Filler im Mehrspielermodus</p>
+        <select id="gridSize">
+            <option value="11">11x11</option>
+            <option value="21">21x21</option>
+            <option value="31">31x31</option>
+        </select>
+        <select id="numColors">
+            <option value="3">3 Farben</option>
+            <option value="5">5 Farben</option>
+            <option value="7">7 Farben</option>
+            <option value="9">9 Farben</option>
+        </select>
+        <button onclick="startMultiPlayer()">Spiel starten</button>
+    </div>
+
+    <!-- Herausforderungen -->
+    <div id="challenges" style="display: none;">
+        <img id="challengeBanner" src="herausforderung_spiel_index_banner.png.PNG" alt="Herausforderungen Banner">
+        <p>Spiele Filler mit einzigartigen Herausforderungen</p>
+        <table>
+            <tr>
+                <td><button id="btn-l1" onclick="startChallenge(1)">l1</button></td>
+                <td><button id="btn-l2" onclick="startChallenge(2)">l2</button></td>
+                <td><button id="btn-l3" onclick="startChallenge(3)">l3</button></td>
+            </tr>
+            <tr>
+                <td><button id="btn-l4" onclick="startChallenge(4)">l4</button></td>
+                <td><button id="btn-l5" onclick="startChallenge(5)">l5</button></td>
+                <td><button id="btn-l6" onclick="startChallenge(6)">l6</button></td>
+            </tr>
+            <tr>
+                <td><button id="btn-l7" onclick="startChallenge(7)">l7</button></td>
+                <td><button id="btn-l8" onclick="startChallenge(8)">l8</button></td>
+                <td><button id="btn-l9" onclick="startChallenge(9)">l9</button></td>
+            </tr>
+            <tr>
+                <td><button id="btn-l10" onclick="startChallenge(10)">l10</button></td>
+                <td><button id="btn-l11" onclick="startChallenge(11)">l11</button></td>
+                <td><button id="btn-l12" onclick="startChallenge(12)">l12</button></td>
+            </tr>
+            <tr>
+                <td><button id="btn-l13" onclick="startChallenge(13)">l13</button></td>
+                <td><button id="btn-l14" onclick="startChallenge(14)">l14</button></td>
+                <td><button id="btn-l15" onclick="startChallenge(15)">l15</button></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="overlay"></div>
+    <div id="resultModal">
+        <h2>Spielende</h2>
+        <p id="resultMessage"></p>
+        <button id="restartGame">OK</button>
+    </div>
+
+    <script>
+        // Funktionen um die verschiedenen Abschnitte anzuzeigen
+        function showSinglePlayer() {
+            document.getElementById('singlePlayer').style.display = 'block';
+            document.getElementById('multiPlayer').style.display = 'none';
+            document.getElementById('challenges').style.display = 'none';
+        }
+
+        function showMultiPlayer() {
+            document.getElementById('singlePlayer').style.display = 'none';
+            document.getElementById('multiPlayer').style.display = 'block';
+            document.getElementById('challenges').style.display = 'none';
+        }
+
+        function showChallenges() {
+            document.getElementById('singlePlayer').style.display = 'none';
+            document.getElementById('multiPlayer').style.display = 'none';
+            document.getElementById('challenges').style.display = 'block';
+        }
+
+        function startSinglePlayer() {
+            const gridSize = document.getElementById('gridSize').value;
+            const numMoves = document.getElementById('numMoves').value;
+            const numColors = document.getElementById('numColors').value;
+            window.location.href = `ein_spieler_spiel.html?gridSize=${gridSize}&numMoves=${numMoves}&numColors=${numColors}`;
+        }
+
+        function startMultiPlayer() {
+            const gridSize = document.getElementById('gridSize').value;
+            const numColors = document.getElementById('numColors').value;
+            window.location.href = `zwei_spieler_spiel.html?gridSize=${gridSize}&numColors=${numColors}`;
+        }
+
+        // Herausforderung Einstellungen
+        const levels = {
+            1: { gridSize: 11, numColors: 3, numMoves: 5, target: "Erobere 10 Felder", points: 100 },
+            2: { gridSize: 11, numColors: 5, numMoves: 10, target: "Erobere 15 Felder", points: 150 },
+            3: { gridSize: 21, numColors: 3, numMoves: 15, target: "Erobere 30 Felder", points: 200 },
+            4: { gridSize: 21, numColors: 5, numMoves: 20, target: "Erobere 25 Felder", points: 250 },
+            5: { gridSize: 21, numColors: 7, numMoves: 25, target: "Erobere 50 Felder", points: 300 },
+            6: { gridSize: 31, numColors: 3, numMoves: 30, target: "Erobere 100 Felder", points: 350 },
+            7: { gridSize: 31, numColors: 5, numMoves: 40, target: "Erobere 150 Felder", points: 400 },
+            8: { gridSize: 31, numColors: 7, numMoves: 50, target: "Erobere 200 Felder", points: 450 },
+            9: { gridSize: 11, numColors: 9, numMoves: 5, target: "Erobere 20 Felder", points: 200 },
+            10: { gridSize: 21, numColors: 5, numMoves: 15, target: "Erobere 35 Felder", points: 300 },
+            11: { gridSize: 21, numColors: 7, numMoves: 20, target: "Erobere 40 Felder", points: 350 },
+            12: { gridSize: 31, numColors: 3, numMoves: 30, target: "Erobere 120 Felder", points: 400 },
+            13: { gridSize: 31, numColors: 5, numMoves: 40, target: "Erobere 175 Felder", points: 450 },
+            14: { gridSize: 31, numColors: 7, numMoves: 50, target: "Erobere 250 Felder", points: 500 },
+            15: { gridSize: 11, numColors: 9, numMoves: 10, target: "Erobere 30 Felder", points: 250 },
+        };
+
+        function startChallenge(level) {
+            const { gridSize, numColors, numMoves } = levels[level];
+            window.location.href = `herausforderung_spiel.html?gridSize=${gridSize}&numColors=${numColors}&numMoves=${numMoves}`;
+        }
+
+        document.getElementById('restartGame').onclick = function () {
+            location.reload();
+        };
+    </script>
+</body>
+</html>
