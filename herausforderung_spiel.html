@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herausforderung - Filler Spiel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #gameContainer {
+            display: grid;
+            margin: 20px auto;
+            border: 2px solid #000;
+            grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+            gap: 1px;
+        }
+
+        #scoreboard {
+            margin-top: 20px;
+        }
+
+        #movesLeft {
+            margin: 20px auto;
+            font-size: 20px;
+            color: red;
+        }
+
+        #colorSelection {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .colorButton {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .gridCell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .filled {
+            cursor: default;
+            transition: background-color 0.3s;
+        }
+
+        #resultModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 2px solid black;
+            z-index: 10;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Herausforderung - Filler Spiel</h1>
+    <div id="gameContainer"></div>
+
+    <div id="scoreboard">
+        <p id="score">Punkte: 0</p>
+        <p id="movesLeft">Züge übrig: <span id="remainingMoves"></span></p>
+    </div>
+
+    <div id="colorSelection"></div>
+
+    <div id="overlay"></div>
+    <div id="resultModal">
+        <h2>Spielende</h2>
+        <p id="resultMessage"></p>
+        <button id="restartGame">OK</button>
+    </div>
+
+    <script>
+        // Spiel-Parameter aus URL abrufen
+        const urlParams = new URLSearchParams(window.location.search);
+        const gridSize = parseInt(urlParams.get('gridSize'));
+        const numColors = parseInt(urlParams.get('numColors'));
+        const numMoves = parseInt(urlParams.get('numMoves'));
+        const targetMessage = urlParams.get('target');
+        const pointsTarget = parseInt(urlParams.get('points'));
+
+        let score = 0;
+        let remainingMoves = numMoves;
+        let currentColor;
+        let grid = [];
+
+        // Beispiel-Farbpalette
+        const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'cyan', 'brown'];
+
+        // Spiel-Grid erstellen
+        function createGrid() {
+            const gameContainer = document.getElementById('gameContainer');
+            gameContainer.innerHTML = '';
+            grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(''));
+
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('gridCell');
+                    cell.style.backgroundColor = '#fff';
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    cell.onclick = () => fillCell(i, j);
+                    gameContainer.appendChild(cell);
+                }
+            }
+        }
+
+        // Farbbuttons dynamisch generieren
+        function createColorButtons(numColors) {
+            const colorSelectionDiv = document.getElementById('colorSelection');
+            colorSelectionDiv.innerHTML = ''; // Vorherige Buttons löschen
+            for (let i = 0; i < numColors; i++) {
+                const colorButton = document.createElement('div');
+                colorButton.classList.add('colorButton');
+                colorButton.style.backgroundColor = colors[i];
+                colorButton.onclick = function () {
+                    currentColor = colors[i];
+                    highlightColorSelection(currentColor);
+                };
+                colorSelectionDiv.appendChild(colorButton);
+            }
+        }
+
+        // Highlight der ausgewählten Farbe
+        function highlightColorSelection(selectedColor) {
+            const colorButtons = document.querySelectorAll('.colorButton');
+            colorButtons.forEach(button => {
+                button.style.border = button.style.backgroundColor === selectedColor ? '2px solid black' : 'none';
+            });
+        }
+
+        // Zelle füllen
+        function fillCell(row, col) {
+            if (remainingMoves > 0 && grid[row][col] === '') {
+                grid[row][col] = currentColor;
+                score += 10; // Beispiel-Punkte für jede gefüllte Zelle
+                updateCellDisplay(row, col);
+                remainingMoves--;
+                document.getElementById('remainingMoves').textContent = remainingMoves;
+
+                if (remainingMoves === 0) {
+                    endGame();
+                }
+            }
+        }
+
+        // Zelle im Spiel anzeigen
+        function updateCellDisplay(row, col) {
+            const cell = document.querySelector(`[data-row='${row}'][data-col='${col}']`);
+            cell.style.backgroundColor = grid[row][col];
+            cell.classList.add('filled');
+        }
+
+        // Punktestand aktualisieren
+        function updateScore() {
+            document.getElementById('score').textContent = "Punkte: " + score * 10;
+        }
+
+        // Spielende und Ergebnisanzeige
+        function endGame() {
+            updateScore();
+            const success = score * 10 >= pointsTarget; // Punktestand mal 10
+            const modal = document.getElementById('resultModal');
+            const message = document.getElementById('resultMessage');
+
+            if (success) {
+                message.textContent = `Herzlichen Glückwunsch! Du hast die Herausforderung mit ${score * 10} Punkten bestanden. Ziel war: ${pointsTarget} Punkte.`;
+            } else {
+                message.textContent = `Leider nicht geschafft. Du hast nur ${score * 10} Punkte erreicht. Ziel war: ${pointsTarget} Punkte.`;
+            }
+
+            modal.style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        // Funktion zum Spielstart
+        createGrid();  // Erstelle das Spiel-Gitter
+        createColorButtons(numColors);  // Erstelle Farbbuttons
+
+        // Neustart des Spiels
+        document.getElementById('restartGame').onclick = function () {
+            location.reload();
+        }
+
+        // Anfängliche Anzeige der verbleibenden Züge
+        document.getElementById('remainingMoves').textContent = remainingMoves;
+    </script>
+</body>
+</html>
