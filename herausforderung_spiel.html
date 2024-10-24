@@ -263,19 +263,14 @@
         }
 
         // Überprüfen, ob das Level schon im localStorage existiert
-        const existingSuccess = localStorage.getItem(lvl);
+    const existingSuccess = localStorage.getItem(lvl);
 
         if (existingSuccess === null) {
             // Level ist noch nicht gespeichert, also neuen Eintrag machen
             localStorage.setItem(lvl, success);
-            alert('Level ' + lvl + ' gespeichert: ' + success);
         } else if (existingSuccess === "lost" && success === "won") {
             // Wenn das Level als 'lost' gespeichert war und jetzt 'won' ist, überschreiben
             localStorage.setItem(lvl, success);
-            alert('Level ' + lvl + ' aktualisiert auf: ' + success);
-        } else {
-            // Keine Änderungen nötig
-            alert('Kein Update notwendig für Level ' + lvl + '. Aktueller Status: ' + existingSuccess);
         }
 
         // Anzeigen des Modals
