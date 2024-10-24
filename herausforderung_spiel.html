@@ -99,7 +99,7 @@
     <h1>Filler Game - 1 Spieler</h1>
 
     <div id="scoreboard">
-        <div id="levelInfo" class="scoreBox">0 / ${targetScore}</div>
+        <div id="levelInfo" class="scoreBox">0 / ${points}</div>
         <div id="homeButton" onclick="goHome()">Home</div>
     </div>
 
@@ -251,7 +251,7 @@ function endGame() {
     const whiteCount = countWhiteCells();
     
     // Vergleiche die Anzahl der weißen Kästen mit targetScore
-    if (whiteCount >= targetScore) {
+    if (whiteCount >= ${points}) {
         resultMessage.textContent = `Punkte: ${score} - Level geschafft!`;
         success = 2; // Erfolg: Geschafft
     } else {
