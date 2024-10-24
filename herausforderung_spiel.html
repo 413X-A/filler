@@ -251,14 +251,11 @@
         function endGame() {
             isGameOver = true;
             const resultMessage = document.getElementById('resultMessage');
-
-            // Überprüfung des Punktestands, um festzustellen, ob das Level geschafft wurde
             if (score >= targetScore) {
                 resultMessage.textContent = 'Herzlichen Glückwunsch! Sie haben das Spiel gewonnen!';
             } else {
                 resultMessage.textContent = 'Das Spiel ist vorbei. Sie haben nicht genug Punkte erreicht.';
             }
-
             document.getElementById('resultModal').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
         }
