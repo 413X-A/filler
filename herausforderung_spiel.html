@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filler Game - 1 Spieler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #gameContainer {
+            display: grid;
+            margin: 20px auto;
+        }
+
+        .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 30px;
+            height: 30px;
+            border: none;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        #colorButtons {
+            margin-top: 20px;
+        }
+
+        #scoreboard {
+            margin-top: 20px;
+        }
+
+        .scoreBox {
+            display: inline-block;
+            padding: 10px;
+            background-color: white;
+            border: 2px solid black;
+            width: 100px;
+            text-align: center;
+            margin: 0 10px;
+        }
+
+        #homeButton {
+            display: inline-block;
+            padding: 10px;
+            background-color: lightgray;
+            border: 2px solid black;
+            width: 80px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        #homeButton:hover {
+            background-color: gray;
+        }
+
+        #movesLeft {
+            width: 80%;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: lightgray;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        #resultModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 2px solid black;
+            z-index: 10;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Filler Game - 1 Spieler</h1>
+
+    <div id="scoreboard">
+        <div id="levelInfo" class="scoreBox">0 / 100</div>
+        <div id="homeButton" onclick="goHome()">Home</div>
+    </div>
+
+    <div id="movesLeft">Züge übrig: <span id="moves">50</span></div>
+
+    <div id="gameContainer"></div>
+
+    <div id="colorButtons"></div>
+
+    <div id="overlay"></div>
+    <div id="resultModal">
+        <h2>Spielende</h2>
+        <p id="resultMessage"></p>
+        <button id="restartGame">OK</button>
+    </div>
+
+    <script>
+        // Hole die Parameter aus der URL
+        const params = new URLSearchParams(window.location.search);
+        let gridSize = parseInt(params.get('gridSize')) || 11; // Standardgröße 11x11
+        let maxMoves = params.get('numMoves') === 'unlimited' ? Infinity : parseInt(params.get('numMoves')) || 50; // Standardanzahl Züge 50
+        const targetScore = parseInt(params.get('targetScore')) || 100; // Benötigte Punktzahl (Standard = 100)
+        const colors = ['red', 'yellow', 'green', 'blue', 'lightgreen', 'lightblue', 'purple', 'pink', 'brown'].slice(0, parseInt(params.get('numColors')) || 9); // Anzahl Farben
+        const level = parseInt(params.get('lvl')) || 1; // Level-Parameter
+
+        const points = parseInt(params.get('points')) || 100; // Standardwert für Punkte
+        let gameBoard = [];
+        let score = 0; // Wir setzen den Score zunächst auf 0
+        let movesLeft = maxMoves;
+        let isGameOver = false;
+
+        document.getElementById('restartGame').addEventListener('click', () => {
+            document.getElementById('resultModal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            goHome();
+        });
+
+        function startGame() {
+            gameBoard = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    gameBoard[i][j] = colors[Math.floor(Math.random() * colors.length)];
+                }
+            }
+
+            gameBoard[Math.floor(gridSize / 2)][Math.floor(gridSize / 2)] = 'white'; // Startblock in der Mitte
+            score = 1; // Start mit einem weißen Feld
+            movesLeft = maxMoves;
+            isGameOver = false;
+
+            drawBoard();
+            createColorButtons();
+            updateScoreAndMoves();
+        }
+
+        function drawBoard() {
+            const gameContainer = document.getElementById('gameContainer');
+            gameContainer.innerHTML = '';
+            const cellSize = Math.floor(window.innerWidth / gridSize);
+            gameContainer.style.gridTemplateColumns = `repeat(${gridSize}, ${cellSize}px)`;
+            gameBoard.forEach((row) => {
+                row.forEach((color) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.style.backgroundColor = color || 'white';
+                    cell.style.width = `${cellSize}px`;
+                    cell.style.height = `${cellSize}px`;
+                    gameContainer.appendChild(cell);
+                });
+            });
+        }
+
+        function createColorButtons() {
+            const colorButtons = document.getElementById('colorButtons');
+            colorButtons.innerHTML = '';
+            colors.forEach(color => {
+                const button = document.createElement('button');
+                button.style.backgroundColor = color;
+                button.addEventListener('click', () => {
+                    if (!isGameOver && movesLeft > 0) {
+                        fillAdjacentToWhite(color);
+                        movesLeft--;
+                        updateScoreAndMoves();
+                        if (checkAllFilled() || movesLeft <= 0) {
+                            endGame();
+                        }
+                    }
+                });
+                colorButtons.appendChild(button);
+            });
+        }
+
+        function fillAdjacentToWhite(selectedColor) {
+            const whiteCells = findWhiteCells();
+
+            whiteCells.forEach(([row, col]) => {
+                const adjacentCells = [
+                    [row - 1, col],
+                    [row + 1, col],
+                    [row, col - 1],
+                    [row, col + 1]
+                ];
+
+                adjacentCells.forEach(([adjRow, adjCol]) => {
+                    if (adjRow >= 0 && adjCol >= 0 && adjRow < gridSize && adjCol < gridSize) {
+                        if (gameBoard[adjRow][adjCol] === selectedColor) {
+                            gameBoard[adjRow][adjCol] = 'white';
+                            score++;
+                        }
+                    }
+                });
+            });
+
+            drawBoard();
+        }
+
+        function findWhiteCells() {
+            const whiteCells = [];
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    if (gameBoard[i][j] === 'white') {
+                        whiteCells.push([i, j]);
+                    }
+                }
+            }
+            return whiteCells;
+        }
+
+        function updateScoreAndMoves() {
+            const whiteCount = countWhiteCells(); // Zähle die weißen Felder
+            document.getElementById('levelInfo').textContent = `${whiteCount} / ${targetScore}`; // Zeigt jetzt die Anzahl der weißen Felder an
+            document.getElementById('moves').textContent = movesLeft === Infinity ? '∞' : movesLeft;
+        }
+
+        function countWhiteCells() {
+            let count = 0;
+            for (let row of gameBoard) {
+                for (let cell of row) {
+                    if (cell === 'white') count++;
+                }
+            }
+            return count;
+        }
+
+        function checkAllFilled() {
+            return countWhiteCells() === gridSize * gridSize; // Überprüfen, ob alle Felder gefüllt sind
+        }
+
+        function endGame() {
+            isGameOver = true;
+            const resultMessage = document.getElementById('resultMessage');
+
+            // Überprüfung des Punktestands, um festzustellen, ob das Level geschafft wurde
+            if (score >= targetScore) {
+                resultMessage.textContent = 'Herzlichen Glückwunsch! Sie haben das Spiel gewonnen!';
+            } else {
+                resultMessage.textContent = 'Das Spiel ist vorbei. Sie haben nicht genug Punkte erreicht.';
+            }
+
+            document.getElementById('resultModal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function goHome() {
+            window.location.href = 'index.html'; // Ersetzen Sie dies durch den Pfad zu Ihrer Startseite
+        }
+
+        // Starte das Spiel beim Laden der Seite
+        window.onload = startGame;
+    </script>
+</body>
+</html>
