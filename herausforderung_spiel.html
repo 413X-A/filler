@@ -249,17 +249,39 @@
             return countWhiteCells() === gridSize * gridSize; // Überprüfen, ob alle Felder gefüllt sind
         }
 
-        function endGame() {
-            isGameOver = true;
-            const resultMessage = document.getElementById('resultMessage');
-            if (score >= targetScore) {
-                resultMessage.textContent = 'Herzlichen Glückwunsch! Sie haben das Spiel gewonnen!';
-            } else {
-                resultMessage.textContent = 'Das Spiel ist vorbei. Sie haben nicht genug Punkte erreicht.';
-            }
-            document.getElementById('resultModal').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
+    function endGame(lvl, targetScore, score) {
+        isGameOver = true;
+        const resultMessage = document.getElementById('resultMessage');
+        let success;
+
+        if (score >= targetScore) {
+            resultMessage.textContent = 'Herzlichen Glückwunsch! Sie haben das Spiel gewonnen!';
+            success = "won";
+        } else {
+            resultMessage.textContent = 'Das Spiel ist vorbei. Sie haben nicht genug Punkte erreicht.';
+            success = "lost";
         }
+
+        // Überprüfen, ob das Level schon im localStorage existiert
+        const existingSuccess = localStorage.getItem(lvl);
+
+        if (existingSuccess === null) {
+            // Level ist noch nicht gespeichert, also neuen Eintrag machen
+            localStorage.setItem(lvl, success);
+            alert('Level ' + lvl + ' gespeichert: ' + success);
+        } else if (existingSuccess === "lost" && success === "won") {
+            // Wenn das Level als 'lost' gespeichert war und jetzt 'won' ist, überschreiben
+            localStorage.setItem(lvl, success);
+            alert('Level ' + lvl + ' aktualisiert auf: ' + success);
+        } else {
+            // Keine Änderungen nötig
+            alert('Kein Update notwendig für Level ' + lvl + '. Aktueller Status: ' + existingSuccess);
+        }
+
+        // Anzeigen des Modals
+        document.getElementById('resultModal').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
 
         function goHome() {
             window.location.href = 'index.html'; // Ersetzen Sie dies durch den Pfad zu Ihrer Startseite
