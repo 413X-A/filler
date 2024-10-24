@@ -252,7 +252,7 @@
         function endGame() {
             isGameOver = true;
             const resultMessage = document.getElementById('resultMessage');
-            if (score >= targetScore) {
+            if (score >= points) {
                 resultMessage.textContent = 'Herzlichen Glückwunsch! Sie haben das Spiel gewonnen!';
             } else {
                 resultMessage.textContent = 'Das Spiel ist vorbei. Sie haben nicht genug Punkte erreicht.';
