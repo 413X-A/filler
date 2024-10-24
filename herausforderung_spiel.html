@@ -242,30 +242,29 @@
             return whiteCount === gridSize * gridSize;
         }
 
-        function endGame() {
-            isGameOver = true;
-            const resultMessage = document.getElementById('resultMessage');
-            let success;
+function endGame() {
+    isGameOver = true;
+    const resultMessage = document.getElementById('resultMessage');
+    let success;
 
-            if (score >= targetScore) {
-                resultMessage.textContent = `Punkte: ${score} - Level geschafft!`;
-                success = 2; // Erfolg: Geschafft
-            } else {
-                resultMessage.textContent = `Punkte: ${score} - Level nicht geschafft.`;
-                success = 1; // Erfolg: Nicht geschafft
-            }
-            
-            // Update die Challenged-Liste und zeige das Modal
-            updateChallengedList(level, success);
-            document.getElementById('resultModal').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
+    // Zähle die Anzahl der weißen Kästen
+    const whiteCount = countWhiteCells();
+    
+    // Vergleiche die Anzahl der weißen Kästen mit targetScore
+    if (whiteCount >= targetScore) {
+        resultMessage.textContent = `Punkte: ${score} - Level geschafft!`;
+        success = 2; // Erfolg: Geschafft
+    } else {
+        resultMessage.textContent = `Punkte: ${score} - Level nicht geschafft.`;
+        success = 1; // Erfolg: Nicht geschafft
+}
 
-        function goHome() {
-            // Wir verwenden den success-Wert, der in der endGame-Funktion gesetzt wurde
-            const success = score >= targetScore ? 2 : 1;
-            window.location.href = `index.html?lvl=${level}&success=${success}`;
-        }
+    // Update die Challenged-Liste und zeige das Modal
+    updateChallengedList(level, success);
+    document.getElementById('resultModal').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+}
+
 
         // Aktualisiere die Challenged-Liste im localStorage
         function updateChallengedList(lvl, success) {
