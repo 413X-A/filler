@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filler Spiel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #challengeBanner {
+            width: 90%;
+            margin: 50px auto;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        td {
+            width: 30%;
+            text-align: center;
+        }
+
+        button {
+            width: 80%;
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+            background-color: lightgray;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: gray;
+        }
+
+        #modeSelection {
+            margin: 20px auto;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9;
+        }
+
+        #resultModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 2px solid black;
+            z-index: 10;
+        }
+
+        .level {
+            display: inline-block;
+            width: 25%; /* 25% der Breite */
+            height: 70px; /* Höhe der Buttons */
+            margin: 2.5%; /* 5% Abstand insgesamt (2.5% auf jeder Seite) */
+            border: 2px solid black;
+            border-radius: 10px; /* Abgerundete Ecken */
+            cursor: pointer;
+            line-height: 70px; /* Vertikale Zentrierung des Textes */
+            font-size: 18px; /* Kleinere Schriftgröße */
+        }
+
+        .success0 {
+            background-color: lightgray; /* Noch nicht abgeschlossen */
+        }
+
+        .success1 {
+            background-color: orange; /* Abgeschlossen, aber nicht erfolgreich */
+        }
+
+        .success2 {
+            background-color: lightgreen; /* Erfolgreich abgeschlossen */
+        }
+    </style>
+</head>
+<body>
+    <h1>Filler Spiel</h1>
+    <p>Ein autistisches Spiel, in dem die Farbkombination an höchster Stelle steht</p>
+
+    <!-- Modus-Auswahl -->
+    <div id="modeSelection">
+        <h2>Wähle deinen Modus:</h2>
+        <button onclick="showSinglePlayer()">Einzelspieler</button>
+        <button onclick="showMultiPlayer()">Mehrspieler</button>
+        <button onclick="showChallenges()">Herausforderungen [ALPHA]</button>
+    </div>
+
+    <!-- Einzelspieler Optionen -->
+    <div id="singlePlayer" style="display: none;">
+        <img src="ein_spieler_spiel_index_banner.png.PNG" alt="Einzelspieler Banner" style="width: 90%;">
+        <p>Spiele Filler im Einzelspielermodus</p>
+        <select id="gridSize">
+            <option value="11">11x11</option>
+            <option value="21">21x21</option>
+            <option value="31">31x31</option>
+        </select>
+        <select id="numMoves">
+            <option value="5">5 Züge</option>
+            <option value="10">10 Züge</option>
+            <option value="15">15 Züge</option>
+            <option value="20">20 Züge</option>
+            <option value="25">25 Züge</option>
+            <option value="30">30 Züge</option>
+            <option value="40">40 Züge</option>
+            <option value="50">50 Züge</option>
+            <option value="unlimited">Unendlich</option>
+        </select>
+        <select id="numColors">
+            <option value="3">3 Farben</option>
+            <option value="5">5 Farben</option>
+            <option value="7">7 Farben</option>
+            <option value="9">9 Farben</option>
+        </select>
+        <button onclick="startSinglePlayer()">Spiel starten</button>
+    </div>
+
+    <!-- Mehrspieler Optionen -->
+    <div id="multiPlayer" style="display: none;">
+        <img src="zwei_spieler_spiel_index_banner.png.PNG" alt="Mehrspieler Banner" style="width: 90%;">
+        <p>Spiele Filler im Mehrspielermodus</p>
+        <select id="gridSizeMulti">
+            <option value="11">11x11</option>
+            <option value="21">21x21</option>
+            <option value="31">31x31</option>
+        </select>
+        <select id="numColorsMulti">
+            <option value="3">3 Farben</option>
+            <option value="5">5 Farben</option>
+            <option value="7">7 Farben</option>
+            <option value="9">9 Farben</option>
+        </select>
+        <button onclick="startMultiPlayer()">Spiel starten</button>
+    </div>
+
+    <!-- Herausforderungen -->
+    <div id="challenges" style="display: none;">
+        <img id="challengeBanner" src="herausforderung_spiel_index_banner.png.PNG" alt="Herausforderungen Banner">
+        <p>Spiele Filler mit einzigartigen Herausforderungen</p>
+        <div id="levelButtons">
+            <div id="btn-l1" class="level" onclick="startChallenge(1)">Level 1</div>
+            <div id="btn-l2" class="level" onclick="startChallenge(2)">Level 2</div>
+            <div id="btn-l3" class="level" onclick="startChallenge(3)">Level 3</div>
+            <div id="btn-l4" class="level" onclick="startChallenge(4)">Level 4</div> <!-- Neuer Button -->
+            <div id="btn-l5" class="level" onclick="startChallenge(5)">Level 5</div> <!-- Neuer Button -->
+            <div id="btn-l6" class="level" onclick="startChallenge(6)">Level 6</div> <!-- Neuer Button -->
+        </div>
+    </div>
+
+    <div id="overlay"></div>
+    <div id="resultModal">
+        <h2>Spielende</h2>
+        <p id="resultMessage"></p>
+        <button id="restartGame">OK</button>
+    </div>
+
+    <script>
+        // Funktionen um die verschiedenen Abschnitte anzuzeigen
+        function showSinglePlayer() {
+            document.getElementById('singlePlayer').style.display = 'block';
+            document.getElementById('multiPlayer').style.display = 'none';
+            document.getElementById('challenges').style.display = 'none';
+        }
+
+        function showMultiPlayer() {
+            document.getElementById('singlePlayer').style.display = 'none';
+            document.getElementById('multiPlayer').style.display = 'block';
+            document.getElementById('challenges').style.display = 'none';
+        }
+
+        function showChallenges() {
+            document.getElementById('singlePlayer').style.display = 'none';
+            document.getElementById('multiPlayer').style.display = 'none';
+            document.getElementById('challenges').style.display = 'block';
+            loadLevels(); // Lade die Level, wenn die Herausforderungen angezeigt werden
+        }
+
+        function startSinglePlayer() {
+            const gridSize = document.getElementById('gridSize').value;
+            const numMoves = document.getElementById('numMoves').value;
+            const numColors = document.getElementById('numColors').value;
+            window.location.href = `ein_spieler_spiel.html?gridSize=${gridSize}&numMoves=${numMoves}&numColors=${numColors}`;
+        }
+
+        function startMultiPlayer() {
+            const gridSize = document.getElementById('gridSizeMulti').value;
+            const numColors = document.getElementById('numColorsMulti').value;
+            window.location.href = `zwei_spieler_spiel.html?gridSize=${gridSize}&numColors=${numColors}`;
+        }
+
+        // Neue Herausforderungen Levels
+        const levels = {
+            1: { gridSize: 5, numColors: 4, numMoves: 20, points: 25, lvl: 1 },
+            2: { gridSize: 6, numColors: 5, numMoves: 25, points: 36, lvl: 2 },
+            3: { gridSize: 7, numColors: 6, numMoves: 30, points: 49, lvl: 3 },
+            4: { gridSize: 8, numColors: 7, numMoves: 35, points: 64, lvl: 4 }, // Neuer Level
+            5: { gridSize: 9, numColors: 8, numMoves: 40, points: 81, lvl: 5 }, // Neuer Level
+            6: { gridSize: 10, numColors: 9, numMoves: 45, points: 100, lvl: 6 }, // Neuer Level
+        };
+
+        function startChallenge(level) {
+            const { gridSize, numColors, numMoves, points, lvl } = levels[level];
+            window.location.href = `herausforderung_spiel.html?gridSize=${gridSize}&numColors=${numColors}&numMoves=${numMoves}&points=${points}&lvl=${lvl}`;
+        }
+
+        // Neustart der Spiele
+        document.getElementById('restartGame').onclick = function () {
+            location.reload();
+        };
+
+        // Laden der Level-Informationen aus dem localStorage
+        function loadLevels() {
+            const levelsArray = [1, 2, 3, 4, 5, 6]; // Definiere die Levels
+            levelsArray.forEach(lvl => {
+                const success = localStorage.getItem(`level${lvl}_success`) || 0; // Hole den Erfolg des Levels
+                const levelButton = document.getElementById(`btn-l${lvl}`);
+
+                // Setze die Klasse basierend auf dem Erfolg
+                if (success === '2') {
+                    levelButton.classList.add('success2'); // Erfolgreich abgeschlossen
+                } else if (success === '1') {
+                    levelButton.classList.add('success1'); // Abgeschlossen, aber nicht erfolgreich
+                } else {
+                    levelButton.classList.add('success0'); // Noch nicht abgeschlossen
+                }
+            });
+        }
+
+        // Beispiel für das Speichern des Erfolgs nach einem Spiel
+        function saveLevelSuccess(level, success) {
+            const currentSuccess = localStorage.getItem(`level${level}_success`) || 0;
+            if (success > currentSuccess) {
+                localStorage.setItem(`level${level}_success`, success);
+            }
+        }
+
+        // Diese Funktion könnte aufgerufen werden, wenn ein Level erfolgreich abgeschlossen wird
+        function onChallengeComplete(level) {
+            // Beispiel für einen Erfolgswert (dies könnte auch von der Spiel-Logik abhängen)
+            const successValue = 2; // Setze den Wert entsprechend
+            saveLevelSuccess(level, successValue);
+            loadLevels(); // Aktualisiere die Anzeige
+        }
+
+        // Rufe loadLevels beim Laden der Seite auf
+        window.onload = function() {
+            loadLevels();
+        };
+    </script>
+</body>
+</html>
