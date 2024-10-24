@@ -121,7 +121,7 @@
         const params = new URLSearchParams(window.location.search);
         let gridSize = parseInt(params.get('gridSize')) || 11; // Standardgröße 11x11
         let maxMoves = params.get('numMoves') === 'unlimited' ? Infinity : parseInt(params.get('numMoves')) || 50; // Standardanzahl Züge 50
-        const targetScore = parseInt(params.get('targetScore')) || 100; // Benötigte Punktzahl (Standard = 100)
+        const targetScore = parseInt(params.get('points')) || 100; // Benötigte Punktzahl (Standard = 100)
         const colors = ['red', 'yellow', 'green', 'blue', 'lightgreen', 'lightblue', 'purple', 'pink', 'brown'].slice(0, parseInt(params.get('numColors')) || 9); // Anzahl Farben
         const level = parseInt(params.get('lvl')) || 1; // Level-Parameter
 
@@ -252,7 +252,7 @@
         function endGame() {
             isGameOver = true;
             const resultMessage = document.getElementById('resultMessage');
-            if (score >= points) {
+            if (score >= targetScore) {
                 resultMessage.textContent = 'Herzlichen Glückwunsch! Sie haben das Spiel gewonnen!';
             } else {
                 resultMessage.textContent = 'Das Spiel ist vorbei. Sie haben nicht genug Punkte erreicht.';
