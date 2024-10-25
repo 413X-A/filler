@@ -86,8 +86,8 @@
 
                 // Prüfen, ob das Passwort übereinstimmt
                 if (userData.passwort === password) {
-                    message.textContent = `Erfolgreich angemeldet als ${username}.`;
-                    message.style.color = "green";
+                    // Erfolgreiche Anmeldung
+                    window.location.href = 'hauptmenue.html';
                 } else {
                     message.textContent = "Falsches Passwort. Versuchen Sie es erneut.";
                     message.style.color = "red";
@@ -104,6 +104,11 @@
                 localStorage.setItem(username, JSON.stringify(newUser));
                 message.textContent = `Neuer Benutzer erstellt und angemeldet als ${username}.`;
                 message.style.color = "green";
+                
+                // Erfolgreiche Registrierung und Weiterleitung
+                setTimeout(() => {
+                    window.location.href = 'hauptmenue.html';
+                }, 1000);
             }
         }
     </script>
