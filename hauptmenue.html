@@ -198,20 +198,23 @@
 
         // Funktionen um die verschiedenen Abschnitte anzuzeigen
         function showProfile() {
-            // Zeigt das Profil an
-            document.getElementById('profile').style.display = 'block';
-            document.getElementById('singlePlayer').style.display = 'none';
-            document.getElementById('multiPlayer').style.display = 'none';
-            document.getElementById('challenges').style.display = 'none';
+    // Zeigt das Profil an
+    document.getElementById('profile').style.display = 'block';
+    document.getElementById('singlePlayer').style.display = 'none';
+    document.getElementById('multiPlayer').style.display = 'none';
+    document.getElementById('challenges').style.display = 'none';
 
-            // Holt den Benutzernamen aus localStorage und zeigt ihn an
-            const currentUser= localStorage.getItem('currentUsername') || Benutzer;
-            document.getElementById('userDisplay').textContent = currentUser;
+    // Holt den Benutzernamen aus localStorage und zeigt ihn an
+    const currentUser = localStorage.getItem('currentUsername') || 'Benutzer';
+    document.getElementById('userDisplay').textContent = currentUser;
 
-            // Holt den EXP-Wert aus localStorage und zeigt ihn an
-            const exp = localStorage.getItem('playerExp') || 0;
-            document.getElementById('expDisplay').textContent = exp;
-        }
+    // Spezifischer Schlüssel für den Benutzer
+    const expKey = `${currentUser}_playerExp`;
+
+    // Holt den EXP-Wert des aktuellen Benutzers und zeigt ihn an
+    const exp = localStorage.getItem(expKey) || 0;
+    document.getElementById('expDisplay').textContent = exp;
+}
         
         function showSinglePlayer() {
             document.getElementById('profile').style.display = 'none';
