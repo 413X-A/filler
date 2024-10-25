@@ -248,17 +248,27 @@
             return countWhiteCells() === gridSize * gridSize; // Überprüfen, ob alle Felder gefüllt sind
         }
 
-        function endGame() {
-            isGameOver = true;
-            const resultMessage = document.getElementById('resultMessage');
-            if (score >= targetScore) {
-                resultMessage.textContent = 'Herzlichen Glückwunsch! Sie haben das Spiel gewonnen!';
-            } else {
-                resultMessage.textContent = 'Das Spiel ist vorbei. Sie haben nicht genug Punkte erreicht.';
-            }
-            document.getElementById('resultModal').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
+function endGame() {
+    isGameOver = true;
+    const resultMessage = document.getElementById('resultMessage');
+    const levelKey = `level_${lvl}`; // Schlüssel für das aktuelle Level im localStorage
+
+    // Nachricht und success-Wert festlegen basierend auf dem Spielergebnis
+    if (score >= targetScore) {
+        resultMessage.textContent = 'Herzlichen Glückwunsch! Sie haben das Spiel gewonnen!';
+        // success auf true setzen
+        localStorage.setItem(levelKey, JSON.stringify({ success: true }));
+    } else {
+        resultMessage.textContent = 'Das Spiel ist vorbei. Sie haben nicht genug Punkte erreicht.';
+        // success auf false setzen
+        localStorage.setItem(levelKey, JSON.stringify({ success: false }));
+    }
+
+    // Ergebnisanzeige
+    document.getElementById('resultModal').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+}
+
 
         function goHome() {
             window.location.href = 'index.html'; // Ersetzen Sie dies durch den Pfad zu Ihrer Startseite
