@@ -181,20 +181,28 @@
 
     <script>
         function clearLocalStorage() {
-        // EXP-Wert aus localStorage abrufen
-        const exp = localStorage.getItem('playerExp') || 0; // Standardwert 0, falls nicht vorhanden
+    const currentUser = localStorage.getItem('currentUsername'); // Den aktuellen Benutzernamen abrufen
 
-        // Alle anderen localStorage-Daten löschen
-        localStorage.clear();
-
-        // EXP-Wert wieder speichern
-        localStorage.setItem('playerExp', exp);
-
-        // Den angezeigten EXP-Wert im Profil aktualisieren
-        document.getElementById('expDisplay').textContent = exp;
-
-        alert('Alle Daten wurden gelöscht, aber die EXP bleibt erhalten.'); // Bestätigungsnachricht
+    // Überprüfen, ob ein Benutzername vorhanden ist
+    if (!currentUser) {
+        alert('Kein Benutzername gefunden.'); // Optional: Eine Warnung anzeigen, wenn kein Benutzername vorhanden ist
+        return;
     }
+
+    // Alle aktuellen Benutzerdaten löschen
+    for (let key in localStorage) {
+        if (key.startsWith(`exp_${currentUser}`) || key.startsWith(`level_${currentUser}`)) {
+            localStorage.removeItem(key); // Löscht die Einträge, die mit dem Benutzernamen verknüpft sind
+        }
+    }
+
+    // Bestätigungsnachricht
+    alert('Alle Benutzerdaten wurden gelöscht.');
+
+    // Auf die index.html leiten
+    window.location.href = 'index.html'; // Hier sicherstellen, dass der Pfad korrekt ist
+}
+
 
         // Funktionen um die verschiedenen Abschnitte anzuzeigen
         function showProfile() {
