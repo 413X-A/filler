@@ -86,7 +86,7 @@
     <!-- Modus-Auswahl -->
     <div id="modeSelection">
         <h2>Wähle deinen Modus:</h2>
-        <button onclick="showProfil()">Profil</button>
+        <button onclick="showProfile()">Profil</button>
         <button onclick="showSinglePlayer()">Einzelspieler</button>
         <button onclick="showMultiPlayer()">Mehrspieler</button>
         <button onclick="showChallenges()">Herausforderungen [ALPHA]</button>
@@ -179,29 +179,29 @@
 
     <script>
         // Funktionen um die verschiedenen Abschnitte anzuzeigen
-        function showProfil() {
-            document.getElementById('profil').style.display = 'block';
+        function showProfile() {
+            document.getElementById('profile').style.display = 'block';
             document.getElementById('singlePlayer').style.display = 'none';
             document.getElementById('multiPlayer').style.display = 'none';
             document.getElementById('challenges').style.display = 'none';
         }
         
         function showSinglePlayer() {
-            document.getElementById('profil').style.display = 'none';
+            document.getElementById('profile').style.display = 'none';
             document.getElementById('singlePlayer').style.display = 'block';
             document.getElementById('multiPlayer').style.display = 'none';
             document.getElementById('challenges').style.display = 'none';
         }
 
         function showMultiPlayer() {
-            document.getElementById('profil').style.display = 'none';
+            document.getElementById('profile').style.display = 'none';
             document.getElementById('singlePlayer').style.display = 'none';
             document.getElementById('multiPlayer').style.display = 'block';
             document.getElementById('challenges').style.display = 'none';
         }
 
         function showChallenges() {
-            document.getElementById('profil').style.display = 'none';
+            document.getElementById('profile').style.display = 'none';
             document.getElementById('singlePlayer').style.display = 'none';
             document.getElementById('multiPlayer').style.display = 'none';
             document.getElementById('challenges').style.display = 'block';
