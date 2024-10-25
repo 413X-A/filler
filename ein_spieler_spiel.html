@@ -241,12 +241,36 @@
         }
 
         function endGame() {
-            isGameOver = true;
-            const resultMessage = document.getElementById('resultMessage');
-            resultMessage.textContent = `Punkte: ${score}`;
-            document.getElementById('resultModal').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
+    isGameOver = true;
+
+    // Zeige das Ergebnis des Spiels an
+    const resultMessage = document.getElementById('resultMessage');
+    resultMessage.textContent = `Punkte: ${score}`;
+    
+    // EXP-Berechnung
+    let exp;
+    if (maxMoves === Infinity) {
+        exp = 15; // 15 EXP bei unbegrenzten Zügen
+    } else {
+        // Berechne EXP als (Anzahl der weißen Felder * 5) / Anzahl der Züge
+        const whiteCells = findWhiteCells().length;
+        exp = Math.floor((whiteCells * 5) / movesLeft);
+    }
+
+    // Bestehende EXP aus dem localStorage abrufen, neuen EXP-Wert addieren und speichern
+    const currentExp = parseInt(localStorage.getItem('playerExp') || '0');
+    const newExp = currentExp + exp;
+    localStorage.setItem('playerExp', newExp);
+
+    // Zeige erhaltene EXP im Ergebnisfenster an
+    const expMessage = document.getElementById('expMessage');
+    expMessage.textContent = `Erhaltene EXP: ${exp}`;
+
+    // Zeige das Ergebnis-Modal an
+    document.getElementById('resultModal').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+}
+
 
         function goHome() {
             window.location.href = 'index.html'; // Leitet zur Startseite weiter
