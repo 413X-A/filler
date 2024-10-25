@@ -236,10 +236,22 @@
 };
 
 
-        function startChallenge(level) {
-            const { gridSize, numColors, numMoves, points, lvl } = levels[level];
-            window.location.href = `herausforderung_spiel.html?gridSize=${gridSize}&numColors=${numColors}&numMoves=${numMoves}&points=${points}&lvl=${lvl}`;
-        }
+function startChallenge(level) {
+    const { gridSize, numColors, numMoves, points, lvl } = levels[level];
+    const levelKey = `level_${lvl}`;
+
+    // Überprüfen, ob ein Eintrag für das Level existiert und `success` auf `true` ist
+    let levelData = JSON.parse(localStorage.getItem(levelKey));
+
+    if (!levelData || levelData.success === false) {
+        // Falls kein Eintrag oder `success` `false`, neuen Eintrag erstellen/überschreiben
+        localStorage.setItem(levelKey, JSON.stringify({ success: false }));
+
+        // Weiterleitung zur Herausforderung
+        window.location.href = `herausforderung_spiel.html?gridSize=${gridSize}&numColors=${numColors}&numMoves=${numMoves}&points=${points}&lvl=${lvl}`;
+    }
+}
+
 
         // Neustart der Spiele
         document.getElementById('restartGame').onclick = function () {
