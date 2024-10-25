@@ -257,17 +257,26 @@
     const exp = calculateEXP();
     expMessage.textContent = `Erhaltene EXP: ${exp}`;
 
-    // Vorhandene EXP abrufen, falls vorhanden
-    let existingExp = parseInt(localStorage.getItem('playerExp')) || 0;
+    // Benutzername abrufen
+    const currentUser = localStorage.getItem('currentUsername');
+    if (!currentUser) {
+        alert('Kein Benutzername gefunden. Bitte melden Sie sich an.');
+        return;
+    }
 
-    // Neue EXP zu bestehender EXP addieren und speichern
+    // EXP für den Benutzer abrufen und aktualisieren
+    const userExpKey = `exp_${currentUser}`;
+    let existingExp = parseInt(localStorage.getItem(userExpKey)) || 0;
+
+    // Neue EXP zum bestehenden Wert hinzufügen und speichern
     const totalExp = existingExp + exp;
-    localStorage.setItem('playerExp', totalExp);
+    localStorage.setItem(userExpKey, totalExp);
 
     // Ergebnisanzeige
     document.getElementById('resultModal').style.display = 'block';
     document.getElementById('overlay').style.display = 'block';
 }
+
 
 
         function goHome() {
