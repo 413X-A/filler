@@ -209,11 +209,11 @@
     document.getElementById('userDisplay').textContent = currentUser;
 
     // Spezifischer Schlüssel für den Benutzer
-    const expKey = `${currentUser}_playerExp`;
+    const expKey = `exp_${currentUser}`; // Schlüssel für die EXP basierend auf dem Benutzernamen
 
     // Holt den EXP-Wert des aktuellen Benutzers und zeigt ihn an
-    const exp = localStorage.getItem(expKey) || 0;
-    document.getElementById('expDisplay').textContent = exp;
+    const exp = localStorage.getItem(expKey) || 0; // EXP aus localStorage abrufen
+    document.getElementById('expDisplay').textContent = exp; // EXP anzeigen
 }
         
         function showSinglePlayer() {
