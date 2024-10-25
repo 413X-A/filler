@@ -93,11 +93,12 @@
     </div>
 
 
-       <!-- Profil -->     
+      <!-- Profil -->     
 <div id="profile" style="display: none;">
     <img src="ein_spieler_spiel_index_banner.png.PNG" alt="Einzelspieler Banner" style="width: 90%;">
     <p>Dein Profil</p>
     <p>Erfahrungspunkte (EXP): <span id="expDisplay">0</span></p> <!-- Platzhalter für EXP -->
+    <button onclick="clearLocalStorage()">Alle Daten löschen</button> <!-- Button zum Löschen der Daten -->
 </div>
 
 
@@ -179,6 +180,12 @@
     </div>
 
     <script>
+        function clearLocalStorage() {
+        localStorage.clear(); // Löscht alle localStorage-Daten
+        document.getElementById('expDisplay').textContent = 0; // Setzt den angezeigten EXP-Wert zurück
+        alert('Alle Daten wurden gelöscht.'); // Bestätigungsnachricht
+    }
+
         // Funktionen um die verschiedenen Abschnitte anzuzeigen
         function showProfile() {
     // Zeigt nur das Profil und verbirgt die anderen Bereiche
