@@ -239,25 +239,36 @@
         }
 
         function endGame() {
-            isGameOver = true;
-            const resultMessage = document.getElementById('resultMessage');
-            const expMessage = document.getElementById('expMessage');
-            const levelKey = `level_${level}`;
+    isGameOver = true;
+    const resultMessage = document.getElementById('resultMessage');
+    const expMessage = document.getElementById('expMessage');
+    const levelKey = `level_${level}`;
 
-            if (score >= targetScore) {
-                resultMessage.textContent = 'Herzlichen Glückwunsch! Sie haben das Spiel gewonnen!';
-                localStorage.setItem(levelKey, JSON.stringify({ success: true }));
-            } else {
-                resultMessage.textContent = 'Das Spiel ist vorbei. Sie haben nicht genug Punkte erreicht.';
-                localStorage.setItem(levelKey, JSON.stringify({ success: false }));
-            }
+    // Erfolg des Levels speichern
+    if (score >= targetScore) {
+        resultMessage.textContent = 'Herzlichen Glückwunsch! Sie haben das Spiel gewonnen!';
+        localStorage.setItem(levelKey, JSON.stringify({ success: true }));
+    } else {
+        resultMessage.textContent = 'Das Spiel ist vorbei. Sie haben nicht genug Punkte erreicht.';
+        localStorage.setItem(levelKey, JSON.stringify({ success: false }));
+    }
 
-            const exp = calculateEXP();
-            expMessage.textContent = `Erhaltene EXP: ${exp}`;
-            
-            document.getElementById('resultModal').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
+    // EXP berechnen und speichern
+    const exp = calculateEXP();
+    expMessage.textContent = `Erhaltene EXP: ${exp}`;
+
+    // Vorhandene EXP abrufen, falls vorhanden
+    let existingExp = parseInt(localStorage.getItem('playerExp')) || 0;
+
+    // Neue EXP zu bestehender EXP addieren und speichern
+    const totalExp = existingExp + exp;
+    localStorage.setItem('playerExp', totalExp);
+
+    // Ergebnisanzeige
+    document.getElementById('resultModal').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+}
+
 
         function goHome() {
             window.location.href = 'index.html';
