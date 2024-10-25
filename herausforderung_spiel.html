@@ -237,7 +237,7 @@
          const levelKey = `level_${lvl}`; // Schlüssel für das aktuelle Level im localStorage
          
          // Nachricht und success-Wert festlegen basierend auf dem Spielergebnis
-         if (score >= points) {
+         if (score >= targetScore) {
          resultMessage.textContent = 'Herzlichen Glückwunsch! Sie haben das Spiel gewonnen!';
          // success auf true setzen
          localStorage.setItem(levelKey, JSON.stringify({ success: true }));
