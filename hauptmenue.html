@@ -205,7 +205,7 @@
             document.getElementById('challenges').style.display = 'none';
 
             // Holt den Benutzernamen aus localStorage und zeigt ihn an
-            const currentUser= localStorage.getItem('username') || Benutzer;
+            const currentUser= localStorage.getItem('currentUsername') || Benutzer;
             document.getElementById('userDisplay').textContent = currentUser;
 
             // Holt den EXP-Wert aus localStorage und zeigt ihn an
