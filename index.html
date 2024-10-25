@@ -78,6 +78,7 @@
             cursor: pointer;
             line-height: 70px; /* Vertikale Zentrierung des Textes */
             font-size: 18px; /* Kleinere Schriftgröße */
+            background-color: lightgray;
         }
         
     </style>
@@ -246,9 +247,6 @@ function highlightCompletedLevels() {
             levelBox.onclick = () => startChallenge(i);
             levelButtonsContainer.appendChild(levelBox);
         }
-
-        // Setze zuerst die Hintergrundfarbe auf hellgrau
-        levelBox.style.backgroundColor = 'lightgray';
 
         // Wenn `success` für das Level auf `true` steht, Hintergrundfarbe auf hellgrün setzen
         if (levelData && levelData.success === true) {
