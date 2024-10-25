@@ -181,21 +181,27 @@
         // Funktionen um die verschiedenen Abschnitte anzuzeigen
         function showProfil() {
             document.getElementById('profil').style.display = 'block';
+            document.getElementById('singlePlayer').style.display = 'none';
+            document.getElementById('multiPlayer').style.display = 'none';
+            document.getElementById('challenges').style.display = 'none';
         }
         
         function showSinglePlayer() {
+            document.getElementById('profil').style.display = 'none';
             document.getElementById('singlePlayer').style.display = 'block';
             document.getElementById('multiPlayer').style.display = 'none';
             document.getElementById('challenges').style.display = 'none';
         }
 
         function showMultiPlayer() {
+            document.getElementById('profil').style.display = 'none';
             document.getElementById('singlePlayer').style.display = 'none';
             document.getElementById('multiPlayer').style.display = 'block';
             document.getElementById('challenges').style.display = 'none';
         }
 
         function showChallenges() {
+            document.getElementById('profil').style.display = 'none';
             document.getElementById('singlePlayer').style.display = 'none';
             document.getElementById('multiPlayer').style.display = 'none';
             document.getElementById('challenges').style.display = 'block';
