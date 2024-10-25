@@ -258,20 +258,18 @@ function highlightCompletedLevels() {
                 levelButtonsContainer.appendChild(levelBox);
             }
 
-             // Wenn `success` für das Level auf `false` steht, Hintergrundfarbe auf orange setzen
-            if (levelData.success === false) {
-                levelBox.style.backgroundColor = 'orange';
-            }
+             // Prüfe, ob ein Eintrag für das Level im localStorage existiert
+if (localStorage.getItem(`level_${levelData.id}`) === null) {
+    // Wenn kein Eintrag existiert, Hintergrundfarbe auf hellgrau setzen
+    levelBox.style.backgroundColor = 'lightgray';
+} else if (levelData.success === true) {
+    // Wenn `success` für das Level auf `true` steht, Hintergrundfarbe auf hellgrün setzen
+    levelBox.style.backgroundColor = 'lightgreen';
+} else {
+    // Optional: Anderen Zustand für das Level (z.B. nicht erfolgreich) behandeln
+    levelBox.style.backgroundColor = ''; // Oder eine andere Farbe setzen
+}
 
-            // Wenn `success` für das Level auf `true` steht, Hintergrundfarbe auf hellgrün setzen
-            if (levelData.success === true) {
-                levelBox.style.backgroundColor = 'lightgreen';
-            }
-
-            // Wenn `success` für das Level auf `null` steht, Hintergrundfarbe auf hellgrün setzen
-            else {
-                levelBox.style.backgroundColor = 'lightgray';
-            }
         }
     }
 }
