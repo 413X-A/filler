@@ -198,16 +198,32 @@
 
         // Funktionen um die verschiedenen Abschnitte anzuzeigen
         function showProfile() {
-    // Zeigt nur das Profil und verbirgt die anderen Bereiche
-    document.getElementById('profile').style.display = 'block';
-    document.getElementById('singlePlayer').style.display = 'none';
-    document.getElementById('multiPlayer').style.display = 'none';
-    document.getElementById('challenges').style.display = 'none';
-    
-    // EXP-Wert aus localStorage abrufen und anzeigen
-    const exp = localStorage.getItem('playerExp') || 0; // Falls kein Wert vorhanden, Standardwert 0
-    document.getElementById('expDisplay').textContent = exp; // EXP-Wert im Profil anzeigen
-}
+            // Zeigt das Profil an
+            document.getElementById('profile').style.display = 'block';
+
+            // Holt den Benutzernamen aus localStorage und zeigt ihn an
+            const storedUsername = localStorage.getItem('currentUsername');
+            const profileHeading = document.getElementById('profileHeading');
+
+            if (storedUsername) {
+                profileHeading.textContent = `Profil für ${storedUsername}!`;
+            } else {
+                profileHeading.textContent = 'Dein Profil';
+            }
+
+            // Holt den EXP-Wert aus localStorage und zeigt ihn an
+            const exp = localStorage.getItem('playerExp') || 0;
+            document.getElementById('expDisplay').textContent = exp;
+        }
+
+        function clearLocalStorage() {
+            const storedUsername = localStorage.getItem('currentUsername');
+            localStorage.clear();
+            if (storedUsername) {
+                localStorage.setItem('currentUsername', storedUsername); // Behalten des aktuellen Benutzernamens
+            }
+            document.getElementById('profileHeading').textContent = 'Daten wurden gelöscht';
+        }
 
 
         
