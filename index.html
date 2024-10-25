@@ -181,9 +181,19 @@
 
     <script>
         function clearLocalStorage() {
-        localStorage.clear(); // Löscht alle localStorage-Daten
-        document.getElementById('expDisplay').textContent = 0; // Setzt den angezeigten EXP-Wert zurück
-        alert('Alle Daten wurden gelöscht.'); // Bestätigungsnachricht
+        // EXP-Wert aus localStorage abrufen
+        const exp = localStorage.getItem('playerExp') || 0; // Standardwert 0, falls nicht vorhanden
+
+        // Alle anderen localStorage-Daten löschen
+        localStorage.clear();
+
+        // EXP-Wert wieder speichern
+        localStorage.setItem('playerExp', exp);
+
+        // Den angezeigten EXP-Wert im Profil aktualisieren
+        document.getElementById('expDisplay').textContent = exp;
+
+        alert('Alle Daten wurden gelöscht, aber die EXP bleibt erhalten.'); // Bestätigungsnachricht
     }
 
         // Funktionen um die verschiedenen Abschnitte anzuzeigen
