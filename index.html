@@ -69,46 +69,49 @@
 
     <script>
         function handleLogin() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const message = document.getElementById('message');
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const message = document.getElementById('message');
 
-            if (!username || !password) {
-                message.textContent = "Bitte füllen Sie alle Felder aus.";
-                return;
-            }
+    if (!username || !password) {
+        message.textContent = "Bitte füllen Sie alle Felder aus.";
+        return;
+    }
 
-            // Benutzername prüfen
-            const existingUser = localStorage.getItem(username);
+    // Prüfe, ob der Benutzername bereits existiert
+    const existingUser = localStorage.getItem(username);
 
-            if (existingUser) {
-                const userData = JSON.parse(existingUser);
+    if (existingUser) {
+        const userData = JSON.parse(existingUser);
 
-                // Prüfen, ob das Passwort übereinstimmt
-                if (userData.passwort === password) {
-                    // Erfolgreiche Anmeldung
-                    window.location.href = 'hauptmenue.html';
-                } else {
-                    message.textContent = "Falsches Passwort. Versuchen Sie es erneut.";
-                    message.style.color = "red";
-                }
-            } else {
-                // Neues Benutzerkonto erstellen
-                const entryNumber = localStorage.length + 1;
-                const newUser = {
-                    benutzername: username,
-                    passwort: password,
-                    eintragsnummer: entryNumber
-                };
-                
-                localStorage.setItem(username, JSON.stringify(newUser));
-                message.textContent = `Neuer Benutzer erstellt und angemeldet als ${username}.`;
-                message.style.color = "green";
-                
-                // Erfolgreiche Registrierung und direkte Weiterleitung
-                window.location.href = 'hauptmenue.html';
-            }
+        // Prüfen, ob das Passwort übereinstimmt
+        if (userData.passwort === password) {
+            // Benutzer erfolgreich angemeldet
+            localStorage.setItem('currentUsername', username);  // Aktuellen Benutzer speichern
+            window.location.href = 'hauptmenue.html';
+        } else {
+            message.textContent = "Falsches Passwort. Versuchen Sie es erneut.";
+            message.style.color = "red";
         }
+    } else {
+        // Neuen Benutzer erstellen
+        const entryNumber = localStorage.length + 1;
+        const newUser = {
+            benutzername: username,
+            passwort: password,
+            eintragsnummer: entryNumber
+        };
+        
+        localStorage.setItem(username, JSON.stringify(newUser));
+        localStorage.setItem('currentUsername', username);  // Aktuellen Benutzer speichern
+        message.textContent = `Neuer Benutzer erstellt und angemeldet als ${username}.`;
+        message.style.color = "green";
+        
+        // Erfolgreiche Registrierung und direkte Weiterleitung
+        window.location.href = 'hauptmenue.html';
+    }
+}
+
     </script>
 </body>
 </html>
