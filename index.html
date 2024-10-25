@@ -236,6 +236,37 @@
 };
 
 
+// Funktion zum Hervorheben und Hinzufügen von Level-Boxen für abgeschlossene Levels
+function highlightCompletedLevels() {
+    const levelButtonsContainer = document.getElementById('levelButtons');
+
+    // Alle Level in `localStorage` durchgehen
+    for (let i = 1; i <= localStorage.length; i++) {
+        const levelKey = `level_${i}`;
+        const levelData = JSON.parse(localStorage.getItem(levelKey));
+
+        if (levelData) {
+            let levelBox = document.getElementById(`btn-l${i}`);
+
+            // Falls keine Box für das Level existiert, wird eine neue erstellt
+            if (!levelBox) {
+                levelBox = document.createElement('div');
+                levelBox.id = `btn-l${i}`;
+                levelBox.className = 'level';
+                levelBox.textContent = i;
+                levelBox.onclick = () => startChallenge(i);
+                levelButtonsContainer.appendChild(levelBox);
+            }
+
+            // Wenn `success` für das Level auf `true` steht, Hintergrundfarbe auf hellgrün setzen
+            if (levelData.success === true) {
+                levelBox.style.backgroundColor = 'lightgreen';
+            }
+        }
+    }
+}
+
+// Funktion zum Starten eines Levels
 function startChallenge(level) {
     const { gridSize, numColors, numMoves, points, lvl } = levels[level];
     const levelKey = `level_${lvl}`;
@@ -253,16 +284,10 @@ function startChallenge(level) {
     // Wenn `success` true ist, keine Weiterleitung
 }
 
-
-        // Neustart der Spiele
-        document.getElementById('restartGame').onclick = function () {
-            location.reload();
-        };
-
-        // Rufe loadLevels beim Laden der Seite auf
-        window.onload = function() {
-            loadLevels();
-        };
+// Beim Laden der Seite die abgeschlossenen und gespeicherten Level markieren
+window.onload = function() {
+    highlightCompletedLevels();
+};
     </script>
 </body>
 </html>
