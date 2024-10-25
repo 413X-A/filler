@@ -96,7 +96,7 @@
       <!-- Profil -->     
 <div id="profile" style="display: none;">
     <img src="ein_spieler_spiel_index_banner.png.PNG" alt="Einzelspieler Banner" style="width: 90%;">
-    <p>Dein Profil</p>
+    <p>Profil für <span id="userDisplay">Benutzer</span></p>
     <p>EPX: <span id="expDisplay">0</span></p> <!-- Platzhalter für EXP -->
     <button onclick="clearLocalStorage()">Alle Daten löschen</button> <!-- Button zum Löschen der Daten -->
 </div>
@@ -200,32 +200,18 @@
         function showProfile() {
             // Zeigt das Profil an
             document.getElementById('profile').style.display = 'block';
+            document.getElementById('singlePlayer').style.display = 'none';
+            document.getElementById('multiPlayer').style.display = 'none';
+            document.getElementById('challenges').style.display = 'none';
 
             // Holt den Benutzernamen aus localStorage und zeigt ihn an
-            const storedUsername = localStorage.getItem('currentUsername');
-            const profileHeading = document.getElementById('profileHeading');
-
-            if (storedUsername) {
-                profileHeading.textContent = `Profil für ${storedUsername}!`;
-            } else {
-                profileHeading.textContent = 'Dein Profil';
-            }
+            const currentUser= localStorage.getItem('username') || Benutzer;
+            document.getElementById('userDisplay').textContent = currentUser;
 
             // Holt den EXP-Wert aus localStorage und zeigt ihn an
             const exp = localStorage.getItem('playerExp') || 0;
             document.getElementById('expDisplay').textContent = exp;
         }
-
-        function clearLocalStorage() {
-            const storedUsername = localStorage.getItem('currentUsername');
-            localStorage.clear();
-            if (storedUsername) {
-                localStorage.setItem('currentUsername', storedUsername); // Behalten des aktuellen Benutzernamens
-            }
-            document.getElementById('profileHeading').textContent = 'Daten wurden gelöscht';
-        }
-
-
         
         function showSinglePlayer() {
             document.getElementById('profile').style.display = 'none';
