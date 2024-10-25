@@ -97,29 +97,7 @@
     <div id="profile" style="display: none;">
         <img src="ein_spieler_spiel_index_banner.png.PNG" alt="Einzelspieler Banner" style="width: 90%;">
         <p>Dein Profil</p>
-        <select id="gridSize">
-            <option value="11">11x11</option>
-            <option value="21">21x21</option>
-            <option value="31">31x31</option>
-        </select>
-        <select id="numMoves">
-            <option value="5">5 Züge</option>
-            <option value="10">10 Züge</option>
-            <option value="15">15 Züge</option>
-            <option value="20">20 Züge</option>
-            <option value="25">25 Züge</option>
-            <option value="30">30 Züge</option>
-            <option value="40">40 Züge</option>
-            <option value="50">50 Züge</option>
-            <option value="unlimited">Unendlich</option>
-        </select>
-        <select id="numColors">
-            <option value="3">3 Farben</option>
-            <option value="5">5 Farben</option>
-            <option value="7">7 Farben</option>
-            <option value="9">9 Farben</option>
-        </select>
-        <button onclick="startSinglePlayer()">Spiel starten</button>
+
     </div>
 
     <!-- Einzelspieler Optionen -->
@@ -201,6 +179,10 @@
 
     <script>
         // Funktionen um die verschiedenen Abschnitte anzuzeigen
+        function showProfil() {
+            document.getElementById('profil').style.display = 'block';
+        }
+        
         function showSinglePlayer() {
             document.getElementById('singlePlayer').style.display = 'block';
             document.getElementById('multiPlayer').style.display = 'none';
