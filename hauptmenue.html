@@ -272,14 +272,20 @@
 
 
 // Funktion zum Hervorheben und Hinzufügen von Level-Boxen für abgeschlossene Levels
-// Funktion zum Hervorheben und Hinzufügen von Level-Boxen für abgeschlossene Levels
 function highlightCompletedLevels() {
     const levelButtonsContainer = document.getElementById('levelButtons');
+    const currentUser = localStorage.getItem('currentUsername'); // Benutzernamen abrufen
+
+    // Überprüfen, ob ein Benutzername vorhanden ist
+    if (!currentUser) {
+        alert('Kein Benutzername gefunden. Bitte melden Sie sich an.');
+        return;
+    }
 
     // Alle Level in `localStorage` durchgehen
     for (let i = 1; i <= 15; i++) { // Da es 15 Level gibt
-        const levelKey = `level_${i}`;
-        const levelData = JSON.parse(localStorage.getItem(levelKey));
+        const levelKey = `level_${currentUser}_${i}`; // Benutzer-spezifischer Schlüssel
+        const levelData = JSON.parse(localStorage.getItem(levelKey)); // Level-Daten für den aktuellen Benutzer
 
         let levelBox = document.getElementById(`btn-l${i}`);
 
@@ -300,8 +306,8 @@ function highlightCompletedLevels() {
             // Wenn das Level nicht erfolgreich ist, Hintergrundfarbe auf orange setzen
             levelBox.style.backgroundColor = 'orange';
         }
-    }
 }
+
 
 // Funktion zum Starten eines Levels
 function startChallenge(level) {
