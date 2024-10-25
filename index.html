@@ -226,42 +226,36 @@
 
 
 // Funktion zum Hervorheben und Hinzufügen von Level-Boxen für abgeschlossene Levels
+// Funktion zum Hervorheben und Hinzufügen von Level-Boxen für abgeschlossene Levels
 function highlightCompletedLevels() {
     const levelButtonsContainer = document.getElementById('levelButtons');
 
     // Alle Level in `localStorage` durchgehen
-    for (let i = 1; i <= localStorage.length; i++) {
+    for (let i = 1; i <= 15; i++) { // Da es 15 Level gibt
         const levelKey = `level_${i}`;
         const levelData = JSON.parse(localStorage.getItem(levelKey));
 
-        if (levelData) {
-            let levelBox = document.getElementById(`btn-l${i}`);
+        let levelBox = document.getElementById(`btn-l${i}`);
 
-            // Falls keine Box für das Level existiert, wird eine neue erstellt
-            if (!levelBox) {
-                levelBox = document.createElement('div');
-                levelBox.id = `btn-l${i}`;
-                levelBox.className = 'level';
-                levelBox.textContent = i;
-                levelBox.onclick = () => startChallenge(i);
-                levelButtonsContainer.appendChild(levelBox);
-            }
+        // Falls keine Box für das Level existiert, wird eine neue erstellt
+        if (!levelBox) {
+            levelBox = document.createElement('div');
+            levelBox.id = `btn-l${i}`;
+            levelBox.className = 'level';
+            levelBox.textContent = i;
+            levelBox.onclick = () => startChallenge(i);
+            levelButtonsContainer.appendChild(levelBox);
+        }
 
-             // Wenn `success` für das Level auf `true` steht, Hintergrundfarbe auf hellgrün setzen
-if (levelData.success === true) {
-    levelBox.style.backgroundColor = 'lightgreen';
-}
-            
-if (levelData.success === false) {
-    // Wenn das Level nicht erfolgreich ist, Hintergrundfarbe auf hellgrau setzen
-    levelBox.style.backgroundColor = 'orange';
-}
+        // Setze zuerst die Hintergrundfarbe auf hellgrau
+        levelBox.style.backgroundColor = 'lightgray';
 
-if (!levelData) {
-    // Wenn kein Eintrag
-    levelBox.style.backgroundColor = 'lightgray';
-}
-
+        // Wenn `success` für das Level auf `true` steht, Hintergrundfarbe auf hellgrün setzen
+        if (levelData && levelData.success === true) {
+            levelBox.style.backgroundColor = 'lightgreen';
+        } else if (levelData && levelData.success === false) {
+            // Wenn das Level nicht erfolgreich ist, Hintergrundfarbe auf orange setzen
+            levelBox.style.backgroundColor = 'orange';
         }
     }
 }
