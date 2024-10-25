@@ -155,25 +155,26 @@
              });
          }
          
-         function createColorButtons() {
-             const colorButtons = document.getElementById('colorButtons');
-             colorButtons.innerHTML = '';
-             colors.forEach(color => {
-                 const button = document.createElement('button');
-                 button.style.backgroundColor = color;
-                 button.addEventListener('click', () => {
-                     if (!isGameOver && movesLeft > 0) {
-                         fillAdjacentToWhite(color);
-                         movesLeft--;
-                         updateScoreAndMoves();
-                         if (checkAllFilled() || movesLeft <= 0) {
-                             endGame();
-                         }
-                     }
-                 });
-                 colorButtons.appendChild(button);
-             });
-         }
+function createColorButtons() {
+    const colorButtons = document.getElementById('colorButtons');
+    colorButtons.innerHTML = '';
+    colors.forEach(color => {
+        const button = document.createElement('button');
+        button.style.backgroundColor = color;
+        button.addEventListener('click', () => {
+            if (!isGameOver && movesLeft > 0) {
+                fillAdjacentToWhite(color);
+                movesLeft--;
+                updateScoreAndMoves();
+                if (checkAllFilled() || movesLeft <= 0) {
+                    endGame();
+                }
+            }
+        });
+        colorButtons.appendChild(button);
+    });
+}
+
          
          function fillAdjacentToWhite(selectedColor) {
              const whiteCells = findWhiteCells();
