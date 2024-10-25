@@ -258,6 +258,11 @@ function highlightCompletedLevels() {
                 levelButtonsContainer.appendChild(levelBox);
             }
 
+             // Wenn `success` für das Level auf `false` steht, Hintergrundfarbe auf orange setzen
+            if (levelData.success === false) {
+                levelBox.style.backgroundColor = 'orange';
+            }
+
             // Wenn `success` für das Level auf `true` steht, Hintergrundfarbe auf hellgrün setzen
             if (levelData.success === true) {
                 levelBox.style.backgroundColor = 'lightgreen';
