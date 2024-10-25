@@ -94,11 +94,12 @@
 
 
        <!-- Profil -->     
-    <div id="profile" style="display: none;">
-        <img src="ein_spieler_spiel_index_banner.png.PNG" alt="Einzelspieler Banner" style="width: 90%;">
-        <p>Dein Profil</p>
+<div id="profile" style="display: none;">
+    <img src="ein_spieler_spiel_index_banner.png.PNG" alt="Einzelspieler Banner" style="width: 90%;">
+    <p>Dein Profil</p>
+    <p>Erfahrungspunkte (EXP): <span id="expDisplay">0</span></p> <!-- Platzhalter für EXP -->
+</div>
 
-    </div>
 
     <!-- Einzelspieler Optionen -->
     <div id="singlePlayer" style="display: none;">
@@ -180,11 +181,17 @@
     <script>
         // Funktionen um die verschiedenen Abschnitte anzuzeigen
         function showProfile() {
-            document.getElementById('profile').style.display = 'block';
-            document.getElementById('singlePlayer').style.display = 'none';
-            document.getElementById('multiPlayer').style.display = 'none';
-            document.getElementById('challenges').style.display = 'none';
-        }
+    // Zeigt nur das Profil und verbirgt die anderen Bereiche
+    document.getElementById('profile').style.display = 'block';
+    document.getElementById('singlePlayer').style.display = 'none';
+    document.getElementById('multiPlayer').style.display = 'none';
+    document.getElementById('challenges').style.display = 'none';
+    
+    // EXP-Wert aus localStorage abrufen und anzeigen
+    const exp = localStorage.getItem('playerExp') || 0; // Falls kein Wert vorhanden, Standardwert 0
+    document.getElementById('expDisplay').textContent = exp;
+}
+
         
         function showSinglePlayer() {
             document.getElementById('profile').style.display = 'none';
