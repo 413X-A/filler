@@ -274,7 +274,7 @@ function fillAdjacentToWhite(selectedColor) {
     const levelKey = `level_${currentUser}_${level}`; // z.B. level_username_1
 
     // Erfolg des Levels speichern
-    if (score >= targetScore) {
+    if (score >= points) {
         resultMessage.textContent = 'Herzlichen Glückwunsch! Sie haben das Spiel gewonnen!';
         localStorage.setItem(levelKey, JSON.stringify({ success: true }));
     } else {
