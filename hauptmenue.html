@@ -78,7 +78,7 @@
         }
 
         /* Style for profile buttons */
-        .profileDelete {
+        .profileDButton {
             width: 45%;
             padding: 10px;
             font-size: 16px;
@@ -90,19 +90,6 @@
             display: inline-block;
             margin: 0 5%;
         }
-        .profileAbmelden {
-            width: 45%;
-            padding: 10px;
-            font-size: 16px;
-            background-color: white;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            display: inline-block;
-            margin: 0 5%;
-        }
-        
         .profileButton:hover {
             background-color: tomato;
             color: white;
@@ -129,8 +116,8 @@
         <p>Profil für <span id="username" style="font-weight: bold;"></span></p>
         <p>EXP: <span id="userExp"></span></p>
         <div style="display: flex; justify-content: space-between; width: 90%; margin: 0 auto;">
-            <button class="profileButton" class="profileAbmelden" onclick="logout()">Abmelden</button>
-            <button class="profileButton" class="profileDelete" onclick="accountDelete()">Account löschen</button>
+            <button class="profileButton" onclick="logout()">Abmelden</button>
+            <button class="profileButton" onclick="accountDelete()">Account löschen</button>
         </div>
     </div>
 
