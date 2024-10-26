@@ -190,28 +190,36 @@
         }
 
         function fillAdjacentToWhite(selectedColor) {
-            const whiteCells = findWhiteCells();
+    const whiteCells = findWhiteCells(); // Finde weiße Zellen
+    let newlyColoredCount = 0; // Zähler für neu gefärbte Zellen
 
-            whiteCells.forEach(([row, col]) => {
-                const adjacentCells = [
-                    [row - 1, col],
-                    [row + 1, col],
-                    [row, col - 1],
-                    [row, col + 1]
-                ];
+    whiteCells.forEach(([row, col]) => {
+        const adjacentCells = [
+            [row - 1, col],
+            [row + 1, col],
+            [row, col - 1],
+            [row, col + 1]
+        ];
 
-                adjacentCells.forEach(([adjRow, adjCol]) => {
-                    if (adjRow >= 0 && adjCol >= 0 && adjRow < gridSize && adjCol < gridSize) {
-                        if (gameBoard[adjRow][adjCol] === selectedColor) {
-                            gameBoard[adjRow][adjCol] = 'white';
-                            score++;
-                        }
-                    }
-                });
-            });
+        adjacentCells.forEach(([adjRow, adjCol]) => {
+            // Überprüfen, ob die angrenzende Zelle im gültigen Bereich liegt
+            if (adjRow >= 0 && adjCol >= 0 && adjRow < gridSize && adjCol < gridSize) {
+                // Wenn die angrenzende Zelle die ausgewählte Farbe hat
+                if (gameBoard[adjRow][adjCol] === selectedColor) {
+                    gameBoard[adjRow][adjCol] = 'white'; // Färbe die angrenzende Zelle weiß
+                    newlyColoredCount++; // Erhöhe den Zähler für neu gefärbte Zellen
+                }
+            }
+        });
+    });
 
-            drawBoard();
-        }
+    // Hier kannst du die Anzahl der neu gefärbten Zellen verwenden
+    // Beispiel: Score aktualisieren
+    score += newlyColoredCount; // Füge die Anzahl neu gefärbter Zellen zum Score hinzu
+
+    drawBoard(); // Zeichne das Spielfeld neu
+}
+
 
         function findWhiteCells() {
             const whiteCells = [];
