@@ -1,14 +1,15 @@
 // musicHandler.js
 function handleMusicForUser() {
     const currentUser = localStorage.getItem('currentUsername');
-    const savedMusic = localStorage.getItem(`musicChoice_${currentUser}`);
-    const musicPlayer = document.getElementById('musicPlayer');
+    const savedSong = localStorage.getItem(`${currentUser}_selectedSong`); // Hole die gespeicherte Musik für den aktuellen Benutzer
+    const savedTimestamp = localStorage.getItem(`${currentUser}_musicTimestamp`); // Hole den gespeicherten Zeitstempel
 
-    if (savedMusic) {
-        musicPlayer.src = savedMusic;
-        musicPlayer.loop = true; // Musik in einer Schleife abspielen
-        musicPlayer.play();
-    } else {
-        musicPlayer.pause(); // Musik anhalten, wenn keine Auswahl vorhanden ist
+    const musicSelect = document.getElementById("musicSelect");
+    if (savedSong) {
+        musicSelect.value = savedSong; // Setze die Auswahl im Dropdown
+        const musicPlayer = document.getElementById("musicPlayer");
+        musicPlayer.src = savedSong; // Setze die Quelle des Players
+        musicPlayer.play(); // Spiele die Musik ab
+
     }
 }
