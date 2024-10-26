@@ -334,15 +334,18 @@ function startChallenge(level) {
         }
 
         // Account löschen und zur Startseite weiterleiten
-        function deleteAccount() {
-            const currentUser = localStorage.getItem('currentUsername');
-            if (currentUser) {
-                localStorage.removeItem(`exp_${currentUser}`);
-                for (let i = 1; i <= 15; i++) {
-                    localStorage.removeItem(`level_${currentUser}_${i}`);
-                }
-                localStorage.removeItem('currentUsername');
+function deleteAccount() {
+    const currentUser = localStorage.getItem('currentUsername');
+    if (currentUser) {
+        // Durch alle Keys in localStorage gehen und nur die löschen, die dem aktuellen Benutzer gehören
+        for (let key in localStorage) {
+            if (key.startsWith(currentUser)) {
+                localStorage.removeItem(key);
             }
+        }
+        localStorage.removeItem('currentUsername'); // Den Benutzernamen selbst ebenfalls entfernen
+    }
+    // Zurück zur Startseite
             window.location.href = 'index.html';
         }
         
