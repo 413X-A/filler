@@ -121,9 +121,9 @@
         <label for="musicSelect">Wähle Musik:</label>
         <select id="musicSelect" onchange="playMusic()">
             <option value="">--Musik auswählen--</option>
-            <option value="song1.mp3">Song 1</option>
-            <option value="song2.mp3">Song 2</option>
-            <option value="song3.mp3">Song 3</option>
+            <option value="jazz_eins.mp3">Jazz</option>
+            <option value="soft_rock_eins.mp3">Rock</option>
+            <option value="dance_eins.mp3">Dance</option>
         </select>
     </div>
 
@@ -132,6 +132,7 @@
         <button class="profileButton" onclick="accountDelete()">Account löschen</button>
     </div>
 </div>
+    <audio id="musicPlayer" loop></audio>
 
     <!-- Einzelspieler Optionen -->
     <div id="singlePlayer" style="display: none;">
@@ -249,6 +250,21 @@
             document.getElementById('challenges').style.display = 'none';
             document.getElementById('profile').style.display = 'block';
         }
+    function playMusic() {
+        const musicSelect = document.getElementById("musicSelect");
+        const musicPlayer = document.getElementById("musicPlayer");
+        const selectedSong = musicSelect.value;
+
+        if (selectedSong) {
+            musicPlayer.src = selectedSong;
+            musicPlayer.play();
+        } else {
+            musicPlayer.pause();
+            musicPlayer.currentTime = 0; // Setze den Track zurück
+        }
+    }
+
+        
 
         function startSinglePlayer() {
             const gridSize = document.getElementById('gridSize').value;
