@@ -250,19 +250,27 @@
             document.getElementById('challenges').style.display = 'none';
             document.getElementById('profile').style.display = 'block';
         }
-    function playMusic() {
-        const musicSelect = document.getElementById("musicSelect");
-        const musicPlayer = document.getElementById("musicPlayer");
-        const selectedSong = musicSelect.value;
+function playMusic() {
+    const musicSelect = document.getElementById("musicSelect");
+    const musicPlayer = document.getElementById("musicPlayer");
+    const selectedSong = musicSelect.value;
 
-        if (selectedSong) {
-            musicPlayer.src = selectedSong;
-            musicPlayer.play();
-        } else {
-            musicPlayer.pause();
-            musicPlayer.currentTime = 0; // Setze den Track zurück
-        }
+    const currentUser = localStorage.getItem('currentUsername'); // Hole den aktuellen Benutzernamen
+
+    if (selectedSong) {
+        // Speichere die ausgewählte Musik und den Zeitstempel für den aktuellen Benutzer
+        const timestamp = new Date().toISOString(); // Aktueller Zeitstempel im ISO-Format
+        localStorage.setItem(`${currentUser}_selectedSong`, selectedSong);
+        localStorage.setItem(`${currentUser}_musicTimestamp`, timestamp); // Speichere den Zeitstempel
+        musicPlayer.src = selectedSong;
+        musicPlayer.play();
+    } else {
+        musicPlayer.pause();
+        musicPlayer.currentTime = 0; // Setze den Track zurück
+        localStorage.removeItem(`${currentUser}_selectedSong`); // Entferne die Auswahl für den aktuellen Benutzer
+        localStorage.removeItem(`${currentUser}_musicTimestamp`); // Entferne den Zeitstempel für den aktuellen Benutzer
     }
+}
 
         
 
