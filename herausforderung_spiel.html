@@ -163,6 +163,7 @@
         button.style.backgroundColor = color;
         button.addEventListener('click', () => {
             if (!isGameOver && movesLeft > 0) {
+                pointsAddedThisTurn = false;  // Reset der Statusvariable zu Beginn des Zugs
                 const addedCells = fillAdjacentToWhite(color); // Zähler speichern
                 movesLeft--;
                 updateScoreAndMoves();
@@ -180,7 +181,10 @@
 }
 
 
-        function fillAdjacentToWhite(selectedColor) {
+
+        let pointsAddedThisTurn = false;  // Statusvariable, um zu überprüfen, ob Punkte in diesem Zug bereits hinzugefügt wurden
+
+function fillAdjacentToWhite(selectedColor) {
     const whiteCells = findWhiteCells();
     let addedCellsCount = 0;  // Zähler für die hinzugefügten Zellen
 
@@ -194,20 +198,26 @@
 
         adjacentCells.forEach(([adjRow, adjCol]) => {
             // Überprüfen, ob die Nachbarzelle innerhalb der Grenzen des Arrays liegt
-            if (adjRow >= 0 && adjCol >= 0 && adjRow < gridSize && adjCol < gridSize) {
+            if (adjRow >= 0 && adjCol >= 0 && adjRow < gridSize && adjRow < gridSize) {
                 // Überprüfen, ob die Nachbarzelle die ausgewählte Farbe hat
                 if (gameBoard[adjRow][adjCol] === selectedColor) {
                     gameBoard[adjRow][adjCol] = 'white';  // Füllen der Zelle mit 'white'
-                    score++;  // Punktestand erhöhen
                     addedCellsCount++;  // Zähler erhöhen
                 }
             }
         });
     });
 
+    // Punkte nur einmal pro Zug erhöhen
+    if (addedCellsCount >= 5 && !pointsAddedThisTurn) {
+        score += 1;  // Score um 1 erhöhen
+        pointsAddedThisTurn = true;  // Punkte wurden hinzugefügt
+    }
+
     drawBoard();
     return addedCellsCount;  // Rückgabe der Anzahl der hinzugefügten Zellen
 }
+
 
 
         function findWhiteCells() {
