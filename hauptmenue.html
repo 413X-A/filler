@@ -102,7 +102,7 @@
     <!-- Buttons zum Löschen und Abmelden des Accounts -->
     <div style="display: flex; justify-content: space-around; margin-top: 20px;">
         <button onclick="logout()" style="width: 45%; margin: 0 5%;">Abmelden</button>
-        <button onclick="clearLocalStorage()" style="width: 45%; margin: 0 5%;">Deinen Account löschen</button>
+        <button onclick="clearLocalStorage()" style="width: 45%; margin: 0 5%;">Account löschen</button>
     </div>
 </div>
 
@@ -202,13 +202,15 @@
     }
 
     // Bestätigungsnachricht
-    alert('Alle Benutzerdaten wurden gelöscht.');
+    alert('Dein Account wurde gelöscht.');
 
     // Auf die index.html leiten
     window.location.href = 'index.html'; // Hier sicherstellen, dass der Pfad korrekt ist
 }
 
-        function logout() {
+    function logout() {
+            // Bestätigungsnachricht
+        alert('Dein Account wurde abgemeldet.');
         // Nur Weiterleitung zur Index-Seite, ohne Daten zu löschen
         window.location.href = 'index.html';
     }
