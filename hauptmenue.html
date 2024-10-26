@@ -379,131 +379,128 @@
         }
 
         // Neue Herausforderungen Level
-      const levels = {
-    1:   { gridSize: 3, points: 5,   numMoves: 3, numColors: 2 }, // 3 * 3 = 9, Punkte: 5
-    2:   { gridSize: 3, points: 6,   numMoves: 4, numColors: 2 }, // 3 * 3 = 9, Punkte: 6
-    3:   { gridSize: 3, points: 7,   numMoves: 5, numColors: 2 }, // 3 * 3 = 9, Punkte: 7
-    4:   { gridSize: 4, points: 12,  numMoves: 6, numColors: 2 }, // 4 * 4 = 16, Punkte: 12
-    5:   { gridSize: 4, points: 13,  numMoves: 7, numColors: 2 }, // 4 * 4 = 16, Punkte: 13
-    6:   { gridSize: 4, points: 14,  numMoves: 8, numColors: 2 }, // 4 * 4 = 16, Punkte: 14
-    7:   { gridSize: 5, points: 20,  numMoves: 9, numColors: 2 }, // 5 * 5 = 25, Punkte: 20
-    8:   { gridSize: 5, points: 21,  numMoves: 10, numColors: 2 }, // 5 * 5 = 25, Punkte: 21
-    9:   { gridSize: 5, points: 22,  numMoves: 11, numColors: 2 }, // 5 * 5 = 25, Punkte: 22
-    10:  { gridSize: 6, points: 30,  numMoves: 12, numColors: 3 }, // 6 * 6 = 36, Punkte: 30
-    11:  { gridSize: 6, points: 31,  numMoves: 13, numColors: 3 }, // 6 * 6 = 36, Punkte: 31
-    12:  { gridSize: 6, points: 32,  numMoves: 14, numColors: 3 }, // 6 * 6 = 36, Punkte: 32
-    13:  { gridSize: 7, points: 42,  numMoves: 15, numColors: 3 }, // 7 * 7 = 49, Punkte: 42
-    14:  { gridSize: 7, points: 44,  numMoves: 16, numColors: 3 }, // 7 * 7 = 49, Punkte: 44
-    15:  { gridSize: 7, points: 46,  numMoves: 17, numColors: 3 }, // 7 * 7 = 49, Punkte: 46
-    16:  { gridSize: 8, points: 56,  numMoves: 18, numColors: 3 }, // 8 * 8 = 64, Punkte: 56
-    17:  { gridSize: 8, points: 58,  numMoves: 19, numColors: 3 }, // 8 * 8 = 64, Punkte: 58
-    18:  { gridSize: 8, points: 60,  numMoves: 20, numColors: 3 }, // 8 * 8 = 64, Punkte: 60
-    19:  { gridSize: 9, points: 72,  numMoves: 21, numColors: 4 }, // 9 * 9 = 81, Punkte: 72
-    20:  { gridSize: 9, points: 74,  numMoves: 22, numColors: 4 }, // 9 * 9 = 81, Punkte: 74
-    21:  { gridSize: 9, points: 76,  numMoves: 23, numColors: 4 }, // 9 * 9 = 81, Punkte: 76
-    22:  { gridSize: 10, points: 90, numMoves: 24, numColors: 4 }, // 10 * 10 = 100, Punkte: 90
-    23:  { gridSize: 10, points: 92, numMoves: 25, numColors: 4 }, // 10 * 10 = 100, Punkte: 92
-    24:  { gridSize: 10, points: 94, numMoves: 26, numColors: 4 }, // 10 * 10 = 100, Punkte: 94
-    25:  { gridSize: 11, points: 110, numMoves: 27, numColors: 4 }, // 11 * 11 = 121, Punkte: 110
-    26:  { gridSize: 11, points: 112, numMoves: 28, numColors: 4 }, // 11 * 11 = 121, Punkte: 112
-    27:  { gridSize: 11, points: 114, numMoves: 29, numColors: 4 }, // 11 * 11 = 121, Punkte: 114
-    28:  { gridSize: 12, points: 132, numMoves: 30, numColors: 5 }, // 12 * 12 = 144, Punkte: 132
-    29:  { gridSize: 12, points: 134, numMoves: 31, numColors: 5 }, // 12 * 12 = 144, Punkte: 134
-    30:  { gridSize: 12, points: 136, numMoves: 32, numColors: 5 }, // 12 * 12 = 144, Punkte: 136
-    31:  { gridSize: 13, points: 156, numMoves: 33, numColors: 5 }, // 13 * 13 = 169, Punkte: 156
-    32:  { gridSize: 13, points: 158, numMoves: 34, numColors: 5 }, // 13 * 13 = 169, Punkte: 158
-    33:  { gridSize: 13, points: 160, numMoves: 35, numColors: 5 }, // 13 * 13 = 169, Punkte: 160
-    34:  { gridSize: 14, points: 196, numMoves: 36, numColors: 5 }, // 14 * 14 = 196, Punkte: 196
-    35:  { gridSize: 14, points: 198, numMoves: 37, numColors: 5 }, // 14 * 14 = 196, Punkte: 198
-    36:  { gridSize: 14, points: 200, numMoves: 38, numColors: 5 }, // 14 * 14 = 196, Punkte: 200
-    37:  { gridSize: 15, points: 225, numMoves: 39, numColors: 6 }, // 15 * 15 = 225, Punkte: 225
-    38:  { gridSize: 15, points: 227, numMoves: 40, numColors: 6 }, // 15 * 15 = 225, Punkte: 227
-    39:  { gridSize: 15, points: 229, numMoves: 41, numColors: 6 }, // 15 * 15 = 225, Punkte: 229
-    40:  { gridSize: 16, points: 256, numMoves: 42, numColors: 6 }, // 16 * 16 = 256, Punkte: 256
-    41:  { gridSize: 16, points: 258, numMoves: 43, numColors: 6 }, // 16 * 16 = 256, Punkte: 258
-    42:  { gridSize: 16, points: 260, numMoves: 44, numColors: 6 }, // 16 * 16 = 256, Punkte: 260
-    43:  { gridSize: 17, points: 289, numMoves: 45, numColors: 7 }, // 17 * 17 = 289, Punkte: 289
-    44:  { gridSize: 17, points: 291, numMoves: 46, numColors: 7 }, // 17 * 17 = 289, Punkte: 291
-    45:  { gridSize: 17, points: 292, numMoves: 47, numColors: 7 }, // 17 * 17 = 289, Punkte: 292
-    46:  { gridSize: 17, points: 293, numMoves: 48, numColors: 7 }, // 17 * 17 = 289, Punkte: 293
-    47:  { gridSize: 17, points: 295, numMoves: 49, numColors: 7 }, // 17 * 17 = 289, Punkte: 295
-    48:  { gridSize: 18, points: 324, numMoves: 50, numColors: 7 }, // 18 * 18 = 324, Punkte: 324
-    49:  { gridSize: 18, points: 326, numMoves: 51, numColors: 7 }, // 18 * 18 = 324, Punkte: 326
-    50:  { gridSize: 18, points: 328, numMoves: 52, numColors: 7 }, // 18 * 18 = 324, Punkte: 328
-    51:  { gridSize: 19, points: 361, numMoves: 53, numColors: 8 }, // 19 * 19 = 361, Punkte: 361
-    52:  { gridSize: 19, points: 362, numMoves: 54, numColors: 8 }, // 19 * 19 = 361, Punkte: 362
-    53:  { gridSize: 19, points: 364, numMoves: 55, numColors: 8 }, // 19 * 19 = 361, Punkte: 364
-    54:  { gridSize: 20, points: 400, numMoves: 56, numColors: 8 }, // 20 * 20 = 400, Punkte: 400
-    55:  { gridSize: 20, points: 402, numMoves: 57, numColors: 8 }, // 20 * 20 = 400, Punkte: 402
-    56:  { gridSize: 20, points: 404, numMoves: 58, numColors: 8 }, // 20 * 20 = 400, Punkte: 404
-    57:  { gridSize: 21, points: 441, numMoves: 59, numColors: 8 }, // 21 * 21 = 441, Punkte: 441
-    58:  { gridSize: 21, points: 443, numMoves: 60, numColors: 8 }, // 21 * 21 = 441, Punkte: 443
-    59:  { gridSize: 21, points: 445, numMoves: 61, numColors: 8 }, // 21 * 21 = 441, Punkte: 445
-    60:  { gridSize: 22, points: 484, numMoves: 62, numColors: 9 }, // 22 * 22 = 484, Punkte: 484
-    61:  { gridSize: 22, points: 486, numMoves: 63, numColors: 9 }, // 22 * 22 = 484, Punkte: 486
-    62:  { gridSize: 22, points: 488, numMoves: 64, numColors: 9 }, // 22 * 22 = 484, Punkte: 488
-    63:  { gridSize: 23, points: 529, numMoves: 65, numColors: 9 }, // 23 * 23 = 529, Punkte: 529
-    64:  { gridSize: 23, points: 531, numMoves: 66, numColors: 9 }, // 23 * 23 = 529, Punkte: 531
-    65:  { gridSize: 23, points: 533, numMoves: 67, numColors: 9 }, // 23 * 23 = 529, Punkte: 533
-    66:  { gridSize: 24, points: 576, numMoves: 68, numColors: 10 }, // 24 * 24 = 576, Punkte: 576
-    67:  { gridSize: 24, points: 578, numMoves: 69, numColors: 10 }, // 24 * 24 = 576, Punkte: 578
-    68:  { gridSize: 24, points: 580, numMoves: 70, numColors: 10 }, // 24 * 24 = 576, Punkte: 580
-    69:  { gridSize: 25, points: 625, numMoves: 71, numColors: 10 }, // 25 * 25 = 625, Punkte: 625
-    70:  { gridSize: 25, points: 627, numMoves: 72, numColors: 10 }, // 25 * 25 = 625, Punkte: 627
-    71:  { gridSize: 25, points: 629, numMoves: 73, numColors: 10 }, // 25 * 25 = 625, Punkte: 629
-    72:  { gridSize: 26, points: 676, numMoves: 74, numColors: 10 }, // 26 * 26 = 676, Punkte: 676
-    73:  { gridSize: 26, points: 678, numMoves: 75, numColors: 10 }, // 26 * 26 = 676, Punkte: 678
-    74:  { gridSize: 26, points: 680, numMoves: 76, numColors: 10 }, // 26 * 26 = 676, Punkte: 680
-    75:  { gridSize: 27, points: 729, numMoves: 77, numColors: 11 }, // 27 * 27 = 729, Punkte: 729
-    76:  { gridSize: 27, points: 731, numMoves: 78, numColors: 11 }, // 27 * 27 = 729, Punkte: 731
-    77:  { gridSize: 27, points: 733, numMoves: 79, numColors: 11 }, // 27 * 27 = 729, Punkte: 733
-    78:  { gridSize: 28, points: 784, numMoves: 80, numColors: 11 }, // 28 * 28 = 784, Punkte: 784
-    79:  { gridSize: 28, points: 786, numMoves: 81, numColors: 11 }, // 28 * 28 = 784, Punkte: 786
-    80:  { gridSize: 28, points: 788, numMoves: 82, numColors: 11 }, // 28 * 28 = 784, Punkte: 788
-    81:  { gridSize: 29, points: 841, numMoves: 83, numColors: 11 }, // 29 * 29 = 841, Punkte: 841
-    82:  { gridSize: 29, points: 843, numMoves: 84, numColors: 11 }, // 29 * 29 = 841, Punkte: 843
-    83:  { gridSize: 29, points: 845, numMoves: 85, numColors: 11 }, // 29 * 29 = 841, Punkte: 845
-    84:  { gridSize: 30, points: 900, numMoves: 86, numColors: 12 }, // 30 * 30 = 900, Punkte: 900
-    85:  { gridSize: 30, points: 902, numMoves: 87, numColors: 12 }, // 30 * 30 = 900, Punkte: 902
-    86:  { gridSize: 30, points: 904, numMoves: 88, numColors: 12 }, // 30 * 30 = 900, Punkte: 904
-    87:  { gridSize: 31, points: 961, numMoves: 89, numColors: 12 }, // 31 * 31 = 961, Punkte: 961
-    88:  { gridSize: 31, points: 963, numMoves: 90, numColors: 12 }, // 31 * 31 = 961, Punkte: 963
-    89:  { gridSize: 31, points: 967, numMoves: 91, numColors: 12 }, // 31 * 31 = 961, Punkte: 967
-    90:  { gridSize: 31, points: 968, numMoves: 92, numColors: 12 }, // 31 * 31 = 961, Punkte: 968
-    91:  { gridSize: 31, points: 970, numMoves: 93, numColors: 12 }, // 31 * 31 = 961, Punkte: 970
-    92:  { gridSize: 32, points: 1024, numMoves: 94, numColors: 12 }, // 32 * 32 = 1024, Punkte: 1024
-    93:  { gridSize: 32, points: 1025, numMoves: 95, numColors: 12 }, // 32 * 32 = 1024, Punkte: 1025
-    94:  { gridSize: 32, points: 1026, numMoves: 96, numColors: 12 }, // 32 * 32 = 1024, Punkte: 1026
-    95:  { gridSize: 33, points: 1089, numMoves: 97, numColors: 13 }, // 33 * 33 = 1089, Punkte: 1089
-    96:  { gridSize: 33, points: 1090, numMoves: 98, numColors: 13 }, // 33 * 33 = 1089, Punkte: 1090
-    97:  { gridSize: 33, points: 1092, numMoves: 99, numColors: 13 }, // 33 * 33 = 1089, Punkte: 1092
-    98:  { gridSize: 34, points: 1156, numMoves: 100, numColors: 13 }, // 34 * 34 = 1156, Punkte: 1156
-    99:  { gridSize: 34, points: 1158, numMoves: 101, numColors: 13 }, // 34 * 34 = 1156, Punkte: 1158
-    100: { gridSize: 34, points: 1160, numMoves: 102, numColors: 13 }, // 34 * 34 = 1156, Punkte: 1160
-    101: { gridSize: 35, points: 1225, numMoves: 103, numColors: 13 }, // 35 * 35 = 1225, Punkte: 1225
-    102: { gridSize: 35, points: 1227, numMoves: 104, numColors: 13 }, // 35 * 35 = 1225, Punkte: 1227
-    103: { gridSize: 35, points: 1229, numMoves: 105, numColors: 13 }, // 35 * 35 = 1225, Punkte: 1229
-    104: { gridSize: 36, points: 1296, numMoves: 106, numColors: 14 }, // 36 * 36 = 1296, Punkte: 1296
-    105: { gridSize: 36, points: 1298, numMoves: 107, numColors: 14 }, // 36 * 36 = 1296, Punkte: 1298
-    106: { gridSize: 36, points: 1300, numMoves: 108, numColors: 14 }, // 36 * 36 = 1296, Punkte: 1300
-    107: { gridSize: 37, points: 1369, numMoves: 109, numColors: 14 }, // 37 * 37 = 1369, Punkte: 1369
-    108: { gridSize: 37, points: 1371, numMoves: 110, numColors: 14 }, // 37 * 37 = 1369, Punkte: 1371
-    109: { gridSize: 37, points: 1373, numMoves: 111, numColors: 14 }, // 37 * 37 = 1369, Punkte: 1373
-    110: { gridSize: 38, points: 1444, numMoves: 112, numColors: 14 }, // 38 * 38 = 1444, Punkte: 1444
-    111: { gridSize: 38, points: 1446, numMoves: 113, numColors: 14 }, // 38 * 38 = 1444, Punkte: 1446
-    112: { gridSize: 38, points: 1448, numMoves: 114, numColors: 14 }, // 38 * 38 = 1444, Punkte: 1448
-    113: { gridSize: 39, points: 1521, numMoves: 115, numColors: 15 }, // 39 * 39 = 1521, Punkte: 1521
-    114: { gridSize: 39, points: 1523, numMoves: 116, numColors: 15 }, // 39 * 39 = 1521, Punkte: 1523
-    115: { gridSize: 39, points: 1525, numMoves: 117, numColors: 15 }, // 39 * 39 = 1521, Punkte: 1525
-    116: { gridSize: 40, points: 1600, numMoves: 118, numColors: 15 }, // 40 * 40 = 1600, Punkte: 1600
-    117: { gridSize: 40, points: 1602, numMoves: 119, numColors: 15 }, // 40 * 40 = 1600, Punkte: 1602
-    118: { gridSize: 40, points: 1604, numMoves: 120, numColors: 15 }, // 40 * 40 = 1600, Punkte: 1604
-    119: { gridSize: 41, points: 1681, numMoves: 121, numColors: 15 }, // 41 * 41 = 1681, Punkte: 1681
-    120: { gridSize: 41, points: 1683, numMoves: 122, numColors: 15 }, // 41 * 41 = 1681, Punkte: 1683
+      const levels = [
+    1: { gridSize: 3, points: 5,   numMoves: 3, numColors: 2, lvl: 1 },
+    2: { gridSize: 3, points: 6,   numMoves: 4, numColors: 2, lvl: 2 },
+    3: { gridSize: 3, points: 7,   numMoves: 5, numColors: 2, lvl: 3 },
+    4: { gridSize: 4, points: 12,  numMoves: 6, numColors: 2, lvl: 4 },
+    5: { gridSize: 4, points: 13,  numMoves: 7, numColors: 2, lvl: 5 },
+    6: { gridSize: 4, points: 14,  numMoves: 8, numColors: 2, lvl: 6 },
+    7: { gridSize: 5, points: 20,  numMoves: 9, numColors: 2, lvl: 7 },
+    8: { gridSize: 5, points: 21,  numMoves: 10, numColors: 2, lvl: 8 },
+    9: { gridSize: 5, points: 22,  numMoves: 11, numColors: 2, lvl: 9 },
+    10: { gridSize: 6, points: 30,  numMoves: 12, numColors: 3, lvl: 10 },
+    11: { gridSize: 6, points: 31,  numMoves: 13, numColors: 3, lvl: 11 },
+    12: { gridSize: 6, points: 32,  numMoves: 14, numColors: 3, lvl: 12 },
+    13: { gridSize: 7, points: 42,  numMoves: 15, numColors: 3, lvl: 13 },
+    14: { gridSize: 7, points: 44,  numMoves: 16, numColors: 3, lvl: 14 },
+    15: { gridSize: 7, points: 46,  numMoves: 17, numColors: 3, lvl: 15 },
+    16: { gridSize: 8, points: 56,  numMoves: 18, numColors: 3, lvl: 16 },
+    17: { gridSize: 8, points: 58,  numMoves: 19, numColors: 3, lvl: 17 },
+    18: { gridSize: 8, points: 60,  numMoves: 20, numColors: 3, lvl: 18 },
+    19: { gridSize: 9, points: 72,  numMoves: 21, numColors: 4, lvl: 19 },
+    20: { gridSize: 9, points: 74,  numMoves: 22, numColors: 4, lvl: 20 },
+    21: { gridSize: 9, points: 76,  numMoves: 23, numColors: 4, lvl: 21 },
+    22: { gridSize: 10, points: 90, numMoves: 24, numColors: 4, lvl: 22 },
+    23: { gridSize: 10, points: 92, numMoves: 25, numColors: 4, lvl: 23 },
+    24: { gridSize: 10, points: 94, numMoves: 26, numColors: 4, lvl: 24 },
+    25: { gridSize: 11, points: 110, numMoves: 27, numColors: 4, lvl: 25 },
+    26: { gridSize: 11, points: 112, numMoves: 28, numColors: 4, lvl: 26 },
+    27: { gridSize: 11, points: 114, numMoves: 29, numColors: 4, lvl: 27 },
+    28: { gridSize: 12, points: 132, numMoves: 30, numColors: 5, lvl: 28 },
+    29: { gridSize: 12, points: 134, numMoves: 31, numColors: 5, lvl: 29 },
+    30: { gridSize: 12, points: 136, numMoves: 32, numColors: 5, lvl: 30 },
+    31: { gridSize: 13, points: 156, numMoves: 33, numColors: 5, lvl: 31 },
+    32: { gridSize: 13, points: 158, numMoves: 34, numColors: 5, lvl: 32 },
+    33: { gridSize: 13, points: 160, numMoves: 35, numColors: 5, lvl: 33 },
+    34: { gridSize: 14, points: 196, numMoves: 36, numColors: 6, lvl: 34 },
+    35: { gridSize: 14, points: 198, numMoves: 37, numColors: 6, lvl: 35 },
+    36: { gridSize: 14, points: 200, numMoves: 38, numColors: 6, lvl: 36 },
+    37: { gridSize: 15, points: 240, numMoves: 39, numColors: 6, lvl: 37 },
+    38: { gridSize: 15, points: 242, numMoves: 40, numColors: 6, lvl: 38 },
+    39: { gridSize: 15, points: 244, numMoves: 41, numColors: 6, lvl: 39 },
+    40: { gridSize: 16, points: 288, numMoves: 42, numColors: 6, lvl: 40 },
+    41: { gridSize: 16, points: 290, numMoves: 43, numColors: 6, lvl: 41 },
+    42: { gridSize: 16, points: 292, numMoves: 44, numColors: 6, lvl: 42 },
+    43: { gridSize: 17, points: 342, numMoves: 45, numColors: 7, lvl: 43 },
+    44: { gridSize: 17, points: 344, numMoves: 46, numColors: 7, lvl: 44 },
+    45: { gridSize: 17, points: 346, numMoves: 47, numColors: 7, lvl: 45 },
+    46: { gridSize: 18, points: 396, numMoves: 48, numColors: 7, lvl: 46 },
+    47: { gridSize: 18, points: 398, numMoves: 49, numColors: 7, lvl: 47 },
+    48: { gridSize: 18, points: 400, numMoves: 50, numColors: 7, lvl: 48 },
+    49: { gridSize: 19, points: 462, numMoves: 51, numColors: 7, lvl: 49 },
+    50: { gridSize: 19, points: 464, numMoves: 52, numColors: 7, lvl: 50 },
+    51: { gridSize: 19, points: 466, numMoves: 53, numColors: 7, lvl: 51 },
+    52: { gridSize: 20, points: 540, numMoves: 54, numColors: 8, lvl: 52 },
+    53: { gridSize: 20, points: 542, numMoves: 55, numColors: 8, lvl: 53 },
+    54: { gridSize: 20, points: 544, numMoves: 56, numColors: 8, lvl: 54 },
+    55: { gridSize: 21, points: 630, numMoves: 57, numColors: 8, lvl: 55 },
+    56: { gridSize: 21, points: 632, numMoves: 58, numColors: 8, lvl: 56 },
+    57: { gridSize: 21, points: 634, numMoves: 59, numColors: 8, lvl: 57 },
+    58: { gridSize: 22, points: 720, numMoves: 60, numColors: 8, lvl: 58 },
+    59: { gridSize: 22, points: 722, numMoves: 61, numColors: 8, lvl: 59 },
+    60: { gridSize: 23, points: 840, numMoves: 63, numColors: 9, lvl: 61 },
+    61: { gridSize: 23, points: 842, numMoves: 64, numColors: 9, lvl: 62 },
+    62: { gridSize: 23, points: 844, numMoves: 65, numColors: 9, lvl: 63 },
+    63: { gridSize: 24, points: 960, numMoves: 66, numColors: 9, lvl: 64 },
+    64: { gridSize: 24, points: 962, numMoves: 67, numColors: 9, lvl: 65 },
+    65: { gridSize: 24, points: 964, numMoves: 68, numColors: 9, lvl: 66 },
+    66: { gridSize: 25, points: 1100, numMoves: 69, numColors: 10, lvl: 67 },
+    67: { gridSize: 25, points: 1102, numMoves: 70, numColors: 10, lvl: 68 },
+    68: { gridSize: 25, points: 1104, numMoves: 71, numColors: 10, lvl: 69 },
+    69: { gridSize: 26, points: 1260, numMoves: 72, numColors: 10, lvl: 70 },
+    70: { gridSize: 26, points: 1262, numMoves: 73, numColors: 10, lvl: 71 },
+    71: { gridSize: 26, points: 1264, numMoves: 74, numColors: 10, lvl: 72 },
+    72: { gridSize: 27, points: 1440, numMoves: 75, numColors: 11, lvl: 73 },
+    73: { gridSize: 27, points: 1442, numMoves: 76, numColors: 11, lvl: 74 },
+    74: { gridSize: 27, points: 1444, numMoves: 77, numColors: 11, lvl: 75 },
+    75: { gridSize: 28, points: 1620, numMoves: 78, numColors: 11, lvl: 76 },
+    76: { gridSize: 28, points: 1622, numMoves: 79, numColors: 11, lvl: 77 },
+    77: { gridSize: 28, points: 1624, numMoves: 80, numColors: 11, lvl: 78 },
+    78: { gridSize: 29, points: 1800, numMoves: 81, numColors: 12, lvl: 79 },
+    79: { gridSize: 29, points: 1802, numMoves: 82, numColors: 12, lvl: 80 },
+    80: { gridSize: 29, points: 1804, numMoves: 83, numColors: 12, lvl: 81 },
+    81: { gridSize: 30, points: 1980, numMoves: 84, numColors: 12, lvl: 82 },
+    82: { gridSize: 30, points: 1982, numMoves: 85, numColors: 12, lvl: 83 },
+    83: { gridSize: 30, points: 1984, numMoves: 86, numColors: 12, lvl: 84 },
+    84: { gridSize: 31, points: 2160, numMoves: 87, numColors: 13, lvl: 85 },
+    85: { gridSize: 31, points: 2162, numMoves: 88, numColors: 13, lvl: 86 },
+    86: { gridSize: 31, points: 2164, numMoves: 89, numColors: 13, lvl: 87 },
+    87: { gridSize: 32, points: 2340, numMoves: 90, numColors: 13, lvl: 88 },
+    88: { gridSize: 32, points: 2342, numMoves: 91, numColors: 13, lvl: 89 },
+    89: { gridSize: 32, points: 2344, numMoves: 92, numColors: 13, lvl: 90 },
+    90: { gridSize: 33, points: 2520, numMoves: 93, numColors: 14, lvl: 91 },
+    91: { gridSize: 33, points: 2522, numMoves: 94, numColors: 14, lvl: 92 },
+    92: { gridSize: 33, points: 2524, numMoves: 95, numColors: 14, lvl: 93 },
+    93: { gridSize: 34, points: 2700, numMoves: 96, numColors: 14, lvl: 94 },
+    94: { gridSize: 34, points: 2702, numMoves: 97, numColors: 14, lvl: 95 },
+    95: { gridSize: 34, points: 2704, numMoves: 98, numColors: 14, lvl: 96 },
+    96: { gridSize: 35, points: 2880, numMoves: 99, numColors: 15, lvl: 97 },
+    97: { gridSize: 35, points: 2882, numMoves: 100, numColors: 15, lvl: 98 },
+    98: { gridSize: 35, points: 2884, numMoves: 101, numColors: 15, lvl: 99 },
+    99: { gridSize: 36, points: 3060, numMoves: 102, numColors: 15, lvl: 100 },
+    100: { gridSize: 36, points: 3062, numMoves: 103, numColors: 15, lvl: 101 },
+    101: { gridSize: 36, points: 3064, numMoves: 104, numColors: 15, lvl: 102 },
+    102: { gridSize: 37, points: 3240, numMoves: 105, numColors: 16, lvl: 103 },
+    103: { gridSize: 37, points: 3242, numMoves: 106, numColors: 16, lvl: 104 },
+    104: { gridSize: 37, points: 3244, numMoves: 107, numColors: 16, lvl: 105 },
+    105: { gridSize: 38, points: 3420, numMoves: 108, numColors: 16, lvl: 106 },
+    106: { gridSize: 38, points: 3422, numMoves: 109, numColors: 16, lvl: 107 },
+    107: { gridSize: 38, points: 3424, numMoves: 110, numColors: 16, lvl: 108 },
+    108: { gridSize: 39, points: 3600, numMoves: 111, numColors: 17, lvl: 109 },
+    109: { gridSize: 39, points: 3602, numMoves: 112, numColors: 17, lvl: 110 },
+    110: { gridSize: 39, points: 3604, numMoves: 113, numColors: 17, lvl: 111 },
+    111: { gridSize: 40, points: 3780, numMoves: 114, numColors: 17, lvl: 112 },
+    112: { gridSize: 40, points: 3782, numMoves: 115, numColors: 17, lvl: 113 },
+    113: { gridSize: 40, points: 3784, numMoves: 116, numColors: 17, lvl: 114 },
+    114: { gridSize: 41, points: 3960, numMoves: 117, numColors: 18, lvl: 115 },
+    115: { gridSize: 41, points: 3962, numMoves: 118, numColors: 18, lvl: 116 },
+    116: { gridSize: 41, points: 3964, numMoves: 119, numColors: 18, lvl: 117 },
+    117: { gridSize: 42, points: 4140, numMoves: 120, numColors: 18, lvl: 118 },
+    118: { gridSize: 42, points: 4142, numMoves: 121, numColors: 18, lvl: 119 },
+    119: { gridSize: 42, points: 3980, numMoves: 121, numColors: 18, lvl: 119 },
+    120: { gridSize: 42, points: 4144, numMoves: 122, numColors: 18, lvl: 120 }
 };
-
-
-
 
 
 // Funktion zum Hervorheben und Hinzufügen von Level-Boxen für abgeschlossene Levels
