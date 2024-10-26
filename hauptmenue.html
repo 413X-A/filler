@@ -322,7 +322,8 @@ function highlightCompletedLevels() {
 // Funktion zum Starten eines Levels
 function startChallenge(level) {
     const { gridSize, numColors, numMoves, points, lvl } = levels[level];
-    const levelKey = `level_${lvl}`;
+    const currentUser = localStorage.getItem('currentUsername'); // Hole den Benutzernamen
+    const levelKey = `level_${currentUser}_${lvl}`; // Spezifischer Schlüssel mit Benutzername
 
     // Überprüfen, ob ein Eintrag für das Level existiert und ob `success` auf `true` ist
     let levelData = JSON.parse(localStorage.getItem(levelKey));
