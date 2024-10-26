@@ -336,26 +336,27 @@ function startChallenge(level) {
         }
 
         function accountDelete() {
-            const userConfirmed = confirm('Möchtest du wirklich unwiderruflich deinen gesamten Account löschen?');
-            if (userConfirmed) {
-                const currentUser = localStorage.getItem('currentUsername');
-    if (currentUser) {
-        // Alle Schlüssel in localStorage durchgehen
-        for (let key in localStorage) {
-            // Prüfen, ob der Schlüssel benutzerspezifisch ist oder Level-Informationen enthält
-            if (key.includes(currentUser) || key.startsWith("level_")) {
-                localStorage.removeItem(key);
+    const userConfirmed = confirm('Möchtest du wirklich unwiderruflich deinen gesamten Account löschen?');
+    if (userConfirmed) {
+        const currentUser = localStorage.getItem('currentUsername');
+        if (currentUser) {
+            // Alle Schlüssel in localStorage durchgehen
+            for (let key in localStorage) {
+                // Prüfen, ob der Schlüssel benutzerspezifisch ist
+                if (key.startsWith(`level_${currentUser}`) || key === `exp_${currentUser}`) {
+                    localStorage.removeItem(key); // Level-Informationen und EXP entfernen
+                }
             }
+            localStorage.removeItem('currentUsername'); // Den Benutzernamen selbst entfernen
         }
-        localStorage.removeItem('currentUsername'); // Den Benutzernamen selbst entfernen
+        // Zurück zur Startseite und Benutzer informieren
+        alert('Dein Account wurde gelöscht.');
+        window.location.href = 'index.html';
+    } else {
+        // Nichts tun, wenn der Benutzer "Abbrechen" wählt
     }
-    // Zurück zur Startseite
-    alert('Dein Account wurde gelöscht.');
-    window.location.href = 'index.html';
 }
-            } else {
-                // Nichts tun
-            }
+
 
 // Beim Laden der Seite die abgeschlossenen und gespeicherten Level markieren
 window.onload = function() {
