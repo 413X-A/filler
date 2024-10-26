@@ -259,9 +259,15 @@ function endGame() {
 
     // Erfolg des Levels speichern
     if (score >= targetScore) {
+        const success_music = new Audio('level_complete.mp3');
+        success_music.play(); // Spiele die Musik ab
+        
         resultMessage.textContent = 'Herzlichen Glückwunsch! Sie haben das Spiel gewonnen!';
         localStorage.setItem(levelKey, JSON.stringify({ success: true }));
     } else {
+        const nosuccess_music = new Audio('level_incomplete.mp3');
+        nosuccess_music.play(); // Spiele die Musik ab
+        
         resultMessage.textContent = 'Das Spiel ist vorbei. Sie haben nicht genug Punkte erreicht.';
         localStorage.setItem(levelKey, JSON.stringify({ success: false }));
     }
