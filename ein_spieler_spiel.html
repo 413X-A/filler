@@ -213,12 +213,17 @@
         });
     });
 
-    // Hier kannst du die Anzahl der neu gefärbten Zellen verwenden
-    // Beispiel: Score aktualisieren
-    score += newlyColoredCount; // Füge die Anzahl neu gefärbter Zellen zum Score hinzu
+    // Aktualisiere den Score mit der Anzahl neu gefärbter Zellen
+    score += newlyColoredCount;
+
+    // Überprüfen, ob 5 oder mehr neue Kästchen gefärbt wurden
+    if (newlyColoredCount >= 5) {
+        score += 1; // Füge zusätzlich 1 zum Score hinzu
+    }
 
     drawBoard(); // Zeichne das Spielfeld neu
 }
+
 
 
         function findWhiteCells() {
