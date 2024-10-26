@@ -533,7 +533,7 @@ function highlightCompletedLevels() {
     }
 
     // Alle Level in `localStorage` durchgehen
-    for (let i = 1; i <= 15; i++) { // Da es 15 Level gibt
+    for (let i = 1; i <= 120; i++) { // Da es 15 Level gibt
         const levelKey = `level_${currentUser}_${i}`; // Benutzer-spezifischer Schlüssel
         const levelData = JSON.parse(localStorage.getItem(levelKey)); // Level-Daten für den aktuellen Benutzer
 
