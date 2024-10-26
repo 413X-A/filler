@@ -291,12 +291,11 @@ function endGame() {
             window.location.href = 'hauptmenue.html';
         }
 
-        window.onload = startGame;
-        
-        window.onload = function() {
-            handleMusicForUser();
-        
-        };
+window.onload = function() {
+    startGame();
+    handleMusicForUser();
+};
+
 
     </script>
 </body>
