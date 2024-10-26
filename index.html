@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fill Me • Anmeldung</title>
+    <style>
+        /* Stile für die Anmeldung */
+    </style>
+</head>
+<body>
+    <div id="loginBox">
+        <h1>Fill Me</h1>
+        <input type="text" id="username" placeholder="Benutzername">
+        <input type="password" id="password" placeholder="Passwort">
+        <button onclick="handleLogin()">Anmelden</button>
+        <div id="message"></div>
+    </div>
+
+<script>
+    function handleLogin() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const message = document.getElementById('message');
+
+        if (!username || !password) {
+            message.textContent = "Bitte füllen Sie alle Felder aus.";
+            return;
+        }
+
+        const existingUser = localStorage.getItem(username);
+
+        if (existingUser) {
+            const userData = JSON.parse(existingUser);
+
+            if (userData.passwort === password) {
+                localStorage.setItem('currentUsername', username);  // Speichere aktuellen Benutzer
+                message.textContent = `Angemeldet als ${username}!`;
+                message.style.color = "green";
+                
+                setTimeout(() => {
+                    window.location.href = 'hauptmenue.html';
+                }, 1000);
+            } else {
+                message.textContent = "Falsches Passwort, oder der Benutzer existiert bereits!";
+                message.style.color = "red";
+            }
+        } else {
+            const entryNumber = localStorage.length + 1;
+            const newUser = {
+                benutzername: username,
+                passwort: password,
+                eintragsnummer: entryNumber
+            };
+            
+            localStorage.setItem(username, JSON.stringify(newUser));
+            localStorage.setItem('currentUsername', username);  // Speichere aktuellen Benutzer
+            message.textContent = `${username} wurde erstellt!`;
+            message.style.color = "green";
+
+            setTimeout(() => {
+                window.location.href = 'hauptmenue.html';
+            }, 1000);
+        }
+    }
+</script>
+</body>
+</html>
