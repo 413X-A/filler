@@ -243,6 +243,7 @@
     const resultMessage = document.getElementById('resultMessage');
     const expMessage = document.getElementById('expMessage');
     const currentUser = localStorage.getItem('currentUsername'); // Benutzername abrufen
+    const musicPlayer = document.getElementById("musicPlayer");
 
     // Überprüfen, ob ein Benutzername vorhanden ist
     if (!currentUser) {
@@ -255,9 +256,16 @@
 
     // Erfolg des Levels speichern
     if (score >= targetScore) {
+        // Funktion zum Abspielen von Jazz-Musik
+        musicPlayer.src = "level_complete.mp3";
+        musicPlayer.play();
+        
         resultMessage.textContent = 'Herzlichen Glückwunsch! Sie haben das Spiel gewonnen!';
         localStorage.setItem(levelKey, JSON.stringify({ success: true }));
     } else {
+        musicPlayer.src = "level_incomplete.mp3";
+        musicPlayer.play();
+        
         resultMessage.textContent = 'Das Spiel ist vorbei. Sie haben nicht genug Punkte erreicht.';
         localStorage.setItem(levelKey, JSON.stringify({ success: false }));
     }
