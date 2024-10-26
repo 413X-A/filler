@@ -156,49 +156,59 @@
         }
 
         function createColorButtons() {
-            const colorButtons = document.getElementById('colorButtons');
-            colorButtons.innerHTML = '';
-            colors.forEach(color => {
-                const button = document.createElement('button');
-                button.style.backgroundColor = color;
-                button.addEventListener('click', () => {
-                    if (!isGameOver && movesLeft > 0) {
-                        fillAdjacentToWhite(color);
-                        movesLeft--;
-                        updateScoreAndMoves();
-                        
-                        if (checkAllFilled() || movesLeft <= 0) {
-                            endGame();
-                        }
-                    }
-                });
-                colorButtons.appendChild(button);
-            });
-        }
+    const colorButtons = document.getElementById('colorButtons');
+    colorButtons.innerHTML = '';
+    colors.forEach(color => {
+        const button = document.createElement('button');
+        button.style.backgroundColor = color;
+        button.addEventListener('click', () => {
+            if (!isGameOver && movesLeft > 0) {
+                const addedCells = fillAdjacentToWhite(color); // Zähler speichern
+                movesLeft--;
+                updateScoreAndMoves();
+
+                // Hier kannst du die Anzahl der hinzugefügten Zellen anzeigen
+                alert(`Anzahl der hinzugefügten Zellen: ${addedCells}`);
+
+                if (checkAllFilled() || movesLeft <= 0) {
+                    endGame();
+                }
+            }
+        });
+        colorButtons.appendChild(button);
+    });
+}
+
 
         function fillAdjacentToWhite(selectedColor) {
-            const whiteCells = findWhiteCells();
+    const whiteCells = findWhiteCells();
+    let addedCellsCount = 0;  // Zähler für die hinzugefügten Zellen
 
-            whiteCells.forEach(([row, col]) => {
-                const adjacentCells = [
-                    [row - 1, col],
-                    [row + 1, col],
-                    [row, col - 1],
-                    [row, col + 1]
-                ];
+    whiteCells.forEach(([row, col]) => {
+        const adjacentCells = [
+            [row - 1, col],
+            [row + 1, col],
+            [row, col - 1],
+            [row, col + 1]
+        ];
 
-                adjacentCells.forEach(([adjRow, adjCol]) => {
-                    if (adjRow >= 0 && adjCol >= 0 && adjRow < gridSize && adjCol < gridSize) {
-                        if (gameBoard[adjRow][adjCol] === selectedColor) {
-                            gameBoard[adjRow][adjCol] = 'white';
-                            score++;
-                        }
-                    }
-                });
-            });
+        adjacentCells.forEach(([adjRow, adjCol]) => {
+            // Überprüfen, ob die Nachbarzelle innerhalb der Grenzen des Arrays liegt
+            if (adjRow >= 0 && adjCol >= 0 && adjRow < gridSize && adjCol < gridSize) {
+                // Überprüfen, ob die Nachbarzelle die ausgewählte Farbe hat
+                if (gameBoard[adjRow][adjCol] === selectedColor) {
+                    gameBoard[adjRow][adjCol] = 'white';  // Füllen der Zelle mit 'white'
+                    score++;  // Punktestand erhöhen
+                    addedCellsCount++;  // Zähler erhöhen
+                }
+            }
+        });
+    });
 
-            drawBoard();
-        }
+    drawBoard();
+    return addedCellsCount;  // Rückgabe der Anzahl der hinzugefügten Zellen
+}
+
 
         function findWhiteCells() {
             const whiteCells = [];
