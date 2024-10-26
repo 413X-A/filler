@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fill Me • Herausforderung</title>
+    <title>FillMe • Herausforderung</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -85,7 +85,7 @@
     </style>
 </head>
 <body>
-    <h1>Fill Me • Herausforderung</h1>
+    <h1>FillMe • Herausforderung</h1>
     <audio id="musicPlayer" style="display:none;"></audio>
     
     <div id="scoreboard">
@@ -262,13 +262,13 @@ function endGame() {
         const success_music = new Audio('level_complete.mp3');
         success_music.play(); // Spiele die Musik ab
         
-        resultMessage.textContent = 'Herzlichen Glückwunsch! Sie haben das Spiel gewonnen!';
+        resultMessage.textContent = '${level} beendet\nErfolgreich mit ${score} Punkten!';
         localStorage.setItem(levelKey, JSON.stringify({ success: true }));
     } else {
         const nosuccess_music = new Audio('level_incomplete.mp3');
         nosuccess_music.play(); // Spiele die Musik ab
         
-        resultMessage.textContent = 'Das Spiel ist vorbei. Sie haben nicht genug Punkte erreicht.';
+        resultMessage.textContent = '${level} beendet\nErfolglos mit ${score}/$targetScore} Punkten!';
         localStorage.setItem(levelKey, JSON.stringify({ success: false }));
     }
 
