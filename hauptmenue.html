@@ -114,8 +114,10 @@
     <div id="profile" style="display: none;">
         <h2>Profil für <span id="username"></span></h2>
         <p>EXP: <span id="userExp"></span></p>
-        <button class="profileButton" onclick="logout()">Abmelden</button>
-        <button class="profileButton" onclick="deleteAccount()">Account löschen</button>
+        <div style="display: flex; justify-content: space-between; width: 90%; margin: 0 auto;">
+            <button class="profileButton" onclick="logout()">Abmelden</button>
+            <button class="profileButton" onclick="deleteAccount()">Account löschen</button>
+        </div>
     </div>
 
     <!-- Einzelspieler Optionen -->
