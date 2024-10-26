@@ -182,11 +182,9 @@
 
 
 
-        let pointsAddedThisTurn = false;  // Statusvariable, um zu überprüfen, ob Punkte in diesem Zug bereits hinzugefügt wurden
-
-function fillAdjacentToWhite(selectedColor) {
+        function fillAdjacentToWhite(selectedColor) {
     const whiteCells = findWhiteCells();
-    let addedCellsCount = 0;  // Zähler für die hinzugefügten Zellen
+    let addedCount = 0; // Zähler für die hinzugefügten Zellen
 
     whiteCells.forEach(([row, col]) => {
         const adjacentCells = [
@@ -197,22 +195,20 @@ function fillAdjacentToWhite(selectedColor) {
         ];
 
         adjacentCells.forEach(([adjRow, adjCol]) => {
-            // Überprüfen, ob die Nachbarzelle innerhalb der Grenzen des Arrays liegt
-            if (adjRow >= 0 && adjCol >= 0 && adjRow < gridSize && adjRow < gridSize) {
-                // Überprüfen, ob die Nachbarzelle die ausgewählte Farbe hat
+            if (adjRow >= 0 && adjCol >= 0 && adjRow < gridSize && adjCol < gridSize) {
                 if (gameBoard[adjRow][adjCol] === selectedColor) {
-                    gameBoard[adjRow][adjCol] = 'white';  // Füllen der Zelle mit 'white'
-                    addedCellsCount++;  // Zähler erhöhen
+                    gameBoard[adjRow][adjCol] = 'white';
+                    addedCount++; // Erhöhe den Zähler für jede hinzugefügte Zelle
                 }
             }
         });
     });
 
-    // Punkte nur einmal pro Zug erhöhen
-    if (addedCellsCount >= 5 && !pointsAddedThisTurn) {
-        score += 1;  // Score um 1 erhöhen
-        pointsAddedThisTurn = true;  // Punkte wurden hinzugefügt
-    }
+    score += addedCount; // Erhöhe den Score um die Anzahl der hinzugefügten Zellen
+    drawBoard(); // Aktualisiere das Spielfeld
+    return addedCount; // Optional: Rückgabe der hinzugefügten Zellen für weitere Verwendung
+}
+
 
     drawBoard();
     return addedCellsCount;  // Rückgabe der Anzahl der hinzugefügten Zellen
