@@ -76,6 +76,24 @@
             font-size: 18px; /* Kleinere Schriftgröße */
             background-color: lightgray;
         }
+
+        /* Style for profile buttons */
+        .profileButton {
+            width: 45%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: lightgray;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-block;
+            margin: 0 5%;
+        }
+        
+        .profileButton:hover {
+            background-color: gray;
+            color: white;
+        }
         
     </style>
 </head>
@@ -174,19 +192,38 @@
             document.getElementById('singlePlayer').style.display = 'block';
             document.getElementById('multiPlayer').style.display = 'none';
             document.getElementById('challenges').style.display = 'none';
+            document.getElementById('profile').style.display = 'none';
         }
 
         function showMultiPlayer() {
             document.getElementById('singlePlayer').style.display = 'none';
             document.getElementById('multiPlayer').style.display = 'block';
             document.getElementById('challenges').style.display = 'none';
+            document.getElementById('profile').style.display = 'none';
         }
 
         function showChallenges() {
             document.getElementById('singlePlayer').style.display = 'none';
             document.getElementById('multiPlayer').style.display = 'none';
             document.getElementById('challenges').style.display = 'block';
+            document.getElementById('profile').style.display = 'none';
             loadLevels(); // Lade die Level, wenn die Herausforderungen angezeigt werden
+        }
+
+        // Profil anzeigen und Informationen aus localStorage holen
+        function showProfile() {
+            const currentUser = localStorage.getItem('currentUsername');
+            if (!currentUser) {
+                alert('Kein Benutzername gefunden. Bitte melden Sie sich an.');
+                return;
+            }
+            document.getElementById('username').textContent = currentUser;
+            document.getElementById('userExp').textContent = localStorage.getItem(`exp_${currentUser}`) || 0;
+
+            document.getElementById('singlePlayer').style.display = 'none';
+            document.getElementById('multiPlayer').style.display = 'none';
+            document.getElementById('challenges').style.display = 'none';
+            document.getElementById('profile').style.display = 'block';
         }
 
         function startSinglePlayer() {
@@ -279,6 +316,25 @@ function startChallenge(level) {
         window.location.href = `herausforderung_spiel.html?gridSize=${gridSize}&numColors=${numColors}&numMoves=${numMoves}&points=${points}&lvl=${lvl}`;
     }
 }
+
+        // Abmelden und zur Startseite weiterleiten
+        function logout() {
+            window.location.href = 'index.html';
+        }
+
+        // Account löschen und zur Startseite weiterleiten
+        function deleteAccount() {
+            const currentUser = localStorage.getItem('currentUsername');
+            if (currentUser) {
+                localStorage.removeItem(`exp_${currentUser}`);
+                for (let i = 1; i <= 15; i++) {
+                    localStorage.removeItem(`level_${currentUser}_${i}`);
+                }
+                localStorage.removeItem('currentUsername');
+            }
+            window.location.href = 'index.html';
+        }
+        
 
 // Beim Laden der Seite die abgeschlossenen und gespeicherten Level markieren
 window.onload = function() {
