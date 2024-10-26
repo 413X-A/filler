@@ -88,9 +88,10 @@
                 if (userData.passwort === password) {
                     // Benutzer erfolgreich angemeldet
                     localStorage.setItem('currentUsername', username);  // Aktuellen Benutzer speichern
+                    message.textContent = `Angemeldet als ${username}!`;
                     window.location.href = 'hauptmenue.html';
                 } else {
-                    message.textContent = "Falsches Passwort. Versuchen Sie es erneut.";
+                    message.textContent = "Falsches Passwort, oder der Benutzer existiert bereits!";
                     message.style.color = "red";
                 }
             } else {
@@ -104,7 +105,7 @@
                 
                 localStorage.setItem(username, JSON.stringify(newUser));
                 localStorage.setItem('currentUsername', username);  // Aktuellen Benutzer speichern
-                message.textContent = `Neuer Benutzer erstellt und angemeldet als ${username}.`;
+                message.textContent = `${username} wurde erstellt!`;
                 message.style.color = "green";
                 
                 // Erfolgreiche Registrierung und direkte Weiterleitung
