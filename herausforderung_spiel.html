@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fill Me • Herausforderung</title>
+    <!-- Füge das Musik-Handler-Skript hier hinzu -->
+    <script src="musicHandler.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,6 +88,8 @@
 </head>
 <body>
     <h1>Fill Me • Herausforderung</h1>
+    <audio id="musicPlayer" style="display:none;"></audio>
+    
     <div id="scoreboard">
         <div id="levelInfo" class="scoreBox">0 / 100</div>
         <div id="homeButton" onclick="goHome()">Home</div>
@@ -288,6 +292,12 @@ function endGame() {
         }
 
         window.onload = startGame;
+        
+        window.onload = function() {
+            handleMusicForUser();
+        
+        };
+
     </script>
 </body>
 </html>
