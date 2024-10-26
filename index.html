@@ -68,50 +68,59 @@
     </div>
 
     <script>
-        function handleLogin() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const message = document.getElementById('message');
+        de kopieren
+<script>
+    function handleLogin() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const message = document.getElementById('message');
 
-            if (!username || !password) {
-                message.textContent = "Bitte füllen Sie alle Felder aus.";
-                return;
-            }
+        if (!username || !password) {
+            message.textContent = "Bitte füllen Sie alle Felder aus.";
+            return;
+        }
 
-            // Prüfe, ob der Benutzername bereits existiert
-            const existingUser = localStorage.getItem(username);
+        // Prüfe, ob der Benutzername bereits existiert
+        const existingUser = localStorage.getItem(username);
 
-            if (existingUser) {
-                const userData = JSON.parse(existingUser);
+        if (existingUser) {
+            const userData = JSON.parse(existingUser);
 
-                // Prüfen, ob das Passwort übereinstimmt
-                if (userData.passwort === password) {
-                    // Benutzer erfolgreich angemeldet
-                    localStorage.setItem('currentUsername', username);  // Aktuellen Benutzer speichern
-                    message.textContent = `Angemeldet als ${username}!`;
-                    window.location.href = 'hauptmenue.html';
-                } else {
-                    message.textContent = "Falsches Passwort, oder der Benutzer existiert bereits!";
-                    message.style.color = "red";
-                }
-            } else {
-                // Neuen Benutzer erstellen
-                const entryNumber = localStorage.length + 1;
-                const newUser = {
-                    benutzername: username,
-                    passwort: password,
-                    eintragsnummer: entryNumber
-                };
-                
-                localStorage.setItem(username, JSON.stringify(newUser));
+            // Prüfen, ob das Passwort übereinstimmt
+            if (userData.passwort === password) {
+                // Benutzer erfolgreich angemeldet
                 localStorage.setItem('currentUsername', username);  // Aktuellen Benutzer speichern
-                message.textContent = `${username} wurde erstellt!`;
+                message.textContent = `Angemeldet als ${username}!`;
                 message.style.color = "green";
                 
-                // Erfolgreiche Registrierung und direkte Weiterleitung
-                window.location.href = 'hauptmenue.html';
+                // Eine Sekunde warten, bevor die Weiterleitung erfolgt
+                setTimeout(() => {
+                    window.location.href = 'hauptmenue.html';
+                }, 1000);
+            } else {
+                message.textContent = "Falsches Passwort, oder der Benutzer existiert bereits!";
+                message.style.color = "red";
             }
+        } else {
+            // Neuen Benutzer erstellen
+            const entryNumber = localStorage.length + 1;
+            const newUser = {
+                benutzername: username,
+                passwort: password,
+                eintragsnummer: entryNumber
+            };
+            
+            localStorage.setItem(username, JSON.stringify(newUser));
+            localStorage.setItem('currentUsername', username);  // Aktuellen Benutzer speichern
+            message.textContent = `${username} wurde erstellt!`;
+            message.style.color = "green";
+
+            // Eine Sekunde warten, bevor die Weiterleitung erfolgt
+            setTimeout(() => {
+                window.location.href = 'hauptmenue.html';
+            }, 1000);
         }
+    }
     </script>
 </body>
 </html>
