@@ -117,7 +117,7 @@
         <p>EXP: <span id="userExp"></span></p>
         <div style="display: flex; justify-content: space-between; width: 90%; margin: 0 auto;">
             <button class="profileButton" onclick="logout()">Abmelden</button>
-            <button class="profileButton" onclick="deleteAccount()">Account löschen</button>
+            <button class="profileButton" onclick="accountDelete()">Account löschen</button>
         </div>
     </div>
 
@@ -331,12 +331,14 @@ function startChallenge(level) {
 
         // Abmelden und zur Startseite weiterleiten
         function logout() {
+            alert('Erfolgreich abgemeldet!');
             window.location.href = 'index.html';
         }
 
-        // Account löschen und zur Startseite weiterleiten
-function deleteAccount() {
-    const currentUser = localStorage.getItem('currentUsername');
+        function accountDelete() {
+            const userConfirmed = confirm('Möchtest du wirklich unwiderruflich deinen gesamten Account löschen?');
+            if (userConfirmed) {
+                const currentUser = localStorage.getItem('currentUsername');
     if (currentUser) {
         // Alle Schlüssel in localStorage durchgehen
         for (let key in localStorage) {
@@ -348,10 +350,12 @@ function deleteAccount() {
         localStorage.removeItem('currentUsername'); // Den Benutzernamen selbst entfernen
     }
     // Zurück zur Startseite
+    alert('Dein Account wurde gelöscht.');
     window.location.href = 'index.html';
 }
-
-        
+            } else {
+                // Nichts tun
+            }
 
 // Beim Laden der Seite die abgeschlossenen und gespeicherten Level markieren
 window.onload = function() {
