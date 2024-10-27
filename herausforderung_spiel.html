@@ -19,7 +19,7 @@
             align-items: center;
             border: 1px solid #ccc;
         }
-        button {
+       button {
             width: 30px;
             height: 30px;
             border: none;
@@ -104,7 +104,7 @@
         <h2>Spielende</h2>
         <p id="resultMessage"></p>
         <p id="expMessage"></p>
-        <button id="restartGame">Fortfahren</button>
+        <button id="restartGame" style="width: 60%; height: 15px;">Fortfahren</button>
     </div>
     <script>
         // Hole die Parameter aus der URL
@@ -302,7 +302,7 @@ function endGame() {
     if (gesamtScore >= targetScore) {
         const success_music = new Audio('level_complete.mp3');
         success_music.play(); // Spiele die Musik ab
-        resultMessage.alert(`${level} abgeschlossen!<br>Gesamte Punkte: ${gesamtScore}<br>Davon Punkte: ${score}<br>Davon Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}`);
+        resultMessage.innerHTML = `${level} abgeschlossen!<br>Gesamte Punkte: ${gesamtScore}<br>Davon Punkte: ${score}<br>Davon Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}`;
         localStorage.setItem(levelKey, JSON.stringify({ success: true }));
     } else {
         const nosuccess_music = new Audio('level_incomplete.mp3');
