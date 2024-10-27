@@ -323,20 +323,15 @@ function endGame() {
     const totalPoints = existingPoints + (gesamtScore - plusScore);
     localStorage.setItem(userPointsKey, totalPoints);
 
-
     // Gesamte Bonuspunkte des Benutzers aktualisieren
     const userBonusKey = `bonusPoints_${currentUser}`; // Schlüssel für die gesamten Bonuspunkte des Benutzers
     let existingBonus = parseInt(localStorage.getItem(userBonusKey)) || 0;
-
-    // Neue Bonuspunkte zum bestehenden Wert hinzufügen und speichern
     const totalBonus = existingBonus + plusScore;
     localStorage.setItem(userBonusKey, totalBonus);
 
-    // EXP für den Benutzer abrufen und aktualisieren
+    // EXP Speichern
     const userExpKey = `exp_${currentUser}`; // Schlüssel für die EXP des Benutzers
     let existingExp = parseInt(localStorage.getItem(userExpKey)) || 0;
-
-    // Neue EXP zum bestehenden Wert hinzufügen und speichern
     const totalExp = existingExp + exp;
     localStorage.setItem(userExpKey, totalExp);
 
