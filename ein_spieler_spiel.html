@@ -271,7 +271,7 @@ function endGame(totalMoves) {
     }
 
     // Berechne die erhaltenen EXP
-    const exp = Math.floor((score * 3) / totalMoves); // Berechnung der EXP
+    const exp = Math.floor((score * 2) / totalMoves); // Berechnung der EXP
 
     // Ergebnisnachricht anzeigen, inklusive der erhaltenen EXP
     resultMessage.innerHTML = `Spielende<br>Punkte: ${score}<br>Erhaltene EXP: ${exp}`;
