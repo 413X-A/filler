@@ -245,9 +245,19 @@
         }
 
         function updateScoreAndMoves() {
-            const gesamtScore = gesamtScore
-            document.getElementById('levelInfo').textContent = `${gesamtScore} / ${targetScore}`;
+            const tafelScore = gesamtScore;
+            document.getElementById('levelInfo').textContent = `${tafelScore} / ${targetScore}`;
             document.getElementById('moves').textContent = movesLeft === Infinity ? '∞' : movesLeft;
+        }
+
+        function countWhiteCells() {
+            let count = 0;
+            for (let row of gameBoard) {
+                for (let cell of row) {
+                    if (cell === 'white') count++;
+                }
+            }
+            return count;
         }
 
         function checkAllFilled() {
