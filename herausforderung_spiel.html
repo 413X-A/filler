@@ -290,7 +290,7 @@ function endGame() {
 
     // Endtafel vorbereiten
     const gesamtScore = score; // Gesamtscore sichern
-    score -= plusScore
+    score -= plusScore;
 
     // Überprüfen, ob ein Benutzername vorhanden ist
     if (!currentUser) {
@@ -317,6 +317,14 @@ function endGame() {
         localStorage.setItem(levelKey, JSON.stringify({ success: false }));
     }
 
+    // Gesamte Bonuspunkte des Benutzers aktualisieren
+    const userBonusKey = `bonus_${currentUser}`; // Schlüssel für die gesamten Bonuspunkte des Benutzers
+    let existingBonus = parseInt(localStorage.getItem(userBonusKey)) || 0;
+
+    // Neue Bonuspunkte zum bestehenden Wert hinzufügen und speichern
+    const totalBonus = existingBonus + plusScore;
+    localStorage.setItem(userBonusKey, totalBonus);
+
     // EXP für den Benutzer abrufen und aktualisieren
     const userExpKey = `exp_${currentUser}`; // Schlüssel für die EXP des Benutzers
     let existingExp = parseInt(localStorage.getItem(userExpKey)) || 0;
@@ -329,6 +337,7 @@ function endGame() {
     document.getElementById('resultModal').style.display = 'block';
     document.getElementById('overlay').style.display = 'block';
 }
+
 
 
 
