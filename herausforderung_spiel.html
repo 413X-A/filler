@@ -207,25 +207,22 @@
     score += newlyColoredCount;
     plusScore += newlyColoredCount;
 
-    // Überprüfen, ob 5 oder mehr neue Kästchen gefärbt wurden
-    if (newlyColoredCount >= 5) {
-        score += 1; // Füge zusätzlich 1 zum Score hinzu
+    // Überprüfen, ob 5 oder mehr neue Kästchen gefärbt wurden und Punkte hinzufügen
+    if (newlyColoredCount >= 25) {
+        score += 5; // Füge 5 Punkte hinzu, wenn 25 oder mehr Kästchen gefärbt wurden
+    } else if (newlyColoredCount >= 20) {
+        score += 4; // Füge 4 Punkte hinzu, wenn 20 oder mehr Kästchen gefärbt wurden
+    } else if (newlyColoredCount >= 15) {
+        score += 3; // Füge 3 Punkte hinzu, wenn 15 oder mehr Kästchen gefärbt wurden
+    } else if (newlyColoredCount >= 10) {
+        score += 2; // Füge 2 Punkte hinzu, wenn 10 oder mehr Kästchen gefärbt wurden
+    } else if (newlyColoredCount >= 5) {
+        score += 1; // Füge 1 Punkt hinzu, wenn 5 oder mehr Kästchen gefärbt wurden
     }
-    else if (newlyColoredCount >= 10) {
-        score += 2; // Füge zusätzlich 1 zum Score hinzu
-    }
-    else if (newlyColoredCount >= 15) {
-        score += 3; // Füge zusätzlich 1 zum Score hinzu
-    }
-    else if (newlyColoredCount >= 20) {
-        score += 4; // Füge zusätzlich 1 zum Score hinzu
-    }
-    else if (newlyColoredCount >= 25) {
-        score += 5; // Füge zusätzlich 1 zum Score hinzu
-    }
-   
+
     drawBoard(); // Zeichne das Spielfeld neu
 }
+
 
 
         function findWhiteCells() {
