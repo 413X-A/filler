@@ -180,28 +180,53 @@
 }
 
         function fillAdjacentToWhite(selectedColor) {
-            const whiteCells = findWhiteCells();
+    const whiteCells = findWhiteCells(); // Finde weiße Zellen
+    let newlyColoredCount = 0; // Zähler für neu gefärbte Zellen
 
-            whiteCells.forEach(([row, col]) => {
-                const adjacentCells = [
-                    [row - 1, col],
-                    [row + 1, col],
-                    [row, col - 1],
-                    [row, col + 1]
-                ];
+    whiteCells.forEach(([row, col]) => {
+        const adjacentCells = [
+            [row - 1, col],
+            [row + 1, col],
+            [row, col - 1],
+            [row, col + 1]
+        ];
 
-                adjacentCells.forEach(([adjRow, adjCol]) => {
-                    if (adjRow >= 0 && adjCol >= 0 && adjRow < gridSize && adjCol < gridSize) {
-                        if (gameBoard[adjRow][adjCol] === selectedColor) {
-                            gameBoard[adjRow][adjCol] = 'white';
-                            score++;
-                        }
-                    }
-                });
-            });
+        adjacentCells.forEach(([adjRow, adjCol]) => {
+            // Überprüfen, ob die angrenzende Zelle im gültigen Bereich liegt
+            if (adjRow >= 0 && adjCol >= 0 && adjRow < gridSize && adjCol < gridSize) {
+                // Wenn die angrenzende Zelle die ausgewählte Farbe hat
+                if (gameBoard[adjRow][adjCol] === selectedColor) {
+                    gameBoard[adjRow][adjCol] = 'white'; // Färbe die angrenzende Zelle weiß
+                    newlyColoredCount++; // Erhöhe den Zähler für neu gefärbte Zellen
+                }
+            }
+        });
+    });
 
-            drawBoard();
-        }
+    // Aktualisiere den Score mit der Anzahl neu gefärbter Zellen
+    score += newlyColoredCount;
+    plusScore += newlyColoredCount;
+
+    // Überprüfen, ob 5 oder mehr neue Kästchen gefärbt wurden
+    if (newlyColoredCount >= 5) {
+        score += 1; // Füge zusätzlich 1 zum Score hinzu
+    }
+    else if (newlyColoredCount >= 10) {
+        score += 2; // Füge zusätzlich 1 zum Score hinzu
+    }
+    else if (newlyColoredCount >= 15) {
+        score += 3; // Füge zusätzlich 1 zum Score hinzu
+    }
+    else if (newlyColoredCount >= 20) {
+        score += 4; // Füge zusätzlich 1 zum Score hinzu
+    }
+    else if (newlyColoredCount >= 25) {
+        score += 5; // Füge zusätzlich 1 zum Score hinzu
+    }
+   
+    drawBoard(); // Zeichne das Spielfeld neu
+}
+
 
         function findWhiteCells() {
             const whiteCells = [];
@@ -264,12 +289,12 @@ function endGame() {
     if (score >= targetScore) {
         const success_music = new Audio('level_complete.mp3');
         success_music.play(); // Spiele die Musik ab
-        resultMessage.innerHTML = `${level} beendet!<br>Erfolgreich mit ${score} Punkten.<br>Erhaltene EXP: ${exp}`;
+        resultMessage.innerHTML = `${level} beendet!<br>Erfolgreich mit ${score} Punkten.<br>p+: ${plusScore}<br>Erhaltene EXP: ${exp}`;
         localStorage.setItem(levelKey, JSON.stringify({ success: true }));
     } else {
         const nosuccess_music = new Audio('level_incomplete.mp3');
         nosuccess_music.play(); // Spiele die Musik ab
-        resultMessage.innerHTML = `${level} beendet!<br>Erfolglos mit ${score} / ${targetScore} Punkten.<br>Erhaltene EXP: ${exp}`;
+        resultMessage.innerHTML = `${level} beendet!<br>Erfolglos mit ${score} / ${targetScore} Punkten.<br>p+: ${plusScore}<br>Erhaltene EXP: ${exp}`;
         localStorage.setItem(levelKey, JSON.stringify({ success: false }));
     }
 
