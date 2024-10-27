@@ -100,7 +100,7 @@
         <h2>Spielende</h2>
         <p id="resultMessage"></p>
         <p id="expMessage"></p>
-        <button id="restartGame">OK</button>
+        <button id="restartGame">Fortfahren</button>
     </div>
     <script>
         // Hole die Parameter aus der URL
@@ -226,6 +226,7 @@
         plusScore += 1;
     }
 
+    const gesamtScore = score   
     drawBoard(); // Zeichne das Spielfeld neu
 }
 
@@ -244,19 +245,9 @@
         }
 
         function updateScoreAndMoves() {
-            const whiteCount = countWhiteCells();
-            document.getElementById('levelInfo').textContent = `${whiteCount} / ${targetScore}`;
+            const gesamtScore = gesamtScore
+            document.getElementById('levelInfo').textContent = `${gesamtScore} / ${targetScore}`;
             document.getElementById('moves').textContent = movesLeft === Infinity ? '∞' : movesLeft;
-        }
-
-        function countWhiteCells() {
-            let count = 0;
-            for (let row of gameBoard) {
-                for (let cell of row) {
-                    if (cell === 'white') count++;
-                }
-            }
-            return count;
         }
 
         function checkAllFilled() {
