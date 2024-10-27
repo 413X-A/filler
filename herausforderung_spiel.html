@@ -293,7 +293,7 @@ function endGame() {
     const levelKey = `level_${currentUser}_${level}`; // z.B. level_username_1
 
     // Erfolg des Levels speichern und entsprechende Musik abspielen
-    if (score >= targetScore) {
+    if (gesamtScore >= targetScore) {
         const success_music = new Audio('level_complete.mp3');
         success_music.play(); // Spiele die Musik ab
         resultMessage.innerHTML = `${level} abgeschlossen!<br>Gesamte Punkte: ${gesamtScore}<br>Davon Punkte: ${score}<br>Davon Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}`;
