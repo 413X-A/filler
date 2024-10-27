@@ -126,6 +126,7 @@
         let gameBoard = [];
         let score = 1;
         let movesLeft = maxMoves;
+        let totalMoves = 0;
         let isGameOver = false;
 
         document.getElementById('restartGame').addEventListener('click', () => {
@@ -145,6 +146,7 @@
             gameBoard[Math.floor(gridSize / 2)][Math.floor(gridSize / 2)] = 'white'; // Startblock in der Mitte
             score = 1;
             movesLeft = maxMoves;
+            totalMoves = 0; // Setzt die Anzahl der Züge bei Spielstart zurück
             isGameOver = false;
 
             drawBoard();
@@ -179,6 +181,7 @@
                     if (!isGameOver && movesLeft > 0) {
                         fillAdjacentToWhite(color);
                         movesLeft--;
+                        totalMoves++; // Erhöhe totalMoves bei jedem Zug
                         updateScoreAndMoves();
                         if (checkAllFilled() || movesLeft <= 0) {
                             endGame(totalMoves);
