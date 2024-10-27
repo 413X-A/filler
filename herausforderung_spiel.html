@@ -270,6 +270,10 @@ function endGame() {
     const expMessage = document.getElementById('expMessage');
     const currentUser = localStorage.getItem('currentUsername'); // Benutzername abrufen
 
+    // Annahme: plusScore, score und gesamtScore sind bereits deklariert und initialisiert
+    const gesamtScore = score; // Gesamtscore sichern
+    score -= plusScore; // Score um plusScore anpassen
+
     // Überprüfen, ob ein Benutzername vorhanden ist
     if (!currentUser) {
         alert('Kein Benutzername gefunden. Bitte melden Sie sich an.');
@@ -307,6 +311,7 @@ function endGame() {
     document.getElementById('resultModal').style.display = 'block';
     document.getElementById('overlay').style.display = 'block';
 }
+
 
 
 
