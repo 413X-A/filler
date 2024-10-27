@@ -299,7 +299,12 @@ function endGame(totalMoves) {
     // Ergebnisnachricht anzeigen, inklusive der erhaltenen EXP
     const success_music = new Audio('level_complete.mp3');
     success_music.play(); // Spiele die Musik ab
-    resultMessage.innerHTML = `Deine Statistiken!<br>Gesamte Punkte: ${gesamtScore}<br>Davon Punkte: ${score}<br>Davon Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}`;
+    if (maxMoves !== Infinity) {
+        resultMessage.innerHTML = `Deine Statistiken!<br>Gesamte Punkte: ${gesamtScore}<br>Davon Punkte: ${score}<br>Davon Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}`;
+    }
+    if (maxMoves === Infinity) {
+        resultMessage.innerHTML = `Deine Statistiken!<br>Gesamte Punkte: ${gesamtScore}<br>Davon Punkte: ${score}<br>Davon Bonus: ${plusScore}<br><br>${exp} EXP werden nicht gezählt!`;
+    }
 
     // EXP für den Benutzer nur bei begrenzten Zügen hinzufügen
     if (maxMoves !== Infinity) {
