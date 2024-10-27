@@ -115,6 +115,7 @@
     <img id="challengeBanner" src="herausforderung_spiel_index_banner.png.PNG" alt="Herausforderungen Banner" style="width: 90%;">
     <p>Profil für <span id="username" style="font-weight: bold;"></span></p>
     <p>EXP: <span id="userExp"></span></p>
+    <p>Bonus Punkte: <span id="userBonusPoints"></span></p>
 
     <!-- Musik Dropdown mit größerem Styling -->
     <div style="margin: 15px auto; width: 90%;">
@@ -244,6 +245,7 @@
             }
             document.getElementById('username').textContent = currentUser;
             document.getElementById('userExp').textContent = localStorage.getItem(`exp_${currentUser}`) || 0;
+            document.getElementById('userBonusPoints').textContent = localStorage.getItem(`bonusPoints_${currentUser}`) || 0;
 
             document.getElementById('singlePlayer').style.display = 'none';
             document.getElementById('multiPlayer').style.display = 'none';
