@@ -280,6 +280,10 @@ function endGame(totalMoves) {
     const resultMessage = document.getElementById('resultMessage');
     const currentUser = localStorage.getItem('currentUsername'); // Benutzername abrufen
 
+    // Endtafel vorbereiten
+    const gesamtScore = score; // Gesamtscore sichern
+    score -= plusScore
+
     // Überprüfen, ob ein Benutzername vorhanden ist
     if (!currentUser) {
         alert('Kein Benutzername gefunden. Bitte melden Sie sich an.');
