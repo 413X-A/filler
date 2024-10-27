@@ -122,7 +122,7 @@
     }
 
     function updateUserCount() {
-        // localStorage.clear()
+        localStorage.clear()
         const userCountDisplay = document.getElementById('userCount');
         userCountDisplay.textContent = `Bereits angemeldete Benutzer: ${localStorage.length}`;
     }
