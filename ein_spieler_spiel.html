@@ -268,12 +268,12 @@ function endGame(totalMoves) {
     }
 
     // Ergebnisnachricht
-    resultMessage.textContent = `Punkte: ${score}`;
+    resultMessage.textContent = `Spielende\nPunkte: ${score}`;
 
     // EXP berechnen und anzeigen
     const exp = Math.floor((score * 7) / totalMoves); // Berechnung der EXP
     const expMessage = document.getElementById('expMessage');
-    expMessage.textContent = `Erhaltene EXP: ${exp}`;
+    expMessage.textContent = `EXP: ${exp}`;
 
     // EXP für den Benutzer abrufen und aktualisieren
     const userExpKey = `exp_${currentUser}`; // Schlüssel für die EXP des Benutzers
