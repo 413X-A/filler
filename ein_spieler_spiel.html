@@ -300,10 +300,6 @@ function endGame(totalMoves) {
         return;
     }
 
-    // Berechne die erhaltenen EXP nur, wenn Züge nicht auf "unlimited" gesetzt sind
-    let exp = 0;
-        exp = Math.floor((score * 2) / totalMoves);
-
     // Ergebnisnachricht anzeigen, inklusive der erhaltenen EXP
     const success_music = new Audio('level_complete.mp3');
     success_music.play(); // Spiele die Musik ab
@@ -316,6 +312,12 @@ function endGame(totalMoves) {
 
     // EXP für den Benutzer nur bei begrenzten Zügen hinzufügen
     if (maxMoves !== Infinity) {
+    // EXP Speichern
+    const userExpKey = `exp_${currentUser}`;
+    let existingExp = parseInt(localStorage.getItem(userExpKey)) || 0;
+    const totalExp = existingExp + exp;
+    localStorage.setItem(userExpKey, totalExp);
+        
     // Punkte speichern
     const userPointsKey = `points_${currentUser}`;
     let existingPoints = parseInt(localStorage.getItem(userPointsKey)) || 0;
@@ -325,16 +327,10 @@ function endGame(totalMoves) {
     // Gesamte Bonuspunkte des Benutzers aktualisieren
     const userBonusKey = `bonusPoints_${currentUser}`; // Schlüssel für die gesamten Bonuspunkte des Benutzers
     let existingBonus = parseInt(localStorage.getItem(userBonusKey)) || 0;
+    const totalBonusPoints = existingBonus + plusScore;
+    localStorage.setItem(userBonusKey, totalBonusPoints);
 
-    // Neue Bonuspunkte zum bestehenden Wert hinzufügen und speichern
-    const totalBonus = existingBonus + plusScore;
-    localStorage.setItem(userBonusKey, totalBonus);
-        const userExpKey = `exp_${currentUser}`; // Schlüssel für die EXP des Benutzers
-        let existingExp = parseInt(localStorage.getItem(userExpKey)) || 0;
-
-        // Neue EXP zum bestehenden Wert hinzufügen und im lokalen Speicher aktualisieren
-        const totalExp = existingExp + exp;
-        localStorage.setItem(userExpKey, totalExp);
+    
     }
 
     // Ergebnisanzeige
