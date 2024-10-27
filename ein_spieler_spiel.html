@@ -311,15 +311,16 @@ function endGame(totalMoves) {
         resultMessage.innerHTML = `Deine Statistiken!<br>Gesamte Punkte: ${gesamtScore}<br>Davon Punkte: ${score}<br>Davon Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}`;
     }
     if (maxMoves === Infinity) {
-        resultMessage.innerHTML = `Deine Statistiken!<br>Gesamte Punkte: ${gesamtScore}<br>Davon Punkte: ${score}<br>Davon Bonus: ${plusScore}<br><br>${exp} EXP werden nicht gezählt!`;
+        resultMessage.innerHTML = `Deine Statistiken!<br>Gesamte Punkte: ${gesamtScore}<br>Davon Punkte: ${score}<br>Davon Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}<br><brFreies Spiel wird nicht im Profil gespeichert!`;
     }
 
+    // EXP für den Benutzer nur bei begrenzten Zügen hinzufügen
+    if (maxMoves !== Infinity) {
     // Punkte speichern
     const userPointsKey = `points_${currentUser}`;
     let existingPoints = parseInt(localStorage.getItem(userPointsKey)) || 0;
     const totalPoints = existingPoints + (gesamtScore - plusScore);
     localStorage.setItem(userPointsKey, totalPoints);
-
 
     // Gesamte Bonuspunkte des Benutzers aktualisieren
     const userBonusKey = `bonusPoints_${currentUser}`; // Schlüssel für die gesamten Bonuspunkte des Benutzers
@@ -328,9 +329,6 @@ function endGame(totalMoves) {
     // Neue Bonuspunkte zum bestehenden Wert hinzufügen und speichern
     const totalBonus = existingBonus + plusScore;
     localStorage.setItem(userBonusKey, totalBonus);
-
-    // EXP für den Benutzer nur bei begrenzten Zügen hinzufügen
-    if (maxMoves !== Infinity) {
         const userExpKey = `exp_${currentUser}`; // Schlüssel für die EXP des Benutzers
         let existingExp = parseInt(localStorage.getItem(userExpKey)) || 0;
 
