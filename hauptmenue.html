@@ -217,6 +217,7 @@
         // Funktionen um die verschiedenen Abschnitte anzuzeigen
         function showSinglePlayer() {
             const button_pressed_music = new Audio('button_pressed.mp3');
+            button_pressed_music.play();
             document.getElementById('singlePlayer').style.display = 'block';
             document.getElementById('multiPlayer').style.display = 'none';
             document.getElementById('challenges').style.display = 'none';
@@ -224,6 +225,8 @@
         }
 
         function showMultiPlayer() {
+            const button_pressed_music = new Audio('button_pressed.mp3');
+            button_pressed_music.play();
             document.getElementById('singlePlayer').style.display = 'none';
             document.getElementById('multiPlayer').style.display = 'block';
             document.getElementById('challenges').style.display = 'none';
@@ -231,6 +234,8 @@
         }
 
         function showChallenges() {
+            const button_pressed_music = new Audio('button_pressed.mp3');
+            button_pressed_music.play();
             document.getElementById('singlePlayer').style.display = 'none';
             document.getElementById('multiPlayer').style.display = 'none';
             document.getElementById('challenges').style.display = 'block';
@@ -240,6 +245,8 @@
 
         // Profil anzeigen und Informationen aus localStorage holen
         function showProfile() {
+            const button_pressed_music = new Audio('button_pressed.mp3');
+            button_pressed_music.play();
             const currentUser = localStorage.getItem('currentUsername');
             if (!currentUser) {
                 alert('Kein Benutzername gefunden. Bitte melden Sie sich an.');
