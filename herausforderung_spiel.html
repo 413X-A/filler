@@ -303,12 +303,13 @@ function endGame() {
 
     // Einheitlicher Schlüssel für den Erfolg des Levels des aktuellen Benutzers
     const levelKey = `level_${currentUser}_${level}`; // z.B. level_username_1
+    const exp_level = level / 2;
 
     // Erfolg des Levels speichern und entsprechende Musik abspielen
     if (gesamtScore >= targetScore) {
         const success_music = new Audio('level_complete.mp3');
         success_music.play(); // Spiele die Musik ab
-        resultMessage.innerHTML = `${level} abgeschlossen [+${level} EXP]!<br>Gesamte Punkte: ${gesamtScore}<br>Davon Punkte: ${score}<br>Davon Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}`;
+        resultMessage.innerHTML = `${level} abgeschlossen [+${exp_level} EXP]!<br>Gesamte Punkte: ${gesamtScore}<br>Davon Punkte: ${score}<br>Davon Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}`;
         localStorage.setItem(levelKey, JSON.stringify({ success: true }));
     } else {
         const nosuccess_music = new Audio('level_incomplete.mp3');
@@ -332,7 +333,7 @@ function endGame() {
     // EXP Speichern
     const userExpKey = `exp_${currentUser}`; // Schlüssel für die EXP des Benutzers
     let existingExp = parseInt(localStorage.getItem(userExpKey)) || 0;
-    const totalExp = existingExp + (exp + (level / 2));
+    const totalExp = existingExp + (exp + exp_level);
     localStorage.setItem(userExpKey, totalExp);
 
     // Ergebnisanzeige anzeigen
