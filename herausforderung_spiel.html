@@ -158,25 +158,26 @@
         }
 
         function createColorButtons() {
-            const colorButtons = document.getElementById('colorButtons');
-            colorButtons.innerHTML = '';
-            colors.forEach(color => {
-                const button = document.createElement('button');
-                button.style.backgroundColor = color;
-                button.addEventListener('click', () => {
-                    if (!isGameOver && movesLeft > 0) {
-                        fillAdjacentToWhite(color);
-                        movesLeft--;
-                        updateScoreAndMoves();
-                        
-                        if (checkAllFilled() || movesLeft <= 0) {
-                            endGame();
-                        }
-                    }
-                });
-                colorButtons.appendChild(button);
-            });
-        }
+    const colorButtons = document.getElementById('colorButtons');
+    colorButtons.innerHTML = '';
+    colors.forEach(color => {
+        const button = document.createElement('button');
+        button.style.backgroundColor = color;
+        button.addEventListener('click', () => {
+            if (!isGameOver && movesLeft > 0) {
+                fillAdjacentToWhite(color);
+                movesLeft--;
+                updateScoreAndMoves();
+                
+                // Überprüfen, ob das Spiel beendet ist
+                if (checkAllFilled() || movesLeft <= 0) {
+                    endGame(); // Hier wird die Endspiel-Funktion aufgerufen
+                }
+            }
+        });
+        colorButtons.appendChild(button);
+    });
+}
 
         function fillAdjacentToWhite(selectedColor) {
             const whiteCells = findWhiteCells();
@@ -246,7 +247,6 @@ function endGame() {
     const resultMessage = document.getElementById('resultMessage');
     const expMessage = document.getElementById('expMessage');
     const currentUser = localStorage.getItem('currentUsername'); // Benutzername abrufen
-    const musicPlayer = document.getElementById("musicPlayer");
 
     // Überprüfen, ob ein Benutzername vorhanden ist
     if (!currentUser) {
@@ -254,26 +254,24 @@ function endGame() {
         return;
     }
 
+    // EXP berechnen und speichern
+    const exp = calculateEXP(); // EXP-Berechnung
+
     // Einheitlicher Schlüssel für den Erfolg des Levels des aktuellen Benutzers
     const levelKey = `level_${currentUser}_${level}`; // z.B. level_username_1
 
-    // Erfolg des Levels speichern
+    // Erfolg des Levels speichern und entsprechende Musik abspielen
     if (score >= targetScore) {
         const success_music = new Audio('level_complete.mp3');
         success_music.play(); // Spiele die Musik ab
-        
-        resultMessage.innerHTML = `${level} beendet!<br>Erfolgreich mit ${score} Punkten.<br>EXP: ${exp}`;
+        resultMessage.innerHTML = `${level} beendet!<br>Erfolgreich mit ${score} Punkten.<br>Erhaltene EXP: ${exp}`;
         localStorage.setItem(levelKey, JSON.stringify({ success: true }));
     } else {
         const nosuccess_music = new Audio('level_incomplete.mp3');
         nosuccess_music.play(); // Spiele die Musik ab
-        
-        resultMessage.innerHTML = `${level} beendet!<br>Erfolglos mit ${score} / ${targetScore} Punkten.<br>EXP: ${exp}`;
+        resultMessage.innerHTML = `${level} beendet!<br>Erfolglos mit ${score} / ${targetScore} Punkten.<br>Erhaltene EXP: ${exp}`;
         localStorage.setItem(levelKey, JSON.stringify({ success: false }));
     }
-
-    // EXP berechnen und speichern
-    const exp = calculateEXP();
 
     // EXP für den Benutzer abrufen und aktualisieren
     const userExpKey = `exp_${currentUser}`; // Schlüssel für die EXP des Benutzers
@@ -283,7 +281,7 @@ function endGame() {
     const totalExp = existingExp + exp;
     localStorage.setItem(userExpKey, totalExp);
 
-    // Ergebnisanzeige
+    // Ergebnisanzeige anzeigen
     document.getElementById('resultModal').style.display = 'block';
     document.getElementById('overlay').style.display = 'block';
 }
