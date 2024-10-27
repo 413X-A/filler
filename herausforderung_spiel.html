@@ -332,7 +332,7 @@ function endGame() {
     // EXP Speichern
     const userExpKey = `exp_${currentUser}`; // Schlüssel für die EXP des Benutzers
     let existingExp = parseInt(localStorage.getItem(userExpKey)) || 0;
-    const totalExp = existingExp + (exp + level);
+    const totalExp = existingExp + (exp + (level / 2));
     localStorage.setItem(userExpKey, totalExp);
 
     // Ergebnisanzeige anzeigen
