@@ -267,19 +267,17 @@ function endGame(totalMoves) {
         return;
     }
 
-    // Ergebnisnachricht
-    resultMessage.textContent = `Spielende\nPunkte: ${score}`;
-
-    // EXP berechnen und anzeigen
+    // Berechne die erhaltenen EXP
     const exp = Math.floor((score * 7) / totalMoves); // Berechnung der EXP
-    const expMessage = document.getElementById('expMessage');
-    expMessage.textContent = `EXP: ${exp}`;
 
-    // EXP für den Benutzer abrufen und aktualisieren
+    // Ergebnisnachricht anzeigen, inklusive der erhaltenen EXP
+    resultMessage.innerHTML = `Spielende<br>Punkte: ${score}<br>Erhaltene EXP: ${exp}`;
+
+    // EXP für den Benutzer hinzufügen
     const userExpKey = `exp_${currentUser}`; // Schlüssel für die EXP des Benutzers
     let existingExp = parseInt(localStorage.getItem(userExpKey)) || 0;
 
-    // Neue EXP zum bestehenden Wert hinzufügen und speichern
+    // Neue EXP zum bestehenden Wert hinzufügen und im lokalen Speicher aktualisieren
     const totalExp = existingExp + exp;
     localStorage.setItem(userExpKey, totalExp);
 
@@ -287,6 +285,7 @@ function endGame(totalMoves) {
     document.getElementById('resultModal').style.display = 'block';
     document.getElementById('overlay').style.display = 'block';
 }
+
 
 
         function goHome() {
