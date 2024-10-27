@@ -197,7 +197,7 @@ function createColorButtons() {
 }
 
 
-        function fillAdjacentToWhite(selectedColor) {
+function fillAdjacentToWhite(selectedColor) {
     const whiteCells = findWhiteCells(); // Finde weiße Zellen
     let newlyColoredCount = 0; // Zähler für neu gefärbte Zellen
 
@@ -224,11 +224,25 @@ function createColorButtons() {
     // Aktualisiere den Score mit der Anzahl neu gefärbter Zellen
     score += newlyColoredCount;
 
-    // Überprüfen, ob 5 oder mehr neue Kästchen gefärbt wurden
-    if (newlyColoredCount >= 5) {
-        score += 1; // Füge zusätzlich 1 zum Score hinzu
+    // Überprüfen, ob 5 oder mehr neue Kästchen gefärbt wurden und Punkte hinzufügen
+    if (newlyColoredCount >= 25) {
+        score += 5; // Füge 5 Punkte hinzu, wenn 25 oder mehr Kästchen gefärbt wurden
+        plusScore += 5;
+    } else if (newlyColoredCount >= 20) {
+        score += 4; // Füge 4 Punkte hinzu, wenn 20 oder mehr Kästchen gefärbt wurden
+        plusScore += 4;
+    } else if (newlyColoredCount >= 15) {
+        score += 3; // Füge 3 Punkte hinzu, wenn 15 oder mehr Kästchen gefärbt wurden
+        plusScore += 3;
+    } else if (newlyColoredCount >= 10) {
+        score += 2; // Füge 2 Punkte hinzu, wenn 10 oder mehr Kästchen gefärbt wurden
+        plusScore += 2;
+    } else if (newlyColoredCount >= 5) {
+        score += 1; // Füge 1 Punkt hinzu, wenn 5 oder mehr Kästchen gefärbt wurden
+        plusScore += 1;
     }
 
+    const gesamtScore = score;  
     drawBoard(); // Zeichne das Spielfeld neu
 }
 
