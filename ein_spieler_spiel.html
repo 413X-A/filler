@@ -223,12 +223,12 @@ function fillAdjacentToWhite(selectedColor) {
 
     // Aktualisiere den Score mit der Anzahl neu gefärbter Zellen
     score += newlyColoredCount;
-    const bonus_music= new Audio('bonus.mp3');
+    const bonus_music = new Audio('bonus.mp3');
 
     // Überprüfen, ob 5 oder mehr neue Kästchen gefärbt wurden und Punkte hinzufügen
     if (newlyColoredCount >= 25) {
         score += 5; // Füge 5 Punkte hinzu, wenn 25 oder mehr Kästchen gefärbt wurden
-        bonus_music.play()
+        bonus_music.play();
         plusScore += 5;
     } else if (newlyColoredCount >= 20) {
         score += 4; // Füge 4 Punkte hinzu, wenn 20 oder mehr Kästchen gefärbt wurden
