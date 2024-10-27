@@ -320,7 +320,7 @@ function endGame() {
     // Punkte speichern
     const userPointsKey = `points_${currentUser}`;
     let existingPoints = parseInt(localStorage.getItem(userPointsKey)) || 0;
-    const totalPoints = existingPoints + gesamtScore;
+    const totalPoints = existingPoints + (gesamtScore - plusScore);
     localStorage.setItem(userPointsKey, totalPoints);
 
 
