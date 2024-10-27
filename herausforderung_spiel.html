@@ -274,7 +274,7 @@ function endGame() {
 
     // Annahme: plusScore, score und gesamtScore sind bereits deklariert und initialisiert
     const gesamtScore = score; // Gesamtscore sichern
-    score -= plusScore; // Score um plusScore anpassen
+    plusScore -= score; // Score um plusScore anpassen
 
     // Überprüfen, ob ein Benutzername vorhanden ist
     if (!currentUser) {
@@ -292,12 +292,12 @@ function endGame() {
     if (score >= targetScore) {
         const success_music = new Audio('level_complete.mp3');
         success_music.play(); // Spiele die Musik ab
-        resultMessage.innerHTML = `${level} beendet!<br>Erfolgreich mit ${score} Punkten.<br>p+: ${plusScore}<br>Erhaltene EXP: ${exp}`;
+        resultMessage.innerHTML = `${level} beendet!<br>Erfolgreich mit ${score} Punkten.<br>Davon Bonus: ${plusScore}<br>Erhaltene EXP: ${exp}`;
         localStorage.setItem(levelKey, JSON.stringify({ success: true }));
     } else {
         const nosuccess_music = new Audio('level_incomplete.mp3');
         nosuccess_music.play(); // Spiele die Musik ab
-        resultMessage.innerHTML = `${level} beendet!<br>Erfolglos mit ${score} / ${targetScore} Punkten.<br>p+: ${plusScore}<br>Erhaltene EXP: ${exp}`;
+        resultMessage.innerHTML = `${level} beendet!<br>Erfolglos mit ${score} / ${targetScore} Punkten.<br>Davon Bonus: ${plusScore}<br>Erhaltene EXP: ${exp}`;
         localStorage.setItem(levelKey, JSON.stringify({ success: false }));
     }
 
