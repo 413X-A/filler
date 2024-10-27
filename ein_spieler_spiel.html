@@ -171,26 +171,29 @@
             });
         }
 
-        function createColorButtons() {
-            const colorButtons = document.getElementById('colorButtons');
-            colorButtons.innerHTML = '';
-            colors.forEach(color => {
-                const button = document.createElement('button');
-                button.style.backgroundColor = color;
-                button.addEventListener('click', () => {
-                    if (!isGameOver && movesLeft > 0) {
-                        fillAdjacentToWhite(color);
-                        movesLeft--;
-                        totalMoves++; // Erhöhe totalMoves bei jedem Zug
-                        updateScoreAndMoves();
-                        if (checkAllFilled() || movesLeft <= 0) {
-                            endGame(totalMoves);
-                        }
-                    }
-                });
-                colorButtons.appendChild(button);
-            });
-        }
+function createColorButtons() {
+    const colorButtons = document.getElementById('colorButtons');
+    colorButtons.innerHTML = '';
+    colors.forEach(color => {
+        const button = document.createElement('button');
+        button.style.backgroundColor = color;
+        button.addEventListener('click', () => {
+            if (!isGameOver && movesLeft > 0) {
+                fillAdjacentToWhite(color);
+                movesLeft--;
+                totalMoves++; // Erhöhe totalMoves bei jedem Zug
+                updateScoreAndMoves();
+
+                // Überprüfen, ob alle Zellen gefüllt sind oder ob keine Züge mehr übrig sind
+                if (checkAllFilled() || movesLeft <= 0) {
+                    endGame(totalMoves);
+                }
+            }
+        });
+        colorButtons.appendChild(button);
+    });
+}
+
 
         function fillAdjacentToWhite(selectedColor) {
     const whiteCells = findWhiteCells(); // Finde weiße Zellen
