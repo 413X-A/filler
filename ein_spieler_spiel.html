@@ -294,7 +294,9 @@ function endGame(totalMoves) {
     const exp = Math.floor((score * 2) / totalMoves); // Berechnung der EXP
 
     // Ergebnisnachricht anzeigen, inklusive der erhaltenen EXP
-    resultMessage.innerHTML = `Spielende<br>Punkte: ${score}<br>Erhaltene EXP: ${exp}`;
+    const success_music = new Audio('level_complete.mp3');
+    success_music.play(); // Spiele die Musik ab
+    resultMessage.innerHTML = `Deine Statistiken!<br>Gesamte Punkte: ${gesamtScore}<br>Davon Punkte: ${score}<br>Davon Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}`;
 
     // EXP für den Benutzer hinzufügen
     const userExpKey = `exp_${currentUser}`; // Schlüssel für die EXP des Benutzers
