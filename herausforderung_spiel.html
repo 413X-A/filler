@@ -317,6 +317,13 @@ function endGame() {
         localStorage.setItem(levelKey, JSON.stringify({ success: false }));
     }
 
+    // Punkte speichern
+    const userPointsKey = `points_${currentUser}`;
+    let existingPoints = parseInt(localStorage.getItem(userPointsKey)) || 0;
+    const totalPoints = existingPoints + gesamtScore;
+    localStorage.setItem(userPointsKey, totalPoints);
+
+
     // Gesamte Bonuspunkte des Benutzers aktualisieren
     const userBonusKey = `bonusPoints_${currentUser}`; // Schlüssel für die gesamten Bonuspunkte des Benutzers
     let existingBonus = parseInt(localStorage.getItem(userBonusKey)) || 0;
