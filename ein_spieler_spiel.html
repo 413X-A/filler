@@ -282,7 +282,7 @@ function endGame(totalMoves) {
 
     // Endtafel vorbereiten
     const gesamtScore = score; // Gesamtscore sichern
-    score -= plusScore
+    score -= plusScore;
 
     // Überprüfen, ob ein Benutzername vorhanden ist
     if (!currentUser) {
@@ -290,26 +290,32 @@ function endGame(totalMoves) {
         return;
     }
 
-    // Berechne die erhaltenen EXP
-    const exp = Math.floor((score * 2) / totalMoves); // Berechnung der EXP
+    // Berechne die erhaltenen EXP nur, wenn Züge nicht auf "unlimited" gesetzt sind
+    let exp = 0;
+    if (maxMoves !== Infinity) {
+        exp = Math.floor((score * 2) / totalMoves); // Berechnung der EXP nur bei begrenzten Zügen
+    }
 
     // Ergebnisnachricht anzeigen, inklusive der erhaltenen EXP
     const success_music = new Audio('level_complete.mp3');
     success_music.play(); // Spiele die Musik ab
     resultMessage.innerHTML = `Deine Statistiken!<br>Gesamte Punkte: ${gesamtScore}<br>Davon Punkte: ${score}<br>Davon Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}`;
 
-    // EXP für den Benutzer hinzufügen
-    const userExpKey = `exp_${currentUser}`; // Schlüssel für die EXP des Benutzers
-    let existingExp = parseInt(localStorage.getItem(userExpKey)) || 0;
+    // EXP für den Benutzer nur bei begrenzten Zügen hinzufügen
+    if (maxMoves !== Infinity) {
+        const userExpKey = `exp_${currentUser}`; // Schlüssel für die EXP des Benutzers
+        let existingExp = parseInt(localStorage.getItem(userExpKey)) || 0;
 
-    // Neue EXP zum bestehenden Wert hinzufügen und im lokalen Speicher aktualisieren
-    const totalExp = existingExp + exp;
-    localStorage.setItem(userExpKey, totalExp);
+        // Neue EXP zum bestehenden Wert hinzufügen und im lokalen Speicher aktualisieren
+        const totalExp = existingExp + exp;
+        localStorage.setItem(userExpKey, totalExp);
+    }
 
     // Ergebnisanzeige
     document.getElementById('resultModal').style.display = 'block';
     document.getElementById('overlay').style.display = 'block';
 }
+
 
 // Event-Listener für den "OK"-Button
 document.getElementById('restartGame').addEventListener('click', () => {
