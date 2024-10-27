@@ -184,14 +184,19 @@ function createColorButtons() {
         const button = document.createElement('button');
         button.style.backgroundColor = color;
         button.addEventListener('click', () => {
-            if (!isGameOver && movesLeft > 0) {
+            // Überprüfen, ob das Spiel vorbei ist oder bei unbegrenzten Zügen, ob alle Zellen gefüllt sind
+            if (!isGameOver && (movesLeft > 0 || maxMoves === Infinity)) {
                 fillAdjacentToWhite(color);
-                movesLeft--;
+                
+                if (maxMoves !== Infinity) { // Züge nur reduzieren, wenn sie begrenzt sind
+                    movesLeft--;
+                }
+                
                 totalMoves++; // Erhöhe totalMoves bei jedem Zug
                 updateScoreAndMoves();
 
-                // Überprüfen, ob alle Zellen gefüllt sind oder ob keine Züge mehr übrig sind
-                if (checkAllFilled() || movesLeft <= 0) {
+                // Beende das Spiel, wenn alle Zellen gefüllt sind oder bei begrenzten Zügen, wenn keine Züge mehr übrig sind
+                if (checkAllFilled() || (movesLeft <= 0 && maxMoves !== Infinity)) {
                     endGame(totalMoves);
                 }
             }
@@ -199,6 +204,7 @@ function createColorButtons() {
         colorButtons.appendChild(button);
     });
 }
+
 
 
 function fillAdjacentToWhite(selectedColor) {
