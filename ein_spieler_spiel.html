@@ -292,9 +292,7 @@ function endGame(totalMoves) {
 
     // Berechne die erhaltenen EXP nur, wenn Züge nicht auf "unlimited" gesetzt sind
     let exp = 0;
-    if (maxMoves !== Infinity) {
-        exp = Math.floor((score * 2) / totalMoves); // Berechnung der EXP nur bei begrenzten Zügen
-    }
+        exp = Math.floor((score * 2) / totalMoves);
 
     // Ergebnisnachricht anzeigen, inklusive der erhaltenen EXP
     const success_music = new Audio('level_complete.mp3');
