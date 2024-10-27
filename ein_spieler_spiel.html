@@ -314,9 +314,9 @@ function endGame(totalMoves) {
 
     // Ergebnisnachricht basierend auf den Spielbedingungen anzeigen
     if (maxMoves !== Infinity) {
-        resultMessage.innerHTML = `Deine Statistiken!<br>Gesamte Punkte: ${gesamtScore}<br>Davon Punkte: ${score}<br>Davon Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}`;
+        resultMessage.innerHTML = `Deine Statistiken!<br>Gesamt: ${gesamtScore}<br>Davon Felder: ${score}<br>Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}<br><br>Bonus wird im Einzelspielermodus nicht im Profil gespeichert!`;
     } else {
-        resultMessage.innerHTML = `Deine Statistiken!<br>Gesamte Punkte: ${gesamtScore}<br>Davon Punkte: ${score}<br>Davon Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}<br><br>Freies Spiel wird nicht im Profil gespeichert!`;
+        resultMessage.innerHTML = `Deine Statistiken!<br>Gesamt: ${gesamtScore}<br>Davon Felder: ${score}<br>Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}<br><br>Freies Spiel wird nicht im Profil gespeichert!`;
     }
 
     // Punkte und EXP im Profil speichern, falls begrenzte Züge
@@ -326,12 +326,6 @@ function endGame(totalMoves) {
         const existingPoints = parseInt(localStorage.getItem(userPointsKey)) || 0;
         const totalPoints = existingPoints + score;
         localStorage.setItem(userPointsKey, totalPoints);
-
-        // Bonuspunkte aktualisieren und speichern
-        const userBonusKey = `bonusPoints_${currentUser}`;
-        const existingBonus = parseInt(localStorage.getItem(userBonusKey)) || 0;
-        const totalBonus = existingBonus + plusScore;
-        localStorage.setItem(userBonusKey, totalBonus);
 
         // EXP aktualisieren und speichern
         const userExpKey = `exp_${currentUser}`;
