@@ -287,8 +287,16 @@ function endGame(totalMoves) {
     // Ergebnisanzeige
     document.getElementById('resultModal').style.display = 'block';
     document.getElementById('overlay').style.display = 'block';
-    goHome()
 }
+
+// Event-Listener für den "OK"-Button
+document.getElementById('restartGame').addEventListener('click', () => {
+    document.getElementById('resultModal').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+    goHome(); // Leitet sofort zur Hauptmenü-Seite weiter
+});
+
+
 
 
 
