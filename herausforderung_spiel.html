@@ -212,7 +212,7 @@
 
     // Aktualisiere den Score mit der Anzahl neu gefärbter Zellen
     score += newlyColoredCount;
-    const bonus_music= new Audio('bonus.mp3');
+    const bonus_music = new Audio('bonus.mp3');
 
     // Überprüfen, ob 5 oder mehr neue Kästchen gefärbt wurden und Punkte hinzufügen
     if (newlyColoredCount >= 25) {
@@ -318,7 +318,7 @@ function endGame() {
     }
 
     // Gesamte Bonuspunkte des Benutzers aktualisieren
-    const userBonusKey = `bonus_${currentUser}`; // Schlüssel für die gesamten Bonuspunkte des Benutzers
+    const userBonusKey = `bonusPoints_${currentUser}`; // Schlüssel für die gesamten Bonuspunkte des Benutzers
     let existingBonus = parseInt(localStorage.getItem(userBonusKey)) || 0;
 
     // Neue Bonuspunkte zum bestehenden Wert hinzufügen und speichern
