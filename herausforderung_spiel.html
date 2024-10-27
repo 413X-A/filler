@@ -262,19 +262,18 @@ function endGame() {
         const success_music = new Audio('level_complete.mp3');
         success_music.play(); // Spiele die Musik ab
         
-        resultMessage.textContent = '${level} beendet\nErfolgreich mit ${score} Punkten!';
+        resultMessage.innerHTML = `${level} beendet!<br>Erfolgreich mit ${score} Punkten.<br>EXP: ${exp}`;
         localStorage.setItem(levelKey, JSON.stringify({ success: true }));
     } else {
         const nosuccess_music = new Audio('level_incomplete.mp3');
         nosuccess_music.play(); // Spiele die Musik ab
         
-        resultMessage.textContent = '${level} beendet\nErfolglos mit ${score}/$targetScore} Punkten!';
+        resultMessage.innerHTML = `${level} beendet!<br>Erfolglos mit ${score} / ${targetScore} Punkten.<br>EXP: ${exp}`;
         localStorage.setItem(levelKey, JSON.stringify({ success: false }));
     }
 
     // EXP berechnen und speichern
     const exp = calculateEXP();
-    expMessage.textContent = `Erhaltene EXP: ${exp}`;
 
     // EXP für den Benutzer abrufen und aktualisieren
     const userExpKey = `exp_${currentUser}`; // Schlüssel für die EXP des Benutzers
