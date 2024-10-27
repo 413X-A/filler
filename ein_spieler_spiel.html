@@ -181,7 +181,7 @@
                         movesLeft--;
                         updateScoreAndMoves();
                         if (checkAllFilled() || movesLeft <= 0) {
-                            endGame();
+                            endGame(totalMoves);
                         }
                     }
                 });
@@ -253,13 +253,38 @@
             return whiteCount === gridSize * gridSize;
         }
 
-        function endGame() {
-            isGameOver = true;
-            const resultMessage = document.getElementById('resultMessage');
-            resultMessage.textContent = `Punkte: ${score}`;
-            document.getElementById('resultModal').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
+function endGame(totalMoves) {
+    isGameOver = true;
+    const resultMessage = document.getElementById('resultMessage');
+    const currentUser = localStorage.getItem('currentUsername'); // Benutzername abrufen
+
+    // Überprüfen, ob ein Benutzername vorhanden ist
+    if (!currentUser) {
+        alert('Kein Benutzername gefunden. Bitte melden Sie sich an.');
+        return;
+    }
+
+    // Ergebnisnachricht
+    resultMessage.textContent = `Punkte: ${score}`;
+
+    // EXP berechnen und anzeigen
+    const exp = Math.floor((score * 7) / totalMoves); // Berechnung der EXP
+    const expMessage = document.getElementById('expMessage');
+    expMessage.textContent = `Erhaltene EXP: ${exp}`;
+
+    // EXP für den Benutzer abrufen und aktualisieren
+    const userExpKey = `exp_${currentUser}`; // Schlüssel für die EXP des Benutzers
+    let existingExp = parseInt(localStorage.getItem(userExpKey)) || 0;
+
+    // Neue EXP zum bestehenden Wert hinzufügen und speichern
+    const totalExp = existingExp + exp;
+    localStorage.setItem(userExpKey, totalExp);
+
+    // Ergebnisanzeige
+    document.getElementById('resultModal').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+}
+
 
         function goHome() {
             window.location.href = 'hauptmenue.html'; // Leitet zur Startseite weiter
