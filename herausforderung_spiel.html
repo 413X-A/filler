@@ -246,7 +246,7 @@
         }
 
         function updateScoreAndMoves() {
-            const tafelScore = gesamtScore
+            const tafelScore = gesamtScore;
             document.getElementById('levelInfo').textContent = `${tafelScore} / ${targetScore}`;
             document.getElementById('moves').textContent = movesLeft === Infinity ? '∞' : movesLeft;
         }
