@@ -205,11 +205,12 @@ function startGame() {
 
         function createColorButtons() {
     const colorButtons = document.getElementById('colorButtons');
-    const gesamtScore = score;
-    colorButtons.innerHTML = '';
+    colorButtons.innerHTML = ''; // Vorhandene Buttons löschen
+
     colors.forEach(color => {
         const button = document.createElement('button');
         button.style.backgroundColor = color;
+
         button.addEventListener('click', () => {
             if (!isGameOver && movesLeft > 0) {
                 fillAdjacentToWhite(color);
@@ -217,14 +218,15 @@ function startGame() {
                 updateScoreAndMoves();
                 
                 // Überprüfen, ob das Spiel beendet ist
-                if (checkAllFilled() || movesLeft <= 0 || gesamtScore >= targetScore) {
-                    endGame(); // Hier wird die Endspiel-Funktion aufgerufen
+                if (checkAllFilled() || movesLeft <= 0 || score >= targetScore) {
+                    endGame(); // Spiel beenden, wenn eine der Bedingungen erfüllt ist
                 }
             }
         });
         colorButtons.appendChild(button);
     });
 }
+
 
         function fillAdjacentToWhite(selectedColor) {
     const whiteCells = findWhiteCells(); // Finde weiße Zellen
