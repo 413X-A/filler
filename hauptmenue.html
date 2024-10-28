@@ -723,6 +723,7 @@ function highlightCompletedLevels() {
         for (let i = 121; i <= 150; i++) {
             let levelBox = document.getElementById(`btn-l${i}`);
             if (levelBox) {
+                levelBox.style.backgroundColor = 'darkgray';
                 levelBox.style.display = 'none'; // Verstecken
             }
         }
