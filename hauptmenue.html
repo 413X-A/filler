@@ -664,41 +664,28 @@ function highlightCompletedLevels() {
     }
 
     let allPreviousLevelsCompleted = true;
+    const levelsToShow = 15; // Anzahl der anzuzeigenden Level
+    const totalLevels = 150; // Gesamtanzahl der Level
 
-    // Schleife durch alle Level von 1 bis 120
-    for (let i = 1; i <= 120; i++) {
-        const levelKey = `level_${currentUser}_${i}`; // Benutzer-spezifischer Level-Schlüssel
-        const levelData = JSON.parse(localStorage.getItem(levelKey));
-
-        // Versuche, das Level-Button-Element zu finden
-        let levelBox = document.getElementById(`btn-l${i}`);
-
-        // Falls keine Box für das Level existiert, wird eine neue erstellt
-        if (!levelBox) {
-            levelBox = document.createElement('div');
-            levelBox.id = `btn-l${i}`;
-            levelBox.className = 'level';
-            levelBox.textContent = i;
-            levelBox.onclick = () => startChallenge(i);
-            levelButtonsContainer.appendChild(levelBox);
-        }
-
-        // Hintergrundfarbe je nach Erfolg auf grün oder orange setzen
-        if (levelData && levelData.success === true) {
-            levelBox.style.backgroundColor = 'lightgreen';
-        } else if (levelData && levelData.success === false) {
-            levelBox.style.backgroundColor = 'orange';
-            allPreviousLevelsCompleted = false; // Wenn ein Level nicht erfolgreich war, setze auf false
+    // Zunächst alle Level auf "versteckt" setzen
+    for (let i = 1; i <= totalLevels; i++) {
+        const levelBox = document.getElementById(`btn-l${i}`);
+        if (levelBox) {
+            levelBox.style.display = 'none'; // Alle Level verstecken
         }
     }
 
-    // Wenn alle vorherigen Level abgeschlossen sind, zeige die Level 121-150 an
-    if (allPreviousLevelsCompleted) {
-        for (let i = 121; i <= 150; i++) {
+    // Schleife durch alle Level in Gruppen von 15
+    for (let group = 0; group < Math.ceil(totalLevels / levelsToShow); group++) {
+        const startLevel = group * levelsToShow + 1; // Startlevel für die Gruppe
+        const endLevel = Math.min(startLevel + levelsToShow - 1, totalLevels); // Endlevel für die Gruppe
+        let groupCompleted = true; // Überprüfen, ob alle Level in dieser Gruppe abgeschlossen sind
+
+        // Überprüfen, ob alle Level in der aktuellen Gruppe abgeschlossen sind
+        for (let i = startLevel; i <= endLevel; i++) {
             const levelKey = `level_${currentUser}_${i}`; // Benutzer-spezifischer Level-Schlüssel
             const levelData = JSON.parse(localStorage.getItem(levelKey));
 
-            // Versuche, das Level-Button-Element zu finden
             let levelBox = document.getElementById(`btn-l${i}`);
 
             // Falls keine Box für das Level existiert, wird eine neue erstellt
@@ -711,23 +698,29 @@ function highlightCompletedLevels() {
                 levelButtonsContainer.appendChild(levelBox);
             }
 
-            // Hintergrundfarbe je nach Erfolg (kann hier ebenfalls angepasst werden, falls nötig)
+            // Hintergrundfarbe je nach Erfolg setzen
             if (levelData && levelData.success === true) {
                 levelBox.style.backgroundColor = 'lightgreen';
             } else if (levelData && levelData.success === false) {
                 levelBox.style.backgroundColor = 'orange';
+                groupCompleted = false; // Wenn ein Level nicht erfolgreich war, setze auf false
             }
         }
-    } else {
-        // Wenn nicht alle vorherigen Level abgeschlossen sind, verstecke die Level 121-150
-        for (let i = 121; i <= 150; i++) {
-            let levelBox = document.getElementById(`btn-l${i}`);
-            if (levelBox) {
-                levelBox.style.display = 'none'; // Verstecken
+
+        // Wenn alle Level in dieser Gruppe erfolgreich abgeschlossen sind, zeige sie an
+        if (groupCompleted) {
+            for (let i = startLevel; i <= endLevel; i++) {
+                const levelBox = document.getElementById(`btn-l${i}`);
+                if (levelBox) {
+                    levelBox.style.display = 'block'; // Sichtbar machen
+                }
             }
+        } else {
+            break; // Stoppe, wenn eine Gruppe nicht erfolgreich ist
         }
     }
 }
+
 
 
 
