@@ -718,8 +718,17 @@ function highlightCompletedLevels() {
                 levelBox.style.backgroundColor = 'orange';
             }
         }
+    } else {
+        // Wenn nicht alle vorherigen Level abgeschlossen sind, verstecke die Level 121-150
+        for (let i = 121; i <= 150; i++) {
+            let levelBox = document.getElementById(`btn-l${i}`);
+            if (levelBox) {
+                levelBox.style.display = 'none'; // Verstecken
+            }
+        }
     }
 }
+
 
 
 
