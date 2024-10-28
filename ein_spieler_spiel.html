@@ -179,6 +179,9 @@ const colors = [
             drawBoard();
             createColorButtons();
             updateScoreAndMoves();
+            if (maxMoves === Infinity) {
+                alert('Freies Spiel aktiviert');
+            }
         }
 
         function drawBoard() {
