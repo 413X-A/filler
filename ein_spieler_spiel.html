@@ -335,9 +335,19 @@ function endGame(totalMoves) {
 
     // Ergebnisnachricht basierend auf den Spielbedingungen anzeigen
     if (maxMoves !== Infinity) {
-        resultMessage.innerHTML = `Deine Statistiken!<br>Gesamt: ${gesamtScore}<br>Davon Felder: ${score}<br>Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}<br><br>Bonus wird im Einzelspielermodus nicht im Profil gespeichert!`;
+        resultMessage.innerHTML = `
+        <p style="font-weight: bold;">Deine Statistiken!</p>
+        <br>Gesamt: ${gesamtScore} (Felder: ${score}, Bonus: ${plusScore})
+        <br><br>Erhaltene EXP: ${exp_gesamt}
+        <br><br>Bonus wird im Einzelspielermodus nicht im Profil gespeichert!
+    `;
     } else {
-        resultMessage.innerHTML = `Deine Statistiken!<br>Gesamt: ${gesamtScore}<br>Davon Felder: ${score}<br>Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}<br><br>Freies Spiel wird nicht im Profil gespeichert!`;
+        resultMessage.innerHTML = `
+        <p style="font-weight: bold;">Deine Statistiken!</p>
+        <br>Gesamt: ${gesamtScore} (Felder: ${score}, Bonus: ${plusScore})
+        <br><br>Erhaltene EXP: ${exp_gesamt}
+        <br><br>Freies Spiel wird nicht im Profil gespeichert!
+    `;
     }
 
     // Punkte und EXP im Profil speichern, falls begrenzte Züge
