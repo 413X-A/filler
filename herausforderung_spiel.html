@@ -102,8 +102,8 @@
     <div id="overlay"></div>
     <div id="resultModal">
         <h2>Spielende</h2>
+        <p style="font-weight: bold">Level ${level} Abgeschlossen [+${exp_level} EXP]!</p>
         <p id="resultMessage"></p>
-        <p id="expMessage"></p>
         <button id="restartGame" style="width: 75%; height: 35px; font-size: 20px">Fortfahren</button>
     </div>
     <script>
@@ -332,7 +332,7 @@ function endGame() {
     if (gesamtScore >= targetScore) {
         const success_music = new Audio('level_complete.mp3');
         success_music.play(); // Spiele die Musik ab
-        resultMessage.innerHTML = `${level} abgeschlossen [+${exp_level} EXP]!<br>Gesamt: ${gesamtScore}<br>Davon Felder: ${score}<br>Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp_gesamt}`;
+        resultMessage.innerHTML = `<br>Gesamt: ${gesamtScore}<br>Davon Felder: ${score}<br>Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp_gesamt}`;
         localStorage.setItem(levelKey, JSON.stringify({ success: true }));
     } else {
         const nosuccess_music = new Audio('level_incomplete.mp3');
