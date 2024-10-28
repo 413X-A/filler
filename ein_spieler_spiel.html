@@ -125,7 +125,28 @@
         const params = new URLSearchParams(window.location.search);
         let gridSize = parseInt(params.get('gridSize')) || 11; // Standardgröße 11x11
         let maxMoves = params.get('numMoves') === 'unlimited' ? Infinity : parseInt(params.get('numMoves')) || 50; // Standardanzahl Züge 50
-        const colors = ['red', 'yellow', 'green', 'blue', 'lightgreen', 'lightblue', 'purple', 'pink', 'brown'].slice(0, parseInt(params.get('numColors')) || 9); // Anzahl Farben
+const colors = [
+    'red', 
+    'yellow', 
+    'green', 
+    'blue', 
+    'lightgreen', 
+    'lightblue', 
+    'purple', 
+    'pink', 
+    'brown', 
+    'orange',       // Neue Farbe 1
+    'cyan',         // Neue Farbe 2
+    'magenta',      // Neue Farbe 3
+    'teal',         // Neue Farbe 4
+    'navy',         // Neue Farbe 5
+    'lime',         // Neue Farbe 6
+    'gold',         // Neue Farbe 7
+    'coral',        // Neue Farbe 8
+    'salmon',       // Neue Farbe 9
+    'gray'          // Neue Farbe 10
+].slice(0, parseInt(params.get('numColors')) || 18); // Anzahl Farben
+
 
         let gameBoard = [];
         let score = 1;
