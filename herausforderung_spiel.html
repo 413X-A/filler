@@ -132,7 +132,8 @@ const colors = [
     'salmon',       // Neue Farbe 9
     'gray'          // Neue Farbe 10
 ].slice(0, parseInt(params.get('numColors')) || 18); // Anzahl Farben
-
+        
+        const NUM_BLACK_CELLS = parseInt(params.get('gridSize')) || 25;
         const level = parseInt(params.get('lvl')) || 1;
         
         let gameBoard = [];
@@ -150,23 +151,40 @@ const colors = [
             goHome();
         });
 
-        function startGame() {
-            gameBoard = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
-            for (let i = 0; i < gridSize; i++) {
-                for (let j = 0; j < gridSize; j++) {
-                    gameBoard[i][j] = colors[Math.floor(Math.random() * colors.length)];
-                }
-            }
-
-            gameBoard[Math.floor(gridSize / 2)][Math.floor(gridSize / 2)] = 'white';
-            score = 1;
-            movesLeft = maxMoves;
-            isGameOver = false;
-
-            drawBoard();
-            createColorButtons();
-            updateScoreAndMoves();
+function startGame() {
+    gameBoard = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
+    
+    // Fülle das Spielfeld mit Farben
+    for (let i = 0; i < gridSize; i++) {
+        for (let j = 0; j < gridSize; j++) {
+            gameBoard[i][j] = colors[Math.floor(Math.random() * colors.length)];
         }
+    }
+
+    // Überprüfen, ob das Level größer als 120 ist
+    if (level > 120) {
+        // Setze einige Zellen auf schwarz
+        for (let i = 0; i < NUM_BLACK_CELLS; i++) {
+            let blackRow, blackCol;
+            do {
+                blackRow = Math.floor(Math.random() * gridSize);
+                blackCol = Math.floor(Math.random() * gridSize);
+            } while (gameBoard[blackRow][blackCol] === 'black'); // Stelle sicher, dass nicht die gleiche Zelle ausgewählt wird
+
+            gameBoard[blackRow][blackCol] = 'black'; // Setze die Zelle auf schwarz
+        }
+    }
+
+    gameBoard[Math.floor(gridSize / 2)][Math.floor(gridSize / 2)] = 'white'; // Setze die zentrale Zelle auf weiß
+    score = 1;
+    movesLeft = maxMoves;
+    isGameOver = false;
+
+    drawBoard();
+    createColorButtons();
+    updateScoreAndMoves();
+}
+
 
         function drawBoard() {
             const gameContainer = document.getElementById('gameContainer');
