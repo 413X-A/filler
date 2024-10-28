@@ -659,7 +659,6 @@ const levels = {
 
 // Funktion zum Hervorheben und Hinzufügen von Level-Boxen für abgeschlossene Levels
 function highlightCompletedLevels() {
-    levelBox.style.display = 'none'; // Verstecken
     const levelButtonsContainer = document.getElementById('levelButtons');
     const currentUser = localStorage.getItem('currentUsername'); // Aktuellen Benutzer abrufen
 
@@ -687,22 +686,23 @@ function highlightCompletedLevels() {
             levelBox.textContent = i;
             levelBox.onclick = () => startChallenge(i);
             levelButtonsContainer.appendChild(levelBox);
-            levelBox.style.display = 'block'; // Anzeigen
-        }
 
-        // Hintergrundfarbe je nach Erfolg auf grün oder orange setzen
-        if (levelData && levelData.success === true) {
-            levelBox.style.backgroundColor = 'lightgreen';
-        } else if (levelData && levelData.success === false) {
-            levelBox.style.backgroundColor = 'orange';
-            allPreviousLevelsCompleted = false; // Wenn ein Level nicht erfolgreich war, setze auf false
+            // Hintergrundfarbe je nach Erfolg auf grün oder orange setzen
+            if (levelData && levelData.success === true) {
+                levelBox.style.backgroundColor = 'lightgreen';
+            } else if (levelData && levelData.success === false) {
+                levelBox.style.backgroundColor = 'orange';
+                allPreviousLevelsCompleted = false; // Wenn ein Level nicht erfolgreich war, setze auf false
+            } else if (!levelData) {
+                allPreviousLevelsCompleted = false; // Level wurde noch nie gespielt
+            }
         }
     }
 
-    // Wenn alle vorherigen Level abgeschlossen sind, zeige die Level 121-150 an
+    // Zeige die Level 121-150 nur, wenn alle vorherigen Level abgeschlossen sind
     if (allPreviousLevelsCompleted) {
         for (let i = 121; i <= 150; i++) {
-            const levelKey = `level_${currentUser}_${i}`; // Benutzer-spezifischer Level-Schlüssel
+            const levelKey = `level_${currentUser}_${i}`;
             const levelData = JSON.parse(localStorage.getItem(levelKey));
 
             // Versuche, das Level-Button-Element zu finden
@@ -716,25 +716,18 @@ function highlightCompletedLevels() {
                 levelBox.textContent = i;
                 levelBox.onclick = () => startChallenge(i);
                 levelButtonsContainer.appendChild(levelBox);
-            }
 
-            // Hintergrundfarbe je nach Erfolg (kann hier ebenfalls angepasst werden, falls nötig)
-            if (levelData && levelData.success === true) {
-                levelBox.style.backgroundColor = 'lightgreen';
-            } else if (levelData && levelData.success === false) {
-                levelBox.style.backgroundColor = 'orange';
-            }
-        }
-    } else {
-        // Wenn nicht alle vorherigen Level abgeschlossen sind, verstecke die Level 121-150
-        for (let i = 121; i <= 150; i++) {
-            let levelBox = document.getElementById(`btn-l${i}`);
-            if (levelBox) {
-                levelBox.style.display = 'none'; // Verstecken
+                // Hintergrundfarbe je nach Erfolg (kann hier ebenfalls angepasst werden, falls nötig)
+                if (levelData && levelData.success === true) {
+                    levelBox.style.backgroundColor = 'lightgreen';
+                } else if (levelData && levelData.success === false) {
+                    levelBox.style.backgroundColor = 'orange';
+                }
             }
         }
     }
 }
+
 
 // Funktion zum Starten eines Levels für den aktuellen Benutzer
 function startChallenge(level) {
