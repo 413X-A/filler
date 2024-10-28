@@ -690,10 +690,12 @@ function highlightCompletedLevels() {
             // Hintergrundfarbe je nach Erfolg auf grün oder orange setzen
             if (levelData && levelData.success === true) {
                 levelBox.style.backgroundColor = 'lightgreen';
-            } else if (levelData && levelData.success === false) {
+            } 
+            if (levelData && levelData.success === false) {
                 levelBox.style.backgroundColor = 'orange';
                 allPreviousLevelsCompleted = false; // Wenn ein Level nicht erfolgreich war, setze auf false
-            } else if (!levelData) {
+            } 
+            if (!levelData) {
                 allPreviousLevelsCompleted = false; // Level wurde noch nie gespielt
             }
         }
