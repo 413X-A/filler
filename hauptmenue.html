@@ -659,6 +659,7 @@ const levels = {
 
 // Funktion zum Hervorheben und Hinzufügen von Level-Boxen für abgeschlossene Levels
 function highlightCompletedLevels() {
+    levelBox.style.display = 'none'; // Verstecken
     const levelButtonsContainer = document.getElementById('levelButtons');
     const currentUser = localStorage.getItem('currentUsername'); // Aktuellen Benutzer abrufen
 
@@ -686,6 +687,7 @@ function highlightCompletedLevels() {
             levelBox.textContent = i;
             levelBox.onclick = () => startChallenge(i);
             levelButtonsContainer.appendChild(levelBox);
+            levelBox.style.display = 'block'; // Anzeigen
         }
 
         // Hintergrundfarbe je nach Erfolg auf grün oder orange setzen
