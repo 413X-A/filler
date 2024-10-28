@@ -663,8 +663,10 @@ function highlightCompletedLevels() {
         return;
     }
 
-    // Schleife durch alle Level von 1 bis 150
-    for (let i = 1; i <= 150; i++) {
+    let allPreviousLevelsCompleted = true;
+
+    // Schleife durch alle Level von 1 bis 120
+    for (let i = 1; i <= 120; i++) {
         const levelKey = `level_${currentUser}_${i}`; // Benutzer-spezifischer Level-Schlüssel
         const levelData = JSON.parse(localStorage.getItem(levelKey));
 
@@ -686,9 +688,39 @@ function highlightCompletedLevels() {
             levelBox.style.backgroundColor = 'lightgreen';
         } else if (levelData && levelData.success === false) {
             levelBox.style.backgroundColor = 'orange';
+            allPreviousLevelsCompleted = false; // Wenn ein Level nicht erfolgreich war, setze auf false
+        }
+    }
+
+    // Wenn alle vorherigen Level abgeschlossen sind, zeige die Level 121-150 an
+    if (allPreviousLevelsCompleted) {
+        for (let i = 121; i <= 150; i++) {
+            const levelKey = `level_${currentUser}_${i}`; // Benutzer-spezifischer Level-Schlüssel
+            const levelData = JSON.parse(localStorage.getItem(levelKey));
+
+            // Versuche, das Level-Button-Element zu finden
+            let levelBox = document.getElementById(`btn-l${i}`);
+
+            // Falls keine Box für das Level existiert, wird eine neue erstellt
+            if (!levelBox) {
+                levelBox = document.createElement('div');
+                levelBox.id = `btn-l${i}`;
+                levelBox.className = 'level';
+                levelBox.textContent = i;
+                levelBox.onclick = () => startChallenge(i);
+                levelButtonsContainer.appendChild(levelBox);
+            }
+
+            // Hintergrundfarbe je nach Erfolg (kann hier ebenfalls angepasst werden, falls nötig)
+            if (levelData && levelData.success === true) {
+                levelBox.style.backgroundColor = 'lightgreen';
+            } else if (levelData && levelData.success === false) {
+                levelBox.style.backgroundColor = 'orange';
+            }
         }
     }
 }
+
 
 
 // Funktion zum Starten eines Levels für den aktuellen Benutzer
