@@ -205,6 +205,7 @@ function startGame() {
 
         function createColorButtons() {
     const colorButtons = document.getElementById('colorButtons');
+    const gesamtScore = score;
     colorButtons.innerHTML = '';
     colors.forEach(color => {
         const button = document.createElement('button');
@@ -216,7 +217,7 @@ function startGame() {
                 updateScoreAndMoves();
                 
                 // Überprüfen, ob das Spiel beendet ist
-                if (checkAllFilled() || movesLeft <= 0) {
+                if (checkAllFilled() || movesLeft <= 0 || gesamtScore >= targetScore) {
                     endGame(); // Hier wird die Endspiel-Funktion aufgerufen
                 }
             }
