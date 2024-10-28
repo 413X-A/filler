@@ -332,12 +332,21 @@ function endGame() {
     if (gesamtScore >= targetScore) {
         const success_music = new Audio('level_complete.mp3');
         success_music.play(); // Spiele die Musik ab
-        resultMessage.innerHTML = `<br>Gesamt: ${gesamtScore}<br>Davon Felder: ${score}<br>Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp_gesamt}`;
+        resultMessage.innerHTML = `
+    <p style="font-weight: bold;">Level ${level} Abgeschlossen [+${exp_level} EXP]</p>
+    <br>Gesamt: ${gesamtScore} (Felder: ${score}, Bonus: ${plusScore})
+    <br><br>Erhaltene EXP: ${exp_gesamt}
+`;
+
         localStorage.setItem(levelKey, JSON.stringify({ success: true }));
     } else {
         const nosuccess_music = new Audio('level_incomplete.mp3');
         nosuccess_music.play(); // Spiele die Musik ab
-        resultMessage.innerHTML = `${level} nicht abgeschlossen!<br>Gesamt: ${gesamtScore} / ${targetScore}<br>Davon Felder: ${score}<br>Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp_gesamt}`;
+        resultMessage.innerHTML = `
+        <p style="font-weight: bold; color: red;">Level ${level} nicht abgeschlossen!</p>
+        <br>Gesamt: ${gesamtScore} / ${targetScore} (Felder: ${score}, Bonus: ${plusScore})
+        <br><br>Erhaltene EXP: ${exp_gesamt}
+    `;
         localStorage.setItem(levelKey, JSON.stringify({ success: false }));
     }
 
