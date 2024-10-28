@@ -133,7 +133,7 @@ const colors = [
     'gray'          // Neue Farbe 10
 ].slice(0, parseInt(params.get('numColors')) || 18); // Anzahl Farben
         
-        const NUM_BLACK_CELLS = parseInt(params.get('gridSize')) || 25;
+        const NUM_BLACK_CELLS = parseInt(params.get('black_fields')) || 35;
         const level = parseInt(params.get('lvl')) || 1;
         
         let gameBoard = [];
