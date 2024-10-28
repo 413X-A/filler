@@ -688,7 +688,7 @@ function highlightCompletedLevels() {
             levelBox.style.backgroundColor = 'lightgreen';
         } else if (levelData && levelData.success === false) {
             levelBox.style.backgroundColor = 'orange';
-            allPreviousLevelsCompleted = false; // Wenn ein Level nicht erfolgreich war, setze auf false
+            allPreviousLevelsCompleted = true; // Wenn ein Level nicht erfolgreich war, setze auf false
         }
     }
 
