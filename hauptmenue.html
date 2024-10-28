@@ -21,7 +21,7 @@
             text-align: center;
         }
 
-        button {
+        .button {
             width: 80%;
             padding: 10px;
             margin: 10px;
@@ -31,7 +31,7 @@
             border-radius: 10px;
             cursor: pointer;
         }
-        button:hover {
+        .button:hover {
             background-color: gray;
             color: white;
         }
@@ -46,6 +46,9 @@
             border-radius: 10px;
             cursor: pointer;
         }
+        .level_button:hover {
+            background-color: white;
+            color: black;
 
         #modeSelection {
             margin: 20px auto;
@@ -114,10 +117,10 @@
     <!-- Modus-Auswahl -->
     <div id="modeSelection">
         <h2>Wähle deinen Modus:</h2>
-        <button onclick="showProfile()">Profil</button>
-        <button onclick="showSinglePlayer()">Einzelspieler</button>
-        <button onclick="showMultiPlayer()">Mehrspieler</button>
-        <button onclick="showChallenges()">Herausforderungen [BETA]</button>
+        <button class="button" onclick="showProfile()">Profil</button>
+        <button class="button" onclick="showSinglePlayer()">Einzelspieler</button>
+        <button class="button" onclick="showMultiPlayer()">Mehrspieler</button>
+        <button class="button" onclick="showChallenges()">Herausforderungen [BETA]</button>
     </div>
 
     <!-- Profil-Ansicht -->
