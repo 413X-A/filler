@@ -141,6 +141,7 @@ const colors = [
         let gesamtScore = 0;
         let plusScore = 0;
         let tafelScore = 0;
+        let exp_gesamt = 0;
         let movesLeft = maxMoves;
         let isGameOver = false;
 
@@ -325,17 +326,18 @@ function endGame() {
     // Einheitlicher Schlüssel für den Erfolg des Levels des aktuellen Benutzers
     const levelKey = `level_${currentUser}_${level}`; // z.B. level_username_1
     const exp_level = level / 2;
+    const exp_gesamt = exp + exp_level;
 
     // Erfolg des Levels speichern und entsprechende Musik abspielen
     if (gesamtScore >= targetScore) {
         const success_music = new Audio('level_complete.mp3');
         success_music.play(); // Spiele die Musik ab
-        resultMessage.innerHTML = `${level} abgeschlossen [+${exp_level} EXP]!<br>Gesamt: ${gesamtScore}<br>Davon Felder: ${score}<br>Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}`;
+        resultMessage.innerHTML = `${level} abgeschlossen [+${exp_level} EXP]!<br>Gesamt: ${gesamtScore}<br>Davon Felder: ${score}<br>Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp_gesamt}`;
         localStorage.setItem(levelKey, JSON.stringify({ success: true }));
     } else {
         const nosuccess_music = new Audio('level_incomplete.mp3');
         nosuccess_music.play(); // Spiele die Musik ab
-        resultMessage.innerHTML = `${level} nicht abgeschlossen!<br>Gesamt: ${gesamtScore} / ${targetScore}<br>Davon Felder: ${score}<br>Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp}`;
+        resultMessage.innerHTML = `${level} nicht abgeschlossen!<br>Gesamt: ${gesamtScore} / ${targetScore}<br>Davon Felder: ${score}<br>Bonus: ${plusScore}<br><br>Erhaltene EXP: ${exp_gesamt}`;
         localStorage.setItem(levelKey, JSON.stringify({ success: false }));
     }
 
@@ -354,7 +356,7 @@ function endGame() {
     // EXP Speichern
     const userExpKey = `exp_${currentUser}`; // Schlüssel für die EXP des Benutzers
     let existingExp = parseInt(localStorage.getItem(userExpKey)) || 0;
-    const totalExp = existingExp + (exp + exp_level);
+    const totalExp = existingExp + exp;
     localStorage.setItem(userExpKey, totalExp);
 
     // Ergebnisanzeige anzeigen
