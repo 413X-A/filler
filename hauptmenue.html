@@ -766,7 +766,7 @@ function accountDelete() {
         const currentUser = localStorage.getItem('currentUsername');
 
         if (currentUser) {
-            // Entferne Benutzer-spezifische Schlüssel
+            // Benutzer-spezifische Schlüssel entfernen
             localStorage.removeItem(`exp_${currentUser}`);
             localStorage.removeItem(`points_${currentUser}`);
             localStorage.removeItem(`bonusPoints_${currentUser}`);
@@ -779,6 +779,12 @@ function accountDelete() {
 
             // Den aktuellen Benutzernamen entfernen
             localStorage.removeItem('currentUsername');
+
+            // Passwort löschen, falls es im localStorage gespeichert ist
+            localStorage.removeItem(`password_${currentUser}`); // Beispielschlüssel für das Passwort
+
+            // Den neuen Benutzer auch entfernen (benutzerdefinierte Schlüssel hier anpassen)
+            localStorage.removeItem(currentUser); // Schlüssel zum Speichern des neuen Benutzers
         }
 
         // Benutzer informieren und zur Startseite zurückkehren
@@ -786,6 +792,7 @@ function accountDelete() {
         window.location.href = 'index.html';
     }
 }
+
 
 
 
