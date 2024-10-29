@@ -766,25 +766,27 @@ function accountDelete() {
         const currentUser = localStorage.getItem('currentUsername');
 
         if (currentUser) {
-            // Alle Schlüssel in localStorage durchgehen
-            for (let key in localStorage) {
-                // Schlüssel, die mit dem Benutzernamen beginnen oder spezifische Level-Informationen sind
-                if (key.startsWith(currentUser) || key.startsWith("level_") || key.startsWith("exp_")) {
-                    localStorage.removeItem(key); // Benutzer- und Level-Informationen entfernen
-                }
+            // Entferne Benutzer-spezifische Schlüssel
+            localStorage.removeItem(`exp_${currentUser}`);
+            localStorage.removeItem(`points_${currentUser}`);
+            localStorage.removeItem(`bonusPoints_${currentUser}`);
+
+            // Alle Level-Schlüssel des Benutzers entfernen (z. B. level_username_1, level_username_2, ...)
+            for (let i = 1; i <= 150; i++) { // Hier 150 als Obergrenze für die Level-Anzahl anpassen
+                const levelKey = `level_${currentUser}_${i}`;
+                localStorage.removeItem(levelKey);
             }
 
-            // Den Benutzernamen selbst entfernen
+            // Den aktuellen Benutzernamen entfernen
             localStorage.removeItem('currentUsername');
         }
 
         // Benutzer informieren und zur Startseite zurückkehren
         alert('Dein Account wurde gelöscht.');
         window.location.href = 'index.html';
-    } else {
-        // Nichts tun, wenn der Benutzer "Abbrechen" wählt
     }
 }
+
 
 
 
