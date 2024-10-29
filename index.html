@@ -94,6 +94,11 @@
                 localStorage.setItem('currentUsername', username);
                 message.textContent = `Angemeldet als ${username}!`;
                 message.style.color = "green";
+
+                    // Vibration auslösen
+                if ("vibrate" in navigator) {
+                    navigator.vibrate(200);  // 200ms Vibration
+                }
                 
                 setTimeout(() => {
                     window.location.href = 'hauptmenue.html';
@@ -114,6 +119,11 @@
             localStorage.setItem('currentUsername', username);
             message.textContent = `${username} wurde erstellt!`;
             message.style.color = "green";
+
+                // Vibration auslösen
+            if ("vibrate" in navigator) {
+                navigator.vibrate(200);  // 200ms Vibration
+            }
 
             setTimeout(() => {
                 window.location.href = 'hauptmenue.html';
