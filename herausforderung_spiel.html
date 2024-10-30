@@ -111,6 +111,7 @@
         let gridSize = parseInt(params.get('gridSize')) || 11;
         let maxMoves = params.get('numMoves') === 'unlimited' ? Infinity : parseInt(params.get('numMoves')) || 50;
         const targetScore = parseInt(params.get('points')) || 100;
+        const NUM_BLACK_CELLS = parseInt(params.get('black_fields')) || 0;
 const colors = [
     'red', 
     'yellow', 
@@ -132,8 +133,6 @@ const colors = [
     'salmon',       // Neue Farbe 9
     'gray'          // Neue Farbe 10
 ].slice(0, parseInt(params.get('numColors')) || 18); // Anzahl Farben
-        
-        const NUM_BLACK_CELLS = parseInt(params.get('black_fields')) || 35;
         const level = parseInt(params.get('lvl')) || 1;
         
         let gameBoard = [];
