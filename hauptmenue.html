@@ -112,9 +112,12 @@
 
     <!-- Profil-Ansicht -->
     <div id="profile" style="display: none;">
-    <video src="intro.MP4" style="width: 90%;" poster="preview.jpg" loop>
+    <video style="width: 90%;" poster="preview.jpg" loop>
+    <source src="intro.MP4" type="video/mp4">
+    <source src="intro.webm" type="video/webm">
     Dein Browser unterstützt das Video-Tag nicht.
 </video>
+
 
     <p>Profil für <span id="username" style="font-weight: bold;"></span></p>
     <p>EXP: <span id="userExp"></span></p>
